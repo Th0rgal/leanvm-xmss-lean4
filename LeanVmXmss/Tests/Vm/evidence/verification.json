@@ -1,0 +1,723 @@
+{
+  "status": "COMPLETE",
+  "commands": [
+    {
+      "label": "build",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "build",
+        "--project-dir",
+        ".",
+        "Tests.Vm.Witnesses",
+        "Tests.Vm.RuntimeIO",
+        "Tests.Vm.Synthetic",
+        "Proofs.Vm.Linear"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Model-Vm-Interpreter.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Model/Vm/Interpreter.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Model-Vm-Interpreter.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Model/Vm/Interpreter.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Model-Vm-KeccakInternal.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Model/Vm/KeccakInternal.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Model-Vm-KeccakInternal.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Model/Vm/KeccakInternal.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Model-Vm-Kernel.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Model/Vm/Kernel.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Model-Vm-Kernel.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Model/Vm/Kernel.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Model-Vm-Linear.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Model/Vm/Linear.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Model-Vm-Linear.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Model/Vm/Linear.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Model-Vm-PowerTable.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Model/Vm/PowerTable.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Model-Vm-PowerTable.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Model/Vm/PowerTable.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Model-Vm-Scheduled.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Model/Vm/Scheduled.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Model-Vm-Scheduled.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Model/Vm/Scheduled.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Model-Xmss-Hints.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Model/Xmss/Hints.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Model-Xmss-Hints.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Model/Xmss/Hints.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Proofs-Vm-Basic.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Proofs/Vm/Basic.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Proofs-Vm-Basic.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Proofs/Vm/Basic.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Proofs-Vm-GPow.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Proofs/Vm/GPow.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Proofs-Vm-GPow.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Proofs/Vm/GPow.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Proofs-Vm-Kernel.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Proofs/Vm/Kernel.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Proofs-Vm-Kernel.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Proofs/Vm/Kernel.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Proofs-Vm-Linear.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Proofs/Vm/Linear.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Proofs-Vm-Linear.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Proofs/Vm/Linear.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Proofs-Vm-RuntimePowers.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Proofs/Vm/RuntimePowers.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Proofs-Vm-RuntimePowers.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Proofs/Vm/RuntimePowers.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Proofs-Xmss-Basic.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Proofs/Xmss/Basic.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Proofs-Xmss-Basic.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Proofs/Xmss/Basic.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Proofs-Xmss-Encoding.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Proofs/Xmss/Encoding.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Proofs-Xmss-Encoding.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Proofs/Xmss/Encoding.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Spec-Vm-Basic.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Spec/Vm/Basic.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Spec-Vm-Basic.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Spec/Vm/Basic.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Spec-Vm-Bytecode.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Spec/Vm/Bytecode.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Spec-Vm-Bytecode.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Spec/Vm/Bytecode.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Spec-Vm-Equality.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Spec/Vm/Equality.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Spec-Vm-Equality.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Spec/Vm/Equality.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Spec-Vm-Hints.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Spec/Vm/Hints.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Spec-Vm-Hints.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Spec/Vm/Hints.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Spec-Vm-KeccakInternal.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Spec/Vm/KeccakInternal.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Spec-Vm-KeccakInternal.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Spec/Vm/KeccakInternal.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Spec-Xmss-Encoding.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Spec/Xmss/Encoding.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Spec-Xmss-Encoding.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Spec/Xmss/Encoding.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Spec-Xmss-Hints.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Spec/Xmss/Hints.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Spec-Xmss-Hints.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Spec/Xmss/Hints.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Tests-Vm-Profile.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Tests/Vm/Profile.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Tests-Vm-Profile.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Tests/Vm/Profile.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Tests-Vm-RuntimeIO.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Tests/Vm/RuntimeIO.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Tests-Vm-RuntimeIO.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Tests/Vm/RuntimeIO.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Tests-Vm-Synthetic.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Tests/Vm/Synthetic.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Tests-Vm-Synthetic.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Tests/Vm/Synthetic.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Tests-Vm-Witnesses.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Tests/Vm/Witnesses.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Tests-Vm-Witnesses.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Tests/Vm/Witnesses.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Tests-Xmss-Differential.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Tests/Xmss/Differential.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Tests-Xmss-Differential.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Tests/Xmss/Differential.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Tests-Xmss-Main.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Tests/Xmss/Main.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Tests-Xmss-Main.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Tests/Xmss/Main.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "axiom-audit",
+      "argv": [
+        "turbo-lean",
+        "eval",
+        "Tests/Vm/AxiomAudit.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "mcp-schemas",
+      "argv": [
+        "python3",
+        "Tests/Vm/mcp_driver.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "mcp-turbo_fast_check",
+      "argv": [
+        "python3",
+        "Tests/Vm/mcp_driver.py",
+        "turbo_fast_check",
+        "{\"file\": \"Proofs/Vm/Basic.lean\", \"project_dir\": \"/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/xmss-hub-unified/LeanVmXmss\", \"compact\": false, \"decl\": \"store_out_of_memory\"}"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "mcp-turbo_agent_step",
+      "argv": [
+        "python3",
+        "Tests/Vm/mcp_driver.py",
+        "turbo_agent_step",
+        "{\"file\": \"Proofs/Vm/Basic.lean\", \"project_dir\": \"/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/xmss-hub-unified/LeanVmXmss\", \"compact\": false, \"decl\": \"store_out_of_memory\"}"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "mcp-turbo_audit_spec",
+      "argv": [
+        "python3",
+        "Tests/Vm/mcp_driver.py",
+        "turbo_audit_spec",
+        "{\"file\": \"Proofs/Vm/Basic.lean\", \"project_dir\": \"/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/xmss-hub-unified/LeanVmXmss\", \"compact\": false}"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "mcp-turbo_check",
+      "argv": [
+        "python3",
+        "Tests/Vm/mcp_driver.py",
+        "turbo_check_decl",
+        "{\"file\": \"Proofs/Vm/Basic.lean\", \"project_dir\": \"/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/xmss-hub-unified/LeanVmXmss\", \"compact\": false}"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "synthetic-differential",
+      "argv": [
+        "python3",
+        "Tests/Vm/synthetic.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "native-build",
+      "argv": [
+        "python3",
+        "Tests/Vm/build_native.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "native-xmss-full",
+      "argv": [
+        "Tests/Vm/evidence/xmss-differential",
+        "/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/p1-shard-c-out/xmss-inputs.bin",
+        "/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/p1-shard-c-out/oracle"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "native-vm-full",
+      "argv": [
+        "Tests/Vm/evidence/vm-full",
+        "/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/p1-shard-c-out/xmss-inputs.bin",
+        "/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/p1-shard-c-out/oracle"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "full_vm": {
+    "status": "PASS",
+    "cycles": 1146537,
+    "memory_cells_used": 8668972,
+    "memory_keccak256": "5b771e0e421e7c539b8b419188320dbeffe7a0c465bdf84731036efafa341530",
+    "opcode_counts": [
+      262098,
+      237184,
+      169439,
+      159273,
+      57477,
+      261066
+    ],
+    "unconstrained_reads": [],
+    "lean_report": "cycles=1146537 memory_cells_used=8668972 memory_keccak256=5b771e0e421e7c539b8b419188320dbeffe7a0c465bdf84731036efafa341530 counts=#[262098, 237184, 169439, 159273, 57477, 261066] unconstrained_reads=[]"
+  }
+}

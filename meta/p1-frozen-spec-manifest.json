@@ -1,0 +1,39 @@
+{
+  "status": "FROZEN_P1_UNIFIED",
+  "frozen_at": "2026-11-07T02:15:00Z",
+  "reference_commits": {
+    "leanVM": "59c2984df79cc9ff1914e547c5d5d390fffc8f3e",
+    "turbo-lean": "29d85f7da2d963750f77d76d5323408a73386f14"
+  },
+  "shards": {
+    "shard_a": {
+      "manifest": "preserved/p1-shards/shard-a/v4c-local-replay-20261107T0026Z/shard-a-manifest.json",
+      "archive_sha256": "a937c1113744540b373abd41dc7b8cd7d80ebde591ed9d147001cb51107a5542"
+    },
+    "shard_b": {
+      "manifest": "preserved/p1-shards/shard-b/local-replay-20261107/shard-b-manifest.json",
+      "archive_sha256": "b9061bff39735e46ca4186f65788e713320dbdb3f024c48aa687ced79756aba5"
+    },
+    "shard_c": {
+      "manifest": "preserved/p1-shards/shard-c/local-replay-20261107/shard-c-manifest.json",
+      "archive_sha256": "3237141d8f9cb58111896c07dbdeee1edcdb88ff04ae81e26a513b621a20c671"
+    }
+  },
+  "spec_sha256": {
+    "Spec/Field/Basic.lean": "496122551dd021bde21fb9872a035fceaf289fe2ce54f418f47141a8ae4e74a2",
+    "Spec/Field/Operations.lean": "8a099af02a2eedc8e74fbd5385dae06303343e5e798e9f880186f226bd41968e",
+    "Spec/Field/Quotient.lean": "e26cdea9f813321001baf0acdc1f334f7ffbd62f398b06410f3e211f994b0ebe",
+    "Spec/Keccak/Basic.lean": "7c0614421a755fc2cb81cf0a6451d6c95ccaf14a249033902aa7415fe8d70f03",
+    "Spec/Merkle/Basic.lean": "3d0ba690a057c245f259e59824d078fd392db3733b0b3ec164d5dc99aecb54bb",
+    "Spec/Merkle/Pruned.lean": "d6c11e08153b1408052b8c45982aae4a3237f87dc69447e8d576e82ea3054660",
+    "Spec/Transcript/Basic.lean": "d79cc6940705d7b0457276cb905351a355390fa3ec440161eff1a1c50361afc5",
+    "Spec/Transcript/Replay.lean": "6ca56bcb783a28f905c775614d9e00f8d9555dd038a8ea6b5887344689e03310",
+    "Spec/Vm/Basic.lean": "1da39016f7a8170cf1ea1ba7ee42d61b238ccce02dbeb18ada4491542f56ee49",
+    "Spec/Vm/Bytecode.lean": "28cd152ee8793dd17bbf8f9c84af96ed11f316cbc0c5d76393cd0030122a3a03",
+    "Spec/Vm/Equality.lean": "385f365f25cad42bff6d01ef182b1b07be38bbbf1a90d27edf981864656732c3",
+    "Spec/Vm/Hints.lean": "f305973605ca10009db811428479d1055d814514150f30535ef054da5d55b22e",
+    "Spec/Vm/KeccakInternal.lean": "4fa6fb58d3747c761f8b83cf715319f6a4ee4b8d33d29cdf22c74f0ca9dadf34",
+    "Spec/Xmss/Encoding.lean": "bb3202efbf13716a6d14608e25838218016162bf1f19cd31e0ef2afdb7cf8257",
+    "Spec/Xmss/Hints.lean": "5ad5617a632f320cbca24d59cb3b4461976dc7cb136c14a1f270e2195fb83d5e"
+  }
+}

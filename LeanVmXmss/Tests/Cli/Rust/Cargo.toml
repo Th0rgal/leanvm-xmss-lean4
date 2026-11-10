@@ -1,0 +1,23 @@
+[package]
+name = "e2e-oracle"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+
+[[bin]]
+name = "e2e-oracle"
+path = "src/main.rs"
+
+[dependencies]
+leanvm_core = { path = "../../../../references/leanVM/crates/leanvm_core" }
+primitives = { path = "../../../../references/leanVM/crates/primitives" }
+fiat_shamir = { path = "../../../../references/leanVM/crates/fiat_shamir" }
+verifier = { path = "../../../../references/leanVM/crates/verifier" }
+rec_aggregation = { features = ["signers-cache"], path = "../../../../references/leanVM/crates/rec_aggregation" }
+signatures = { features = ["mock"], path = "../../../../references/leanVM/crates/signatures" }
+bincode = "1.3.3"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1

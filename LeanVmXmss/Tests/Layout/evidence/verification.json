@@ -1,0 +1,181 @@
+{
+  "status": "COMPLETE",
+  "commands": [
+    {
+      "label": "build",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "build",
+        "--project-dir",
+        ".",
+        "--max-memory-mb",
+        "6144",
+        "Proofs.Layout.Basic",
+        "Tests.Layout.Witnesses",
+        "Tests.Layout.Differential",
+        "Tests.Layout.Main"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Spec-Layout-Basic.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Spec/Layout/Basic.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Spec-Layout-Basic.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Spec/Layout/Basic.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Model-Layout-Scalar.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Model/Layout/Scalar.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Model-Layout-Scalar.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Model/Layout/Scalar.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Proofs-Layout-Basic.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Proofs/Layout/Basic.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Proofs-Layout-Basic.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Proofs/Layout/Basic.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Tests-Layout-Witnesses.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Tests/Layout/Witnesses.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Tests-Layout-Witnesses.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Tests/Layout/Witnesses.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Tests-Layout-Differential.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "check",
+        "Tests/Layout/Differential.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-Tests-Layout-Differential.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Tests/Layout/Differential.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "axiom-audit",
+      "argv": [
+        "turbo-lean",
+        "eval",
+        "Tests/Layout/AxiomAudit.lean",
+        "--project-dir",
+        "."
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "native-modules",
+      "argv": [
+        "/usr/bin/python3",
+        "Tests/Hub/cache_manager.py",
+        "Tests.Layout.Main"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "native-build",
+      "argv": [
+        "lean-native",
+        "build-exe",
+        "--input",
+        "Tests/Layout/Main.lean",
+        "-o",
+        "/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/xmss-hub-unified/LeanVmXmss/Tests/Layout/evidence/layout-differential",
+        "--dynamic-runtime"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "rust-oracle",
+      "argv": [
+        "/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/xmss-hub-unified/targets/rust/release/layout-oracle",
+        "/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/p1-shard-c-out/oracle/bytecode.bin"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "lean-oracle",
+      "argv": [
+        "/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/xmss-hub-unified/LeanVmXmss/Tests/Layout/evidence/layout-differential",
+        "/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/p1-shard-c-out/oracle/bytecode.bin"
+      ],
+      "exit_code": 0
+    }
+  ]
+}

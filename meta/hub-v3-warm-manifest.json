@@ -1,0 +1,224 @@
+{
+  "hub_version": "xmss-hub-v3",
+  "hub_root": "/var/lib/orb-node/work/caches/xmss-hub-v3",
+  "generated_at": "2026-11-09T14:20:49Z",
+  "toolchain_heads": {
+    "leanVM": "59c2984df79cc9ff1914e547c5d5d390fffc8f3e",
+    "turbo-lean": "29d85f7da2d963750f77d76d5323408a73386f14",
+    "turbo-lean-frozen": "29d85f7da2d963750f77d76d5323408a73386f14",
+    "lean4": "v4.35.0 (eb6cafb7290e8bd5f2937522d8d804f58f02bafc)"
+  },
+  "patch": {
+    "path": "meta/compiler-fix.patch",
+    "sha256": "05d8024587ec0046b363a8821a899a5bd7c75a5eea56a68515dd558e1b8d526d",
+    "modified_files": [
+      "lean/LeanNative/Backend/LLVM.lean",
+      "lean/LeanNative/Driver/BuildExe.lean"
+    ]
+  },
+  "seed": {
+    "stripped_b85_chars": 222890,
+    "tar_xz_bytes": 178312,
+    "tar_xz_sha256": "81ccb2e37eed8c9bf105cbc3d31821d937e58bca49d4fa24e1f11d5025d13c13",
+    "tar_bytes": 1331200,
+    "tar_sha256": "2eefb017557ca9240b0032a78af6ec5d2af17ed10e21a907be2cde54f6cd0d10",
+    "tar_members": 203
+  },
+  "binaries": {
+    "turbo-lean": {
+      "path": "bin/turbo-lean",
+      "bytes": 17717896,
+      "sha256": "9fa2d14e345e5e3b546726548534157e8362e9a1df49029a5184e13a018c3d81"
+    },
+    "lean-native": {
+      "path": "bin/lean-native",
+      "bytes": 259156144,
+      "sha256": "30702b47e3aadfc61f3c509ea7a6821d835131e63b1135eff989194695679e77"
+    },
+    "lean-native-core": {
+      "path": "bin/lean-native-core",
+      "bytes": 126259520,
+      "sha256": "3f661f9683bf0ade2da0872a2785fa34e9edbf31387eabc799c2fba05d87250b"
+    },
+    "turbo-zygote": {
+      "path": "bin/turbo-zygote",
+      "bytes": 234879216,
+      "sha256": "dd3ff817a7c3db14b5e221b71e22a3a729d330967f2a85bb138fafe03cdb807f"
+    },
+    "leanvm": {
+      "path": "bin/leanvm",
+      "bytes": 5954088,
+      "sha256": "d37989c5452a170d1de4a4660823d2bab8bd6e010da49bb7d35bba22f7ea07f4"
+    },
+    "git": {
+      "path": "git-install/bin/git",
+      "version": "2.47.1",
+      "sha256": "abb63d8f411e986767869a77691dd4d31759e4874cac18345101d18ef0214117"
+    }
+  },
+  "p0_smoke": {
+    "status": "PASS",
+    "canary": "k=262 e=131 standalone=true native_clmul=true",
+    "elapsed_seconds": 5.995,
+    "log": "artifacts/build-exe-p0.log"
+  },
+  "frozen_spec_check": {
+    "manifest": "meta/p1-frozen-spec-manifest.json",
+    "status": "FROZEN_P1_UNIFIED",
+    "verified_files": 15
+  },
+  "oracle_xmss1400": {
+    "fixtures": {
+      "xmss-inputs.bin": {
+        "bytes": 3455200,
+        "sha256": "6d3f0dabe5b62679a63decb43ce52ac2074005f5e109df0da7dff9a63c78abe3"
+      },
+      "bytecode.bin": {
+        "bytes": 20041312,
+        "sha256": "929753489573a779f6d2396deb39d35f313b0d6c05aad68562e487d4bfe33216"
+      },
+      "hints.bin": {
+        "bytes": 10594241,
+        "sha256": "c5f04bfbe4e7ba54e2a8fc794534dfb6a72d99a1b5197788351943d403714183"
+      },
+      "schedule.bin": {
+        "bytes": 2924748,
+        "sha256": "049ab4a52c6c4bbeb219af5d48bfb7a8a579d4004b62f38927cc5d0b969cc35e"
+      },
+      "statement.bin": {
+        "bytes": 32,
+        "sha256": "666bbe771dcbbb4595fd56f836c651597a3f7176568b95132c931ff3b7b6e095"
+      },
+      "seed.bin": {
+        "bytes": 32,
+        "sha256": "6f4689bba4a8110f97a4024f7dcf247c8b1464616cef2d658b9dbded7d2d4066"
+      },
+      "bytecode-value.bin": {
+        "bytes": 8,
+        "sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"
+      },
+      "execution.json": {
+        "bytes": 212,
+        "sha256": "e022461b2f82aa71cc76a16dc94676362b7856a9b906122748a63db5d3b21736"
+      },
+      "lean-execution.txt": {
+        "bytes": 201,
+        "sha256": "a054e70f8207dabb4e6b986bcf8cf219f3a4977a2ab7eb780d0ba52f325dc170"
+      }
+    },
+    "execution": {
+      "cycles": 1146537,
+      "memory_cells_used": 8668972,
+      "rows": [262098, 237184, 169439, 159273, 57477, 261066],
+      "memory_keccak256": "5b771e0e421e7c539b8b419188320dbeffe7a0c465bdf84731036efafa341530"
+    }
+  },
+  "parity_results": {
+    "vm_synthetic": {"status": "PASS", "cases": 10},
+    "layout": {
+      "status": "PASS",
+      "cases": ["syn_keccak_heavy", "syn_tiny", "xmss1400"],
+      "mismatches": []
+    },
+    "transcript": {
+      "status": "PASS",
+      "exit_code": 0,
+      "rust_lean_equal": true,
+      "mcp_gates_passed": true,
+      "output_sha256": "ff8d718080a5bf091b5bc456a4d10ea8bc015246dc43f38efece582491570de6"
+    },
+    "witness": {
+      "status": "PASS",
+      "synthetic_parity": "SYNTHETIC_PARITY|PASS",
+      "xmss1400_parity": "XMSS1400_PARITY|PASS",
+      "xmss1400_anchor": "EXEC|1146537|8668972|24|262098,237184,169439,159273,57477,261066|0"
+    },
+    "bus": {
+      "status": "PASS",
+      "synthetic_parity": "SYNTHETIC_PARITY|PASS",
+      "xmss1400_parity": "XMSS1400_PARITY|PASS",
+      "xmss1400_anchor": "STREAM|954|d455e52fefd45ea541c03a0bdc4482a0b8f7813641128ecc4d5fb051d885b7f7"
+    }
+  },
+  "audits": {
+    "proofs_audit_spec": {
+      "status": "PASS",
+      "files": 37,
+      "total_specs_audited": 712,
+      "vacuous_specs": 0,
+      "trivial_specs": 0
+    },
+    "axiom_audits": {
+      "allowed_axioms": ["propext", "Quot.sound"],
+      "sorryAx": 0,
+      "native_decide": 0,
+      "_unsafe_rec": 0,
+      "slices": {
+        "Field": {"status": "PASS", "checked": 626, "theorems": 420},
+        "Layout": {"status": "PASS", "checked": 711, "rejections": 0},
+        "Vm": {"status": "PASS", "checked": 2115, "rejections": 0},
+        "Witness": {"status": "PASS", "checked": 191, "rejections": 0},
+        "Bus": {"status": "PASS", "checked": 900, "rejections": 0},
+        "Pcs": {"status": "PASS", "checked": 551, "rejections": 0},
+        "Transcript": {"status": "PASS", "checked": 1449, "rejections": 0}
+      }
+    }
+  },
+  "updated_at": "2026-11-09T14:53:33Z",
+  "oracle_xmss4": {
+    "fixtures": {
+      "execution.json": {"bytes": 194, "sha256": "0a4157ca1383bbd2fe7745ea02fdaa139f76275153812cd4eeec9ef4fb45748d"},
+      "bytecode.bin": {"bytes": 20041312, "sha256": "929753489573a779f6d2396deb39d35f313b0d6c05aad68562e487d4bfe33216"},
+      "hints.bin": {"bytes": 30709, "sha256": "3f17d7d4e5a2aae9662b9ee8de45130fbc63ac7ef6a50d205181c863fa1dda08"},
+      "schedule.bin": {"bytes": 2924748, "sha256": "049ab4a52c6c4bbeb219af5d48bfb7a8a579d4004b62f38927cc5d0b969cc35e"},
+      "xmss-inputs.bin": {"bytes": 9872, "sha256": "4bf4f97710c76e69af6bd3c04c5a9538646bc2cca16f7010d290d77d792f0af0"},
+      "statement.bin": {"bytes": 32, "sha256": "6593fd9c7a7e58055427af08ee60242ad11605a767ded6dcf61a5f500820f1bd"},
+      "seed.bin": {"bytes": 32, "sha256": "6f4689bba4a8110f97a4024f7dcf247c8b1464616cef2d658b9dbded7d2d4066"},
+      "bytecode-value.bin": {"bytes": 8, "sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"}
+    },
+    "execution": {
+      "cycles": 21465,
+      "memory_cells_used": 65536,
+      "rows": [885, 873, 17514, 1213, 227, 753],
+      "memory_keccak256": "495815c4b8475105845846256923c26c367d2d87b1f334f6852581f6c065ce0c"
+    }
+  },
+  "oracle_xmss16": {
+    "fixtures": {
+      "execution.json": {"bytes": 198, "sha256": "937cf5a865ee9312e91343869882914f2b46934f2ddbf85d2d3b308ea88be44e"},
+      "bytecode.bin": {"bytes": 20041312, "sha256": "929753489573a779f6d2396deb39d35f313b0d6c05aad68562e487d4bfe33216"},
+      "hints.bin": {"bytes": 121513, "sha256": "7f601a68b732c9c72fbd7d5b26bf0529f16afacaad51df607a73c7638850c97e"},
+      "schedule.bin": {"bytes": 2924748, "sha256": "049ab4a52c6c4bbeb219af5d48bfb7a8a579d4004b62f38927cc5d0b969cc35e"},
+      "xmss-inputs.bin": {"bytes": 39488, "sha256": "fa9927a1f8b6a6b8b919acf0cb62537ab6b5345c4690ea80d630bad83fedaedc"},
+      "statement.bin": {"bytes": 32, "sha256": "3a57d5e7625424510bad108053f89cfaffcf0188586133cb6cc6867f8f851cc8"},
+      "seed.bin": {"bytes": 32, "sha256": "6f4689bba4a8110f97a4024f7dcf247c8b1464616cef2d658b9dbded7d2d4066"},
+      "bytecode-value.bin": {"bytes": 8, "sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"}
+    },
+    "execution": {
+      "cycles": 31140,
+      "memory_cells_used": 117322,
+      "rows": [3132, 2904, 18825, 2569, 719, 2991],
+      "memory_keccak256": "e7c2d337963bc1db2fe2d5dce2b920d0ca89332383eb661dc1f2401482b2d0c0"
+    }
+  },
+  "warmup": {
+    "lean_symlink": "/var/lib/orb-node/work/caches/xmss-hub-v3/sysroot-v4.35/bin/lean",
+    "lean_realpath": "/var/lib/orb-node/work/caches/xmss-hub-v3/elan/toolchains/leanprover--lean4---v4.35.0/bin/lean",
+    "native_c_cache_path": "LeanVmXmss/.lake/build/native-c-cache.json",
+    "native_c_cache_module_count": 99,
+    "imported_native_preserved": {
+      "olean": true,
+      "ir_export_obj": true,
+      "native_c_export_obj": true
+    }
+  },
+  "harvest": {
+    "source_mission_id": "36345237-85cd-4d69-9bfc-77d601c8fc31",
+    "source_machine_id": "mmebnuhpt9",
+    "manifest_sha256": "d2d68f217d11af1ca2533eadd50b853a04a3d1a1253660410b629408129de751",
+    "snapshot_name": "orb-snap-verity-core-xmss-hub-v3-warm-jzch",
+    "snapshot_label": "xmss-hub-v3-warm",
+    "snapshot_action_id": "1b84ba87-80cd-4287-88ac-d8082751be7c",
+    "goal_complete_warmup_done_at": "2026-11-09T14:54:46Z"
+  }
+}

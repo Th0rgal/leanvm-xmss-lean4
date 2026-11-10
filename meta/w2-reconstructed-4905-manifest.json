@@ -1,0 +1,22 @@
+{
+  "shard": "xmss1400-w2-pcs-whir-wire",
+  "archive_sha256": "f87bc43e4a4548e3c27e920dc644fd58f29abae049f6402cfd0d209a0f34cbfd",
+  "source": "61 edit replay seq 4216..4904 onto checkpoint 0dc9b774",
+  "files": 17,
+  "splice_ok": {
+    "syn_deref": "SPLICE_OK|syn_deref|stream=1886|merkle=3|wire_bytes=204289",
+    "syn_keccak": "SPLICE_OK|syn_keccak|stream=1886|merkle=3|wire_bytes=204553",
+    "xmss4": "SPLICE_OK|xmss4|stream=2038|merkle=4|wire_bytes=241553",
+    "xmss16": "SPLICE_OK|xmss16|stream=2086|merkle=4|wire_bytes=279705",
+    "syn_tiny": "SPLICE_OK|syn_tiny|stream=1886|merkle=3|wire_bytes=205377",
+    "syn_jump": "SPLICE_OK|syn_jump|stream=1886|merkle=3|wire_bytes=205057"
+  },
+  "file_sha256": {
+    "Tests/Pcs/Rust/src/main.rs": "9c7db75089409c7e9ad86c7059ef2596fb165270ae86e45a7a916173624383ca",
+    "Spec/Pcs/Whir.lean": "b78b90f1a233d715c7acef1585e1afa9a14d1985944d8643542b8f6bb7628525",
+    "Model/Pcs/Whir.lean": "eb0e8cab430da1fcefb94211cb645c4f906cacb6251ac3962a20e474cacfb4ec",
+    "Proofs/Pcs/Whir.lean": "084e89ac83bd59397ad796abf0eead585303a0e84e4ce132a0f32ce14aeb0c08",
+    "Tests/Pcs/WhirCheck.lean": "577238fba717e033d6a6bedf9d75ca317ac5ce0d19456807a086b0051ad98531"
+  },
+  "gap": "proveWhir_refines, proveStackedOpening_refines, stackedWeight_refines, provePcsOpen_refines are rfl but Model definitions diverge from Spec. WhirAxiomAudit and audit-spec not re-run. T| probes may remain in WhirCheck.lean."
+}

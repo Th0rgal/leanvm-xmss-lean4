@@ -1,0 +1,27 @@
+[package]
+name = "mutant-suite"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[[bin]]
+name = "mutant-suite"
+path = "src/main.rs"
+doc = false
+
+[dependencies]
+rec_aggregation = { features = ["signers-cache"], path = "/var/lib/orb-node/work/caches/xmss-hub-v3/references/leanVM/crates/rec_aggregation" }
+leanvm_core = { path = "/var/lib/orb-node/work/caches/xmss-hub-v3/references/leanVM/crates/leanvm_core" }
+lean_compiler = { path = "/var/lib/orb-node/work/caches/xmss-hub-v3/references/leanVM/crates/lean_compiler" }
+lean_da = { path = "/var/lib/orb-node/work/caches/xmss-hub-v3/references/leanVM/crates/lean_da" }
+keccak_gkr = { features = ["bench"], path = "/var/lib/orb-node/work/caches/xmss-hub-v3/references/leanVM/crates/keccak_gkr" }
+signatures = { path = "/var/lib/orb-node/work/caches/xmss-hub-v3/references/leanVM/crates/signatures" }
+primitives = { path = "/var/lib/orb-node/work/caches/xmss-hub-v3/references/leanVM/crates/primitives" }
+verifier = { path = "/var/lib/orb-node/work/caches/xmss-hub-v3/references/leanVM/crates/verifier" }
+bench = { path = "/var/lib/orb-node/work/caches/xmss-hub-v3/references/leanVM/crates/bench" }
+rand = "0.9"
+bincode = "1"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1

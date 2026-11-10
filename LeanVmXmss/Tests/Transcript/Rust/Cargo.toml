@@ -1,0 +1,12 @@
+[package]
+name = "shard-b-reference"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+
+[dependencies]
+primitives = { path = "../../../../references/leanVM/crates/primitives" }
+fiat_shamir = { path = "../../../../references/leanVM/crates/fiat_shamir" }
+verifier = { path = "../../../../references/leanVM/crates/verifier" }
+parallel = { path = "../../../../references/leanVM/crates/parallel" }

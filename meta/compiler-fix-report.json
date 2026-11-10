@@ -1,0 +1,222 @@
+{
+  "schema": "p0.compiler.fix.v1",
+  "created_utc": "2026-11-06T08:22:08.217422+00:00",
+  "base": "29d85f7da2d963750f77d76d5323408a73386f14",
+  "worktree": "/var/lib/orb-node/work/caches/p0-compiler-29d85f7/repair/checkout",
+  "patch": {
+    "path": "/var/lib/orb-node/work/caches/p0-compiler-29d85f7/compiler-fix.patch",
+    "bytes": 27150,
+    "sha256": "05d8024587ec0046b363a8821a899a5bd7c75a5eea56a68515dd558e1b8d526d",
+    "files": {
+      "lean/LeanNative/Backend/LLVM.lean": {
+        "before": "62548c42bd7d05823af82ef7bcceb31e511217f12472fe47d0d45eab331d96e1",
+        "after": "9b319d50d7c9bf2ab6198dd68652290fddef41a8adee7281d18a1e10d38196b1",
+        "bytes": 221025
+      },
+      "lean/LeanNative/Driver/BuildExe.lean": {
+        "before": "64f43940f0dc5ba113517bad66dcb27cb18ac0cbe58daaa839a7059e1ae890dd",
+        "after": "43ce3d562558347906b68f356fff194b87bd723431d760454a3e57b710bbbc26",
+        "bytes": 13707
+      },
+      "scripts/fixtures/BuildExeP0.lean": {
+        "before": null,
+        "after": "731cba740fb79059b3622458b246752bdbdf750e7a93dcba8c3b240c20972c56",
+        "bytes": 1696
+      },
+      "scripts/test_build_exe_p0.py": {
+        "before": null,
+        "after": "f80d05747e659ae7d3bb4fd730ad3614715f0b2e2806bffbba0b69c5c6fdbcfc",
+        "bytes": 7806
+      }
+    },
+    "apply_check": {
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  },
+  "changes": [
+    "Emit portable Lean-header runtime adapters beside the executable; resolve sysroot via LEAN_SYSROOT or Lean.findSysroot.",
+    "Lower exported scalar roots plus local call dependencies, retain genuine Lean-generated C IO main and host declarations, and link imported native objects.",
+    "Checked llvm-link --override replaces C kernel definitions before checked optimization; final linker sees one LLVM module and no duplicate-definition allowance.",
+    "UInt64 and USize use Lean heap boxing; UInt32 uses the installed runtime ABI; narrow integers retain scalar tags. Missing optional runtime providers trap instead of truncating.",
+    "Keep unboxed scalar libraries runtime-free; add full executable, actual runtime ABI, tool-failure and unsupported-export regressions."
+  ],
+  "canary": {
+    "status": "PASS",
+    "command": [
+      "python3",
+      "/var/lib/orb-node/work/caches/p0-compiler-29d85f7/repair/checkout/scripts/test_build_exe_p0.py"
+    ],
+    "result": {
+      "k": 262,
+      "e": 131,
+      "uint64": [
+        0,
+        9223372036854775808,
+        18446744073709551615
+      ],
+      "standalone": true,
+      "native_clmul": true
+    },
+    "vector_identity": {
+      "k": 262,
+      "e": 131,
+      "all_original_vectors_exact": true,
+      "original_vectors_sha256": "57ea2088f690ace8dae596d1e473d3e3e482288bf28e3433ad717ba0fdaf1677"
+    },
+    "executable": "/var/lib/orb-node/work/caches/p0-compiler-29d85f7/repair/tests/accepted/field-io",
+    "executable_sha256": "b75880bbd822b50342790cab25263e05187ee7a220fa87964a11b2339d2eeabd",
+    "compiler": "/var/lib/orb-node/work/caches/p0-compiler-29d85f7/repair/checkout/lean/.lake/build/bin/lean-native",
+    "compiler_sha256": "79b805002e329a6eee167403265daa91b50467a4169c8e735d0e843eca3cc6ba",
+    "main_origin": "Lean.Compiler.LCNF.emitC, not a hand-written C main",
+    "runtime_source": "/var/lib/orb-node/work/caches/p0-compiler-29d85f7/repair/tests/accepted/field-io.runtime.c",
+    "runtime_sha256": "83e4d14a6e2173b7bc0b22aab1f237478525b6def9c6a3a555d607d7c83dc878",
+    "standalone_scope": "Lean runtime statically linked; system libc/libm remain dynamic",
+    "ldd": "\tlinux-vdso.so.1 (0x00007fff717bf000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f2e06d34000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f2e06600000)\n\t/lib64/ld-linux-x86-64.so.2 (0x00007f2e06e33000)\n",
+    "symbol_owners": {
+      "p0_kmul": 1,
+      "p0_emul0": 1,
+      "p0_emul1": 1,
+      "p0_emul2": 1
+    },
+    "software_clmul64_symbol_present": false,
+    "p0_kmul_native_clmul_instructions": 3,
+    "minimal_io_uint32_build_rc": 0,
+    "minimal_io_uint32_run_rc": 0
+  },
+  "validation": {
+    "full_lean_build_rc": 0,
+    "scalar_14_tests_rc": 0,
+    "trust_20_tests_rc": 0,
+    "focused_p0_rc": 0,
+    "prescribed_ci_rc": 0,
+    "prescribed_ci_log": "/var/lib/orb-node/work/caches/p0-compiler-29d85f7/repair/evidence/isolated-ci-verify.json",
+    "ci_entrypoint_adaptation": "Unmodified CI gates in separate patched audit worktree; direct Lake build/stdin entrypoints redirected to turbo-lean build/eval. Exact adapted script and evaluated Lean snippets preserved in repair/evidence.",
+    "trusted_receipt": "/var/lib/orb-node/work/caches/p0-compiler-29d85f7/repair/evidence/ci-receipt.json",
+    "installed_turbo_typecheck_rc": {
+      "LLVM": 0,
+      "BuildExe": 0
+    },
+    "repo_turbo_typecheck_optout": "Standalone check refused stale imports under worktree opt-out; full native DAG build and trusted CI subsequently passed in isolated audit checkout.",
+    "cargo_check_rc": 0,
+    "cargo_tests_corrected_env_rc": 101,
+    "cargo_tests_log": "/var/lib/orb-node/work/caches/p0-compiler-29d85f7/repair/evidence/cargo-tests-corrected-env.json",
+    "cargo_tests_summary": "423 passed, 3 failed, 2 explicitly filtered; full suite is not green",
+    "cargo_failed_serial_retries": {
+      "0": {
+        "args": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release",
+          "--bin",
+          "turbo-lean",
+          "module_builder::unusable_system_sandbox_never_falls_back_to_project_bwrap",
+          "--",
+          "--exact",
+          "--test-threads=1"
+        ],
+        "cwd": "/var/lib/orb-node/work/caches/p0-compiler-29d85f7/repair/checkout",
+        "rc": 0,
+        "stdout": "\nrunning 1 test\ntest module_builder::unusable_system_sandbox_never_falls_back_to_project_bwrap ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 427 filtered out; finished in 0.00s\n\n",
+        "stderr": "   Compiling ring v0.17.14\n   Compiling rustls v0.23.46\n   Compiling rustls-webpki v0.103.16\n   Compiling ureq v2.12.1\n   Compiling turbo-lean v0.1.0 (/var/lib/orb-node/work/caches/p0-compiler-29d85f7/repair/checkout/crates/turbo-lean)\n    Finished `release` profile [optimized] target(s) in 54.07s\n     Running unittests src/main.rs (target/release/deps/turbo_lean-30b04c455e1a29bc)\n",
+        "seconds": 54.14081072807312
+      },
+      "1": {
+        "args": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release",
+          "--bin",
+          "turbo-lean",
+          "zygote::tests::test_daemon_eval_with_lake_input_dir_needs_tracks_edits_without_identity_mismatch",
+          "--",
+          "--exact",
+          "--test-threads=1"
+        ],
+        "cwd": "/var/lib/orb-node/work/caches/p0-compiler-29d85f7/repair/checkout",
+        "rc": 0,
+        "stdout": "\nrunning 1 test\ntest zygote::tests::test_daemon_eval_with_lake_input_dir_needs_tracks_edits_without_identity_mismatch ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 427 filtered out; finished in 1.23s\n\n",
+        "stderr": "    Finished `release` profile [optimized] target(s) in 0.04s\n     Running unittests src/main.rs (target/release/deps/turbo_lean-30b04c455e1a29bc)\n",
+        "seconds": 1.3006041049957275
+      },
+      "2": {
+        "args": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release",
+          "--bin",
+          "turbo-lean",
+          "zygote::tests::test_local_zygote_eval_aba_swap_never_poisons_eval_shm_cache",
+          "--",
+          "--exact",
+          "--test-threads=1"
+        ],
+        "cwd": "/var/lib/orb-node/work/caches/p0-compiler-29d85f7/repair/checkout",
+        "rc": 0,
+        "stdout": "\nrunning 1 test\ntest zygote::tests::test_local_zygote_eval_aba_swap_never_poisons_eval_shm_cache ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 427 filtered out; finished in 0.83s\n\n",
+        "stderr": "    Finished `release` profile [optimized] target(s) in 0.04s\n     Running unittests src/main.rs (target/release/deps/turbo_lean-30b04c455e1a29bc)\n",
+        "seconds": 0.8979806900024414
+      }
+    },
+    "initial_cargo_test_attempt": "Invalid harness environment: propagated worktree opt-out prevented fixture rebuilds, and system Git 2.43 failed required Git >=2.46. Initial failures retained; retry uses local Git 2.49 and default fixture rebuild policy.",
+    "git_diff_check": {
+      "args": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "compiler_unchanged_during_regressions": {
+      "before": "79b805002e329a6eee167403265daa91b50467a4169c8e735d0e843eca3cc6ba",
+      "after": "79b805002e329a6eee167403265daa91b50467a4169c8e735d0e843eca3cc6ba",
+      "unchanged": true,
+      "rc": [
+        0,
+        0
+      ]
+    }
+  },
+  "remaining_unsupported": {
+    "optimized_exported_IO": "[lean-native] Unsupported non-scalar exported return type of `action` type `IO UInt32` (lowered as `LeanNative.IR.LNIRType.objPtr`)",
+    "exported_E_aggregate": "[lean-native] Unsupported exported tuple parameter `a` in `emul`",
+    "exported_ByteArray_slice": "[lean-native] Unsupported non-scalar exported parameter `b` of `readWord` type `ByteArray` (lowered as `LeanNative.IR.LNIRType.sarray (LeanNative.IR.LNIRType.i8)`)",
+    "native_heap_ADT_mutation": "No new RC-ADT/heap LLVM lowering; existing rejection gates retained.",
+    "scope": "Host IO runs via stock Lean C and runtime; optimized kernels retain scalar-component interfaces. No P1 SIMD, generic parallel, slice, typed-AST crypto proof or runtime dispatch expansion.",
+    "import_linking": "Imported modules need existing .c.o.export objects in Lean build layout; arbitrary native shim-library discovery is not implemented.",
+    "toolchain": "Executed on Linux x86_64, Lean 4.35, system clang/LLVM 18. Build-exe requires compatible llvm-link and opt; other build-exe targets are not qualified here.",
+    "boxed_standalone_libraries": "Boxed entrypoints outside build-exe require the generated Lean runtime adapters; absent providers trap. Unboxed direct entrypoints remain runtime-free."
+  },
+  "preservation": {
+    "prior_evidence_files": 153,
+    "prior_evidence_unchanged": true,
+    "frozen_source_status": {
+      "args": [
+        "git",
+        "status",
+        "--porcelain"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "frozen_compiler_sha256": "0220ceb31f20eb0c90ba19b81f53790bd98cd8387fb412584c5923f91456e53d",
+    "snapshot_taken": false,
+    "snapshot_policy": "Latest explicit user instruction forbids snapshot_managed_machine; parent will harvest and snapshot unified hub.",
+    "machine_id": "mmy987xvnq",
+    "machine_name": "large-b",
+    "retain_vm_for_parent_minutes": 45,
+    "leave_online": true,
+    "commits_or_pushes": false,
+    "added_repo_comments_or_docs": false,
+    "before": "/var/lib/orb-node/work/caches/p0-compiler-29d85f7/repair/before",
+    "after": "/var/lib/orb-node/work/caches/p0-compiler-29d85f7/repair/after",
+    "all_evidence_root": "/var/lib/orb-node/work/caches/p0-compiler-29d85f7"
+  }
+}

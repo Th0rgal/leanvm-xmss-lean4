@@ -1,0 +1,32 @@
+[package]
+name = "shard-c-oracle"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+
+[[bin]]
+name = "shard-c-oracle"
+path = "src/main.rs"
+
+[[bin]]
+name = "schedule-export"
+path = "generated/lib.rs"
+
+[[bin]]
+name = "vm-synthetic"
+path = "src/synthetic.rs"
+
+[[bin]]
+name = "export-inputs"
+path = "src/export_inputs.rs"
+
+[dependencies]
+rec_aggregation = { features = ["signers-cache"], path = "/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/xmss-hub-unified/references/leanVM/crates/rec_aggregation" }
+leanvm_core = { path = "/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/xmss-hub-unified/references/leanVM/crates/leanvm_core" }
+primitives = { path = "/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/xmss-hub-unified/references/leanVM/crates/primitives" }
+signatures = { features = ["mock"], path = "/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/xmss-hub-unified/references/leanVM/crates/signatures" }
+
+[profile.release]
+lto = "thin"
+codegen-units = 1

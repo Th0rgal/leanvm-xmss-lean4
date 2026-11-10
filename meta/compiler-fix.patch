@@ -1,0 +1,481 @@
+diff --git a/lean/LeanNative/Backend/LLVM.lean b/lean/LeanNative/Backend/LLVM.lean
+index 5417f97..092e326 100644
+--- a/lean/LeanNative/Backend/LLVM.lean
++++ b/lean/LeanNative/Backend/LLVM.lean
+@@ -1991,8 +1991,14 @@ def emitRuntimeAndCAbiHelpers (optimized : Bool) (target : TargetArch := .x86_64
+       "  %ot = getelementptr inbounds i8, ptr %o, i64 6\n  %n8 = trunc i32 %nobjs to i8\n  store i8 %n8, ptr %ot, align 1\n" ++
+       "  %tg = getelementptr inbounds i8, ptr %o, i64 7\n  %t8 = trunc i32 %tag to i8\n  store i8 %t8, ptr %tg, align 1\n" ++
+       "  ret ptr %o\n}",
+-    s!"define weak_odr dso_local ptr @lean_native_box_u64(i64 %val) {attr} \{\nentry:\n  %sh = shl i64 %val, 1\n  %tagged = or i64 %sh, 1\n  %p = inttoptr i64 %tagged to ptr\n  ret ptr %p\n}",
+-    s!"define weak_odr dso_local i64 @lean_native_unbox_u64(ptr %boxed) {attr} \{\nentry:\n  %i = ptrtoint ptr %boxed to i64\n  %v = lshr i64 %i, 1\n  ret i64 %v\n}",
++    String.intercalate "\n\n" (([("u64", "i64"), ("usize", sigLLVMType target .usize), ("u32", "i32")]).flatMap fun (suffix, ty) =>
++      [("box", ty, "ptr"), ("unbox", "ptr", ty)].map fun (op, argTy, retTy) =>
++        let impl := s!"lean_native_runtime_{op}_{suffix}"
++        s!"declare extern_weak {retTy} @{impl}({argTy})\n" ++
++        s!"define weak_odr dso_local {retTy} @lean_native_{op}_{suffix}({argTy} %v) {attr} \{\nentry:\n" ++
++        s!"  %available = icmp ne ptr @{impl}, null\n  br i1 %available, label %ready, label %missing\n" ++
++        "missing:\n  call void @llvm.trap()\n  unreachable\nready:\n" ++
++        s!"  %r = call {retTy} @{impl}({argTy} %v)\n  ret {retTy} %r\n}"),
+     mkEnsureExclFn "lean_native_ensure_exclusive" true 3,
+     mkEnsureExclFn "lean_native_ensure_exclusive_uninit" false 3,
+     mkEnsureExclFn "lean_native_ensure_exclusive_e1" true 0,
+@@ -2366,6 +2372,18 @@ def isExternDecl (d : LNIRDecl) : Bool :=
+   | .letBind dst _ (.call fn _ _ true) (.ret retVar) => dst == retVar && fn == d.name
+   | _ => false
+ 
++def leanRuntimeC : String :=
++  "#include <lean/lean.h>\n" ++
++  "lean_object *lean_native_runtime_box_u64(uint64_t v) { return lean_box_uint64(v); }\n" ++
++  "uint64_t lean_native_runtime_unbox_u64(lean_object *v) { return lean_unbox_uint64(v); }\n" ++
++  "lean_object *lean_native_runtime_box_usize(size_t v) { return lean_box_usize(v); }\n" ++
++  "size_t lean_native_runtime_unbox_usize(lean_object *v) { return lean_unbox_usize(v); }\n" ++
++  "lean_object *lean_native_runtime_box_u32(uint32_t v) { return lean_box_uint32(v); }\n" ++
++  "uint32_t lean_native_runtime_unbox_u32(lean_object *v) { return lean_unbox_uint32(v); }\n"
++
++def runtimeBoxSuffix? : LNIRType → Option String
++  | .i64 => some "u64" | .usize => some "usize" | .i32 => some "u32" | _ => none
++
+ def emitLLVMABIWrapperDecl (d : LNIRDecl) (target : TargetArch := .x86_64) : String :=
+   if isExternDecl d || !(d.params.all (fun p => isABIThunkableType p.ty)) || !(isABIThunkableType d.retTy) then ""
+   else
+@@ -2375,26 +2393,31 @@ def emitLLVMABIWrapperDecl (d : LNIRDecl) (target : TargetArch := .x86_64) : Str
+     let (unboxLines, callArgs) := indexedParams.foldl (fun (lines, args) (idx, p) =>
+       if p.ty == .unit then
+         (lines, args ++ ["ptr null"])
++      else if let some suffix := runtimeBoxSuffix? p.ty then
++        let pTy := sigLLVMType target p.ty
++        (lines ++ [s!"  %unboxed_{idx} = call {pTy} @lean_native_unbox_{suffix}(ptr %abi_arg{idx})"],
++          args ++ [s!"{pTy} {sigLLVMAttr target p.ty}%unboxed_{idx}"])
+       else if isABIScalarIntType p.ty then
+         let pTy := sigLLVMType target p.ty
+         let pAttr := sigLLVMAttr target p.ty
+         let baseLines := [s!"  %raw_{idx} = ptrtoint ptr %abi_arg{idx} to i64", s!"  %unboxed_{idx} = lshr i64 %raw_{idx}, 1"]
+-        if pTy == "i64" then
+-          (lines ++ baseLines, args ++ [s!"i64 %unboxed_{idx}"])
+-        else
+-          (lines ++ baseLines ++ [s!"  %arg_tr_{idx} = trunc i64 %unboxed_{idx} to {pTy}"], args ++ [s!"{pTy} {pAttr}%arg_tr_{idx}"])
++        (lines ++ baseLines ++ [s!"  %arg_tr_{idx} = trunc i64 %unboxed_{idx} to {pTy}"],
++          args ++ [s!"{pTy} {pAttr}%arg_tr_{idx}"])
+       else (lines, args ++ [s!"ptr %abi_arg{idx}"])
+     ) ([], [])
+     let callArgsStr := String.intercalate ", " callArgs
+     let callAndRetLines :=
+       if d.retTy == .unit then
+         [s!"  call void @{fnSym}({callArgsStr})", "  %boxptr = inttoptr i64 1 to ptr\n  ret ptr %boxptr"]
++      else if let some suffix := runtimeBoxSuffix? d.retTy then
++        let rTy := sigLLVMType target d.retTy
++        [s!"  %ret_raw = call {sigLLVMAttr target d.retTy}{rTy} @{fnSym}({callArgsStr})",
++          s!"  %boxptr = call ptr @lean_native_box_{suffix}({rTy} %ret_raw)", "  ret ptr %boxptr"]
+       else if isABIScalarIntType d.retTy then
+         let rTy := sigLLVMType target d.retTy
+         let rAttr := sigLLVMAttr target d.retTy
+-        let callLines :=
+-          if rTy == "i64" then [s!"  %ret64 = call i64 @{fnSym}({callArgsStr})"]
+-          else [s!"  %ret_raw = call {rAttr}{rTy} @{fnSym}({callArgsStr})", s!"  %ret64 = zext {rTy} %ret_raw to i64"]
++        let callLines := [s!"  %ret_raw = call {rAttr}{rTy} @{fnSym}({callArgsStr})",
++          s!"  %ret64 = zext {rTy} %ret_raw to i64"]
+         callLines ++ ["  %shl = shl i64 %ret64, 1\n  %tagged = or i64 %shl, 1\n  %boxptr = inttoptr i64 %tagged to ptr\n  ret ptr %boxptr"]
+       else [ s!"  %ret = call ptr @{fnSym}({callArgsStr})\n  ret ptr %ret" ]
+     String.intercalate "\n" ([
+diff --git a/lean/LeanNative/Driver/BuildExe.lean b/lean/LeanNative/Driver/BuildExe.lean
+index cf329d1..1c52d4d 100644
+--- a/lean/LeanNative/Driver/BuildExe.lean
++++ b/lean/LeanNative/Driver/BuildExe.lean
+@@ -36,21 +36,7 @@ def resolveLeanSysroot : IO System.FilePath := do
+   if let some envRoot ← IO.getEnv "LEAN_SYSROOT" then
+     if !envRoot.isEmpty then
+       return System.FilePath.mk envRoot
+-  try
+-    Lean.findSysroot
+-  catch _ =>
+-    let home := (← IO.getEnv "HOME").getD ""
+-    let candidates := [
+-      s!"{home}/.elan/toolchains/leanprover--lean4---v4.35.0",
+-      "/var/lib/sandboxed-node/.elan/toolchains/leanprover--lean4---v4.35.0",
+-      "/var/lib/sandboxed-node/caches/elan/toolchains/leanprover--lean4---v4.35.0",
+-      "/var/lib/orb-node/work/caches/elan/toolchains/leanprover--lean4---v4.35.0"
+-    ]
+-    for c in candidates do
+-      let p := System.FilePath.mk c
+-      if ← p.pathExists then
+-        return p
+-    return System.FilePath.mk "/var/lib/sandboxed-node/.elan/toolchains/leanprover--lean4---v4.35.0"
++  Lean.findSysroot
+ 
+ /-- When `filePath` (e.g., `SnarkFast/Kernels.lean`) is an umbrella module that re-exports
+     domain submodules in `<filePath_without_.lean>/<Sub>.lean` (`Field`, `Ntt`, `Hashes`, `Pcs`),
+@@ -106,13 +92,29 @@ def ingestLeanSourceFile (filePath : String) (moduleName : String := "LeanNative
+     (arch : TargetArch := .x86_64) (allowRcAdt : Bool := false) : IO LNIRModule :=
+   normalizeAndInlineLocalDefs <$> withElaboratedFrontend filePath `LeanNativeInput (ingestAllLocalDecls moduleName arch allowRcAdt)
+ 
+-/-- Elaborate `filePath` with `Lean.Elab.runFrontend`, extracting both the Lean 4.31 C module code
+-    (`Lean.Compiler.LCNF.emitC modName`) and the lowered `LNIRModule` via `ingestAllLocalDecls`. -/
+ def emitLeanCFromSourceFile (filePath : String) (modName : Lean.Name := `Main)
+-    (arch : TargetArch := .x86_64) : IO (String × LNIRModule) :=
++    (arch : TargetArch := .x86_64) : IO (String × LNIRModule × Array String) :=
+   withElaboratedFrontend filePath modName do
+-    let mod ← ingestAllLocalDecls modName.toString arch
+-    return (← Lean.Compiler.LCNF.emitC modName, mod)
++    let env ← getEnv
++    let names ← Lean.Compiler.LCNF.getLocalImpureDecls
++    let mut selected := names.filter (fun n => (Lean.getExportNameFor? env n).isSome)
++    for _ in [:names.size] do
++      for n in selected do
++        if let some d ← Lean.Compiler.LCNF.getLocalImpureDecl? n then
++          if let .code c := d.value then
++            for callee in collectCodeLocalCallees names c do
++              if !selected.contains callee then selected := selected.push callee
++    let mod ← ingestModuleDecls selected modName.toString arch
++    let mut objects := #[]
++    let sysroot ← resolveLeanSysroot
++    for n in env.header.moduleNames do
++      let olean ← Lean.findOLean n
++      if !olean.toString.startsWith sysroot.toString then
++        let obj := ((olean.toString.replace "/lib/lean/" "/ir/").dropEnd 6).toString ++ ".c.o.export"
++        unless ← (System.FilePath.mk obj).pathExists do
++          throwError "[lean-native] missing native object for imported module {n}: {obj}"
++        objects := objects.push obj
++    return (← Lean.Compiler.LCNF.emitC modName, mod, objects)
+ 
+ /-- P-cert C4/C5 `build-exe` gate (fail closed, checked before any file is written): the Bridge already refuses
+     RC-ADT decls without `allowRcAdt`, but the LLVM backend accepts no heap code, so `build-exe` re-checks
+@@ -128,7 +130,7 @@ def buildNativeExecutable (filePath : String) (outBin : String) (optLevel : Stri
+   let sysroot ← resolveLeanSysroot
+   let hostArch : TargetArch :=
+     if System.Platform.target.startsWith "aarch64" || System.Platform.target.startsWith "arm64" then .arm64 else .x86_64
+-  let (cCode, rawMod) ← emitLeanCFromSourceFile filePath `Main hostArch
++  let (cCode, rawMod, importObjects) ← emitLeanCFromSourceFile filePath `Main hostArch
+   let (optMod, _) := LeanNative.Transform.runDefaultPipeline rawMod
+   if let some err := buildExeLLVMGate? rawMod optMod hostArch then throw <| IO.userError err
+   let superoptTgt : LeanNative.Transform.SuperoptTarget :=
+@@ -142,7 +144,6 @@ def buildNativeExecutable (filePath : String) (outBin : String) (optLevel : Stri
+     if telCfg.enabled then
+       let _ ← LeanNative.Transform.emitModuleTelemetryEvents telCfg superoptTgt false rawMod
+   let lnirLlPath := s!"{outBin}.lnir.ll"
+-  let lnirOptLlPath := s!"{outBin}.lnir.opt.ll"
+   let lnirLlText := LeanNative.Backend.LLVM.emitLLVMOptimized optMod hostArch
+   IO.FS.writeFile lnirLlPath lnirLlText
+ 
+@@ -155,14 +156,8 @@ def buildNativeExecutable (filePath : String) (outBin : String) (optLevel : Stri
+   let clangIncDir := (sysroot / "include" / "clang").toString
+   let libDir := (sysroot / "lib" / "lean").toString
+ 
+-  let relRuntime : System.FilePath := "runtime/lean_native_runtime.c"
+-  let absRuntime : System.FilePath := "/var/lib/spark-admin/jobs/3730b838-a03b-49e3-bbd2-eb51c132a4e7/lean-native/runtime/lean_native_runtime.c"
+-  let runtimePath ← if (← relRuntime.pathExists) then pure relRuntime.toString else pure absRuntime.toString
+-  let runtimeDir := ((System.FilePath.mk runtimePath).parent.getD (System.FilePath.mk "runtime")).toString
+-  let cOptScript : System.FilePath := ((System.FilePath.mk runtimeDir).parent.getD (System.FilePath.mk ".")) / "scripts" / "ln_c_opt.py"
+-  let cOptPath := if (← cOptScript.pathExists) then cOptScript.toString else "scripts/ln_c_opt.py"
+-  discard <| IO.Process.output { cmd := "python3", args := #[cOptPath, cPath, cPath] }
+-
++  let runtimePath := s!"{outBin}.runtime.c"
++  IO.FS.writeFile runtimePath LeanNative.Backend.LLVM.leanRuntimeC
+   let sysClang : System.FilePath := "/usr/bin/clang"
+   let tcClang : System.FilePath := sysroot / "bin" / "clang"
+   let clangCmd ←
+@@ -174,45 +169,29 @@ def buildNativeExecutable (filePath : String) (outBin : String) (optLevel : Stri
+ 
+   let clangEmitOut ← IO.Process.output {
+     cmd  := clangCmd
+-    args := #["-S", "-emit-llvm", optLevel, "-Xclang", "-disable-llvm-passes", "-DNDEBUG", "-march=native", s!"-I{incDir}", s!"-I{runtimeDir}"] ++ extraIncArgs ++ #[cPath, "-o", rawLlPath]
++    args := #["-S", "-emit-llvm", optLevel, "-Xclang", "-disable-llvm-passes", "-DNDEBUG", "-march=native",
++      s!"-I{incDir}"] ++ extraIncArgs ++ #[cPath, "-o", rawLlPath]
+   }
+   if clangEmitOut.exitCode != 0 then
+     throw <| IO.userError s!"clang -emit-llvm failed:\n{clangEmitOut.stderr}"
+ 
+-  let intrDecls := optMod.decls.filter fun d =>
+-    ["l_clmul64Hi", "l_clmul64", "l_gf2Affine", "l_eor3"].any fun s => (d.name.splitOn s).length > 1
+-  if !intrDecls.isEmpty then
+-    let intrPath := s!"{outBin}.intr.ll"
+-    IO.FS.writeFile intrPath ((LeanNative.Backend.LLVM.emitLLVMOptimized { optMod with decls := intrDecls } hostArch).replace ") #0 {" ") alwaysinline #0 {")
+-    if (← (System.FilePath.mk "/usr/lib/llvm-18/bin/llvm-link").pathExists) then
+-      discard <| IO.Process.output { cmd := "/usr/lib/llvm-18/bin/llvm-link", args := #["-S", rawLlPath, s!"--override={intrPath}", "-o", rawLlPath] }
+-    else
+-      discard <| IO.Process.output { cmd := "python3", args := #[cOptPath, "--override-ll", rawLlPath, intrPath, rawLlPath] }
++  let mergedLlPath := s!"{outBin}.merged.ll"
++  let mergeOut ← IO.Process.output {
++    cmd := "llvm-link"
++    args := #["-S", rawLlPath, s!"--override={lnirLlPath}", "-o", mergedLlPath]
++  }
++  if mergeOut.exitCode != 0 then
++    throw <| IO.userError s!"LLVM optimized definition merge failed:\n{mergeOut.stderr}"
+ 
+-  let optBin : System.FilePath := "/usr/lib/llvm-18/bin/opt"
+-  let hasOptBin ← optBin.pathExists
+-  let runOptPass (inLl outLl : String) (fallback : IO String) : IO Unit := do
+-    if hasOptBin then
+-      try
+-        let out ← IO.Process.output {
+-          cmd  := optBin.toString
+-          args := #["-S", "-passes=default<O3>,loop-vectorize,slp-vectorizer", "-vectorize-loops", "-vectorize-slp", inLl, "-o", outLl]
+-        }
+-        if out.exitCode == 0 then return ()
+-      catch _ => pure ()
+-    try
+-      let clangIrOut ← IO.Process.output {
+-        cmd  := clangCmd
+-        args := #["-x", "ir", optLevel, "-S", "-emit-llvm", "-Wno-override-module", inLl, "-o", outLl]
+-      }
+-      if clangIrOut.exitCode != 0 then IO.FS.writeFile outLl (← fallback)
+-    catch _ =>
+-      IO.FS.writeFile outLl (← fallback)
+-  runOptPass rawLlPath optLlPath (IO.FS.readFile rawLlPath)
+-  runOptPass lnirLlPath lnirOptLlPath (pure lnirLlText)
++  let optOut ← IO.Process.output {
++    cmd := "opt"
++    args := #["-S", "-passes=default<O3>,loop-vectorize,slp-vectorizer", mergedLlPath, "-o", optLlPath]
++  }
++  if optOut.exitCode != 0 then
++    throw <| IO.userError s!"LLVM optimization failed:\n{optOut.stderr}"
+ 
+   let isDarwin := (System.Platform.target.splitOn "darwin").length > 1 || (System.Platform.target.splitOn "apple").length > 1
+-  let linkInputs := if isDarwin then #[optLlPath, runtimePath] else #[optLlPath, lnirOptLlPath, runtimePath, "-Wl,--allow-multiple-definition"]
++  let linkInputs := #[optLlPath, runtimePath] ++ importObjects
+   let sysLibDir := (sysroot / "lib").toString
+   let hasStaticLeanRt ← ((sysroot / "lib" / "lean" / "libleanrt.a").pathExists)
+   let hasStaticInit ← ((sysroot / "lib" / "lean" / "libInit.a").pathExists)
+@@ -225,7 +204,7 @@ def buildNativeExecutable (filePath : String) (outBin : String) (optLevel : Stri
+   let runtimeLinkFlags : Array String ← do
+     if useStandaloneStatic then
+       let leanLibDir := sysroot / "lib" / "lean"
+-      let mut leanArchives := #[(leanLibDir / "libInit.a").toString]
++      let mut leanArchives := #[(leanLibDir / "libInit.a").toString, (leanLibDir / "libLean.a").toString]
+       if hasStaticStd then leanArchives := leanArchives.push (leanLibDir / "libStd.a").toString
+       leanArchives := leanArchives.push (leanLibDir / "libleanrt.a").toString
+       if (← (leanLibDir / "libleancpp.a").pathExists) then
+@@ -238,17 +217,14 @@ def buildNativeExecutable (filePath : String) (outBin : String) (optLevel : Stri
+         leanArchives ++ extStatic ++ #["-Wl,--end-group", "-lm", "-lpthread", "-ldl", "-lrt"])
+     else
+       pure #[s!"-L{libDir}", "-lleanshared", s!"-Wl,-rpath,{libDir}", "-lm", "-lpthread", "-ldl"]
+-  let mut linkOut ← IO.Process.output {
+-    cmd  := clangCmd
+-    args := #[optLevel, "-DNDEBUG", "-march=native", "-Wno-override-module", s!"-I{incDir}", s!"-I{runtimeDir}"] ++
+-      extraIncArgs ++ linkInputs ++ runtimeLinkFlags ++ #["-o", outBin]
++  let linkWith (flags : Array String) := IO.Process.output {
++    cmd := clangCmd
++    args := #[optLevel, "-DNDEBUG", "-march=native", "-Wno-override-module", s!"-I{incDir}"] ++
++      extraIncArgs ++ linkInputs ++ flags ++ #["-o", outBin]
+   }
++  let mut linkOut ← linkWith runtimeLinkFlags
+   if linkOut.exitCode != 0 && useStandaloneStatic && !cliArgs.contains "--standalone" then
+-    linkOut ← IO.Process.output {
+-      cmd  := clangCmd
+-      args := #[optLevel, "-DNDEBUG", "-march=native", "-Wno-override-module", s!"-I{incDir}", s!"-I{runtimeDir}"] ++
+-        extraIncArgs ++ linkInputs ++ #[s!"-L{libDir}", "-lleanshared", s!"-Wl,-rpath,{libDir}", "-lm", "-lpthread", "-ldl", "-o", outBin]
+-    }
++    linkOut ← linkWith #[s!"-L{libDir}", "-lleanshared", s!"-Wl,-rpath,{libDir}", "-lm", "-lpthread", "-ldl"]
+   if linkOut.exitCode != 0 then
+     throw <| IO.userError s!"clang native link failed:\n{linkOut.stderr}"
+ 
+diff --git a/scripts/fixtures/BuildExeP0.lean b/scripts/fixtures/BuildExeP0.lean
+new file mode 100644
+index 0000000..ca6a615
+--- /dev/null
++++ b/scripts/fixtures/BuildExeP0.lean
+@@ -0,0 +1,54 @@
++import LeanNative.IR.Types
++open LeanNative.IR
++
++@[noinline, export p0_kmul]
++def kmul (a b : UInt64) : UInt64 :=
++  let lo := clmul64 a b
++  let hi := clmul64Hi a b
++  lo ^^^ clmul64 hi 0x1b ^^^ clmul64 (clmul64Hi hi 0x1b) 0x1b
++
++@[noinline, export p0_emul0]
++def emul0 (a0 a1 a2 b0 b1 b2 : UInt64) : UInt64 :=
++  let p0 := kmul a0 b0
++  let p1 := kmul a1 b1
++  let p2 := kmul a2 b2
++  let c12 := kmul (a1 ^^^ a2) (b1 ^^^ b2) ^^^ p1 ^^^ p2
++  p0 ^^^ c12
++
++@[noinline, export p0_emul1]
++def emul1 (a0 a1 a2 b0 b1 b2 : UInt64) : UInt64 :=
++  let p0 := kmul a0 b0
++  let p1 := kmul a1 b1
++  let p2 := kmul a2 b2
++  let c01 := kmul (a0 ^^^ a1) (b0 ^^^ b1) ^^^ p0 ^^^ p1
++  let c12 := kmul (a1 ^^^ a2) (b1 ^^^ b2) ^^^ p1 ^^^ p2
++  c01 ^^^ c12 ^^^ p2
++
++@[noinline, export p0_emul2]
++def emul2 (a0 a1 a2 b0 b1 b2 : UInt64) : UInt64 :=
++  let p0 := kmul a0 b0
++  let p1 := kmul a1 b1
++  let p2 := kmul a2 b2
++  let c02 := kmul (a0 ^^^ a2) (b0 ^^^ b2) ^^^ p0 ^^^ p2
++  c02 ^^^ p1 ^^^ p2
++
++
++@[noinline, export p0_identity]
++def identity (x : UInt64) : UInt64 := x
++
++@[noinline, export p0_identity32]
++def identity32 (x : UInt32) : UInt32 := x
++
++@[noinline, export p0_identitySize]
++def identitySize (x : USize) : USize := x
++
++def main (args : List String) : IO Unit := do
++  let u := fun (s : String) => s.toNat!.toUInt64
++  match args with
++  | ["K", a, b] => IO.println (kmul (u a) (u b))
++  | ["E", a0, a1, a2, b0, b1, b2] =>
++    IO.println (emul0 (u a0) (u a1) (u a2) (u b0) (u b1) (u b2))
++    IO.println (emul1 (u a0) (u a1) (u a2) (u b0) (u b1) (u b2))
++    IO.println (emul2 (u a0) (u a1) (u a2) (u b0) (u b1) (u b2))
++  | ["I", x] => IO.println (identity (u x))
++  | _ => throw (IO.userError "expected K a b, E a0 a1 a2 b0 b1 b2, or I x")
+diff --git a/scripts/test_build_exe_p0.py b/scripts/test_build_exe_p0.py
+new file mode 100644
+index 0000000..474347e
+--- /dev/null
++++ b/scripts/test_build_exe_p0.py
+@@ -0,0 +1,145 @@
++import json
++import os
++import random
++import re
++import subprocess
++import tempfile
++import unittest
++from pathlib import Path
++
++ROOT = Path(__file__).resolve().parents[1]
++MASK = (1 << 64) - 1
++
++
++def kmul(a, b):
++    result = 0
++    for _ in range(64):
++        if b & 1:
++            result ^= a
++        a = ((a << 1) ^ (0x1b if a >> 63 else 0)) & MASK
++        b >>= 1
++    return result
++
++
++def emul(a, b):
++    result = [0] * 5
++    for i in range(3):
++        for j in range(3):
++            result[i + j] ^= kmul(a[i], b[j])
++    for j in (4, 3):
++        result[j - 3] ^= result[j]
++        result[j - 2] ^= result[j]
++    return result[:3]
++
++
++class BuildExeP0(unittest.TestCase):
++    def test_standalone_io_native_kernels_and_boxing(self):
++        with tempfile.TemporaryDirectory(prefix="build-exe-p0-") as tmp:
++            out = Path(os.environ.get("TURBO_P0_EVIDENCE_DIR", tmp)).resolve()
++            out.mkdir(parents=True, exist_ok=True)
++            exe = out / "field-io"
++            records = []
++
++            def run(args, expect=0, **kwargs):
++                p = subprocess.run(list(map(str, args)), text=True, capture_output=True,
++                                   cwd=ROOT / "lean", **kwargs)
++                records.append(dict(args=list(map(str, args)), rc=p.returncode,
++                                    stdout=p.stdout, stderr=p.stderr))
++                (out / "commands.json").write_text(json.dumps(records, indent=2))
++                self.assertEqual(p.returncode, expect, p.stderr + p.stdout)
++                return p.stdout
++
++            run([ROOT / "lean/.lake/build/bin/lean-native", "build-exe", "--input",
++                 ROOT / "scripts/fixtures/BuildExeP0.lean", "-o", exe, "--standalone"])
++            rng = random.Random(29385)
++            kv = [(0, 0), (0, 1), (1, MASK), (1 << 63, 2), (MASK, MASK),
++                  (0x123456789abcdef, 0xfedcba9876543210)]
++            kv += [(rng.getrandbits(64), rng.getrandbits(64)) for _ in range(256)]
++            ev = [([0, 1, 0], [0, 0, 1]), ([0, 0, 1], [0, 0, 1]),
++                  ([1, MASK, 1 << 63], [0xfedcba9876543210, 3, 7])]
++            ev += [([rng.getrandbits(64) for _ in range(3)],
++                    [rng.getrandbits(64) for _ in range(3)]) for _ in range(128)]
++            for a, b in kv:
++                self.assertEqual(int(run([exe, "K", a, b])), kmul(a, b))
++            for a, b in ev:
++                self.assertEqual(list(map(int, run([exe, "E", *a, *b]).split())), emul(a, b))
++            for value in (0, 1 << 63, MASK):
++                self.assertEqual(int(run([exe, "I", value])), value)
++            symbols = run(["nm", "--defined-only", exe])
++            (out / "symbols.txt").write_text(symbols)
++            for symbol in ("p0_kmul", "p0_emul0", "p0_emul1", "p0_emul2"):
++                self.assertEqual(len(re.findall(rf"^\w+ T {symbol}$", symbols, re.M)), 1)
++                disasm = run(["objdump", "-d", f"--disassemble={symbol}", exe])
++                (out / f"{symbol}.asm").write_text(disasm)
++                self.assertRegex(disasm, r"\bvp?clmul")
++                self.assertNotRegex(disasm, r"\bcall\w*\s")
++            self.assertNotIn("--allow-multiple-definition", (ROOT / "lean/LeanNative/Driver/BuildExe.lean").read_text())
++            sysroot = Path(os.environ["LEAN_SYSROOT"])
++            harness = out / "boxing.c"
++            harness.write_text('#include <lean/lean.h>\n#include <stdint.h>\n'
++                'extern lean_object *lean_native_abi_p0_identity(lean_object *);\n'
++                'extern lean_object *lean_native_abi_p0_identity32(lean_object *);\n'
++                'extern lean_object *lean_native_abi_p0_identitySize(lean_object *);\n'
++                'extern lean_object *lean_native_box_u64(uint64_t);\n'
++                'extern uint64_t lean_native_unbox_u64(lean_object *);\n'
++                'extern void lean_initialize_runtime_module(void);\n'
++                'int main(void) { lean_initialize_runtime_module();\n'
++                'uint64_t values[] = {0, UINT64_C(9223372036854775808), UINT64_MAX};\n'
++                'for (unsigned i=0; i<3; ++i) {\n'
++                'lean_object *a=lean_box_uint64(values[i]);\n'
++                'lean_object *b=lean_native_abi_p0_identity(a);\n'
++                'lean_object *c=lean_native_box_u64(values[i]);\n'
++                'if (lean_unbox_uint64(b)!=values[i] || lean_native_unbox_u64(a)!=values[i]\n'
++                ' || lean_unbox_uint64(c)!=values[i]) return 1;\n'
++                'lean_dec(a); lean_dec(b); lean_dec(c);\n'
++                'a=lean_box_uint32((uint32_t)values[i]); b=lean_native_abi_p0_identity32(a);\n'
++                'if (lean_unbox_uint32(b)!=(uint32_t)values[i]) return 2; lean_dec(a); lean_dec(b);\n'
++                'a=lean_box_usize((size_t)values[i]); b=lean_native_abi_p0_identitySize(a);\n'
++                'if (lean_unbox_usize(b)!=(size_t)values[i]) return 3; lean_dec(a); lean_dec(b);\n'
++                '} return 0; }\n')
++            run(["/usr/bin/clang", "-O3", "-march=native", "-ffunction-sections", "-fdata-sections",
++                 "-c", str(exe) + ".opt.ll", "-o", out / "program.o"])
++            run(["objcopy", "--redefine-sym", "main=lean_program_main", out / "program.o"])
++            run(["/usr/bin/clang", "-O2", "-I" + str(sysroot / "include"), harness,
++                 out / "program.o", str(exe) + ".runtime.c", "-Wl,--gc-sections",
++                 "-L" + str(sysroot / "lib/lean"), "-lleanshared",
++                 "-Wl,-rpath," + str(sysroot / "lib/lean"), "-o", out / "boxing"])
++            run([out / "boxing"])
++            bare = out / "bare.c"
++            bare.write_text('#include <stdint.h>\n'
++                'extern uint64_t p0_identity(uint64_t);\n'
++                'extern void *lean_native_abi_p0_identity(void *);\n'
++                'int main(int argc, char **argv) {\n'
++                'if (argc>1) lean_native_abi_p0_identity((void *)1);\n'
++                'return p0_identity(UINT64_MAX)!=UINT64_MAX; }\n')
++            run(["/usr/bin/clang", "-O2", "-march=native", bare, str(exe) + ".lnir.ll", "-o", out / "bare"])
++            run([out / "bare"])
++            run([out / "bare", "missing-runtime"], expect=-4)
++            for tool, message in (("llvm-link", "optimized definition merge failed"),
++                                  ("opt", "LLVM optimization failed")):
++                tools = out / (tool + "-failure")
++                tools.mkdir(exist_ok=True)
++                fault = tools / tool
++                fault.write_text("#!/bin/sh\nexit 73\n")
++                fault.chmod(0o755)
++                failed = out / (tool + "-preserved")
++                failed.write_bytes(b"previous executable")
++                run([ROOT / "lean/.lake/build/bin/lean-native", "build-exe", "--input",
++                     ROOT / "scripts/fixtures/BuildExeP0.lean", "-o", failed, "--standalone"],
++                    expect=1, env={**os.environ, "PATH": str(tools) + os.pathsep + os.environ["PATH"]})
++                self.assertIn(message, records[-1]["stderr"])
++                self.assertEqual(failed.read_bytes(), b"previous executable")
++            unsupported = out / "Unsupported.lean"
++            unsupported.write_text('@[export bad_kernel]\ndef bad (x : String) : String := x\n'
++                                   'def main : IO Unit := pure ()\n')
++            rejected = out / "rejected"
++            run([ROOT / "lean/.lake/build/bin/lean-native", "build-exe", "--input",
++                 unsupported, "-o", rejected, "--standalone"], expect=1)
++            self.assertIn("non-scalar", records[-1]["stderr"])
++            self.assertFalse(rejected.exists())
++            (out / "result.json").write_text(json.dumps(dict(k=len(kv), e=len(ev),
++                uint64=[0, 1 << 63, MASK], standalone=True, native_clmul=True)))
++
++
++if __name__ == "__main__":
++    unittest.main()

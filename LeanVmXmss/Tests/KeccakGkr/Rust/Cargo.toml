@@ -1,0 +1,23 @@
+[package]
+name = "keccak-gkr-oracle"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+
+[[bin]]
+name = "keccak-gkr-oracle"
+path = "src/main.rs"
+
+[dependencies]
+keccak_gkr = { path = "../../../../references/leanVM/crates/keccak_gkr" }
+leanvm_core = { path = "../../../../references/leanVM/crates/leanvm_core" }
+primitives = { path = "../../../../references/leanVM/crates/primitives" }
+fiat_shamir = { path = "../../../../references/leanVM/crates/fiat_shamir" }
+verifier = { path = "../../../../references/leanVM/crates/verifier" }
+rec_aggregation = { path = "../../../../references/leanVM/crates/rec_aggregation" }
+pcs = { path = "../../../../references/leanVM/crates/pcs" }
+
+[profile.release]
+lto = "thin"
+codegen-units = 1

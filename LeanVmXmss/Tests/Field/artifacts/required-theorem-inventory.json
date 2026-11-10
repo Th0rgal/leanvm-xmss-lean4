@@ -1,0 +1,23 @@
+{
+  "acceptance": "PENDING_KERNEL_CHECK",
+  "required": {
+    "mul_assoc": "K multiplicative associativity",
+    "emul_assoc": "E multiplicative associativity",
+    "mul_one_left": "K left multiplicative identity",
+    "emul_one_left": "E left multiplicative identity",
+    "emul_comm": "E multiplicative commutativity",
+    "emul_add_right": "E distributivity",
+    "mul_inv_nonzero": "K nonzero inverse law",
+    "emul_inv_nonzero": "E nonzero inverse law",
+    "decodeBytesK_encodeBytesK": "8-byte element roundtrip",
+    "decodeBytesE_encodeBytesE": "24-byte element roundtrip",
+    "encodeBytesK_decodeBytesK": "8-byte canonical image roundtrip",
+    "encodeBytesE_decodeBytesE": "24-byte canonical image roundtrip",
+    "frobenius_eq_pow": "Frobenius equals exponent 2^64",
+    "frobenius2_eq_pow": "second Frobenius equals exponent 2^128",
+    "norm_in_base": "extension norm has zero nonconstant limbs",
+    "inv_eq_pow": "Itoh-Tsujii inverse equals exponent 2^64 - 2",
+    "scaledMul_correct": "6-bit window table multiplication correctness"
+  },
+  "missing": {}
+}

@@ -1,0 +1,42 @@
+{
+  "shard": "W5",
+  "baseline": {
+    "vm": {"program": "syn_keccak", "instructions": 16, "keccak_rows": 2, "log_inv_rate": 1, "accepted": true, "stream_scalars": 1886, "merkle_batches": 3},
+    "eth": {"fixture": "xmss4", "records": 4, "log_inv_rate": 1, "accepted": true, "wire_bytes": 270953}
+  },
+  "mutants": [
+    {"category": 1, "name": "sig_leaf_index_bit", "level": "native", "rejected": true, "error": "verification_error"},
+    {"category": 1, "name": "sig_chain_value_bit", "level": "native", "rejected": true, "error": "verification_error"},
+    {"category": 1, "name": "guest_lx_path_sibling_forged", "level": "guest", "rejected": true, "error": "write-once conflict at cell 21356: had 0:8c678397899309d9:95d994b844e688d2, new 0:ffc35cf4cbd97:f33b3b2d44f6dec6 at pc 161276 (in __loop2 (line 3706))"},
+    {"category": 1, "name": "guest_chain_start_forged", "level": "guest", "rejected": true, "error": "write-once conflict at cell 21356: had 0:214f52b39f973712:b2e0271035bbb278, new 0:ffc35cf4cbd97:f33b3b2d44f6dec6 at pc 161276 (in __loop2 (line 3706))"},
+    {"category": 2, "name": "message_bit", "level": "native", "rejected": true, "error": "verification_error"},
+    {"category": 2, "name": "guest_claim_message_forged", "level": "guest", "rejected": true, "error": "write-once conflict at cell 36683: had 0:11bc4e5d9147ad59:20507c06054b39c5, new 0:11bc4e5d9147ad59:20507c06054b39c4 at pc 174924 (in __loop2 (line 3723))"},
+    {"category": 3, "name": "pubkey_bit", "level": "native", "rejected": true, "error": "verification_error"},
+    {"category": 3, "name": "wire_unsorted_signers", "level": "wire", "rejected": true, "error": "not a valid aggregate encoding"},
+    {"category": 3, "name": "wire_duplicate_signer", "level": "wire", "rejected": true, "error": "the snark did not verify: GKR layer 20: children do not match the sumcheck"},
+    {"category": 3, "name": "wire_pubkey_bit", "level": "wire", "rejected": true, "error": "not a valid aggregate encoding"},
+    {"category": 5, "name": "bus_table_scalar[10]", "level": "vm_stream", "rejected": true, "error": "GKR layer 17: children do not match the sumcheck"},
+    {"category": 5, "name": "bus_table_scalar[284]", "level": "vm_stream", "rejected": true, "error": "GKR layer 4: children do not match the sumcheck"},
+    {"category": 5, "name": "bus_table_scalar[558]", "level": "vm_stream", "rejected": true, "error": "table sumcheck terminal mismatch"},
+    {"category": 6, "name": "keccak_gkr_scalar[559]", "level": "vm_stream", "rejected": true, "error": "Keccak product polynomial does not carry the claim"},
+    {"category": 6, "name": "keccak_gkr_scalar[971]", "level": "vm_stream", "rejected": true, "error": "Keccak product polynomial does not carry the claim"},
+    {"category": 6, "name": "keccak_gkr_scalar[1384]", "level": "vm_stream", "rejected": true, "error": "Keccak layer evaluations do not match the sumcheck"},
+    {"category": 7, "name": "transcript_transposed", "level": "vm_stream", "rejected": true, "error": "invalid grinding nonce"},
+    {"category": 7, "name": "transcript_shifted", "level": "vm_stream", "rejected": true, "error": "announced size has a nonzero high limb"},
+    {"category": 7, "name": "pow_nonce[1875]", "level": "vm_stream", "rejected": true, "error": "invalid grinding nonce"},
+    {"category": 8, "name": "merkle_sibling_digest", "level": "vm_merkle", "rejected": true, "error": "Merkle root mismatch"},
+    {"category": 8, "name": "merkle_leaf_word", "level": "vm_merkle", "rejected": true, "error": "Merkle root mismatch"},
+    {"category": 8, "name": "xmss_auth_path_bit", "level": "native", "rejected": true, "error": "verification_error"},
+    {"category": 8, "name": "xmss_leaf_word_bit", "level": "native", "rejected": true, "error": "verification_error"},
+    {"category": 9, "name": "deferred_claim_point_bit", "level": "wire", "rejected": true, "error": "not a valid aggregate encoding"},
+    {"category": 9, "name": "public_input_word_bit", "level": "wire", "rejected": true, "error": "the snark did not verify: GKR layer 20: children do not match the sumcheck"},
+    {"category": 10, "name": "wire_count_prefix_bit", "level": "wire", "rejected": true, "error": "not a valid aggregate encoding"},
+    {"category": 10, "name": "wire_trailing_byte", "level": "wire", "rejected": true, "error": "not a valid aggregate encoding"},
+    {"category": 10, "name": "vm_proof_length_prefix_bit", "level": "vm_wire", "rejected": true, "error": "malformed or rejected"},
+    {"category": 10, "name": "vm_proof_trailing_byte", "level": "vm_wire", "rejected": true, "error": "non-canonical encoding (trailing byte)"}
+  ],
+  "rust_categories_covered": [1, 2, 3, 5, 6, 7, 8, 9, 10],
+  "mutant_count": 29,
+  "accepted_count": 0,
+  "all_rejected": true
+}

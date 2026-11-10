@@ -1,0 +1,11 @@
+.lake/
+build/
+target/
+*.olean
+*.ilean
+*.c.o
+*.c.o.export
+/oracle/xmss1400/*.bin
+!/oracle/xmss1400/bytecode-value.bin
+!/oracle/xmss1400/seed.bin
+!/oracle/xmss1400/statement.bin

@@ -1,0 +1,109 @@
+#!/usr/bin/env python3
+"""
+Synchronize or verify `<!-- inventory:KEY -->...<!-- /inventory:KEY -->` markers
+in `AGENTS.md` against the live `TurboLean/Spec.lean`, `LeanNative/Spec.lean`, and
+C-ABI export inventory in `crates/turbo-lean/build.rs`.
+"""
+import argparse
+import json
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+
+
+def compute_inventory() -> dict[str, str]:
+    build_rs = (ROOT / "crates" / "turbo-lean" / "build.rs").read_text(encoding="utf-8")
+    m_exports = re.search(r"const\s+TURBO_EXPORTS\s*:\s*&\[&str\]\s*=\s*&\[(.*?)\];", build_rs, flags=re.S)
+    assert m_exports is not None, "TURBO_EXPORTS not found in crates/turbo-lean/build.rs"
+    exports = re.findall(r'"([A-Za-z0-9_]+)"', m_exports.group(1))
+    cabi_exports = len(exports)
+    turbo_exports = sum(name.startswith("turbo_spec_") for name in exports)
+    leansys_exports = sum(name.startswith("leansys_") for name in exports)
+    leannative_exports = sum(name.startswith(("leannative_", "lean_native_")) for name in exports)
+    assert cabi_exports == turbo_exports + leansys_exports + leannative_exports, "Unknown C-ABI export family"
+
+    spec_src = (ROOT / "lean" / "TurboLean" / "Spec.lean").read_text(encoding="utf-8")
+    spec_theorems = len(re.findall(r"^(?:private\s+|protected\s+)?(?:theorem|lemma)\s+[A-Za-z0-9_'.]+", spec_src, flags=re.M))
+
+    ln_spec_src = (ROOT / "lean" / "LeanNative" / "Spec.lean").read_text(encoding="utf-8")
+    ln_spec_theorems = len(re.findall(r"^(?:private\s+|protected\s+)?(?:theorem|lemma)\s+[A-Za-z0-9_'.]+", ln_spec_src, flags=re.M))
+
+    turbo_bin = ROOT / "target" / "release" / "turbo-lean"
+    if turbo_bin.exists():
+        res = subprocess.run(
+            [str(turbo_bin), "--json", "audit-spec", str(ROOT / "lean" / "TurboLean" / "Spec.lean")],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        rep = json.loads(res.stdout)
+        tight = int(rep["tight_specs"])
+        total = int(rep["total_specs_audited"])
+        assert rep["ok"] and rep["vacuous_specs"] == 0 and rep["trivial_specs"] == 0, rep
+
+        res_ln = subprocess.run(
+            [str(turbo_bin), "--json", "audit-spec", str(ROOT / "lean" / "LeanNative" / "Spec.lean")],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        rep_ln = json.loads(res_ln.stdout)
+        ln_tight = int(rep_ln["tight_specs"])
+        ln_total = int(rep_ln["total_specs_audited"])
+        assert rep_ln["ok"] and rep_ln["vacuous_specs"] == 0 and rep_ln["trivial_specs"] == 0, rep_ln
+    else:
+        tight = spec_theorems
+        total = spec_theorems
+        ln_tight = ln_spec_theorems
+        ln_total = ln_spec_theorems
+
+    return {
+        "turbo_tight_specs": f"{tight}/{total}",
+        "leannative_tight_specs": f"{ln_tight}/{ln_total}",
+        "turbo_cabi_exports": str(cabi_exports),
+        "turbo_cabi_breakdown": (
+            f"`{turbo_exports} turbo_spec_*` + `{leansys_exports} leansys_*` + "
+            f"`{leannative_exports} leannative_*`/`lean_native_*`"
+        ),
+    }
+
+
+def apply_markers(text: str, inv: dict[str, str]) -> str:
+    for k, val in inv.items():
+        pattern = re.compile(
+            rf"(<!--\s*inventory:{re.escape(k)}\s*-->)(.*?)(<!--\s*/inventory:{re.escape(k)}\s*-->)",
+            re.DOTALL,
+        )
+        text = pattern.sub(rf"\g<1>{val}\g<3>", text)
+    return text
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--check", action="store_true", help="Verify markers match without writing")
+    ap.add_argument("--write", action="store_true", help="Update markers in AGENTS.md")
+    args = ap.parse_args()
+
+    inv = compute_inventory()
+    targets = [ROOT / "AGENTS.md"]
+    drifted = []
+    for p in targets:
+        orig = p.read_text(encoding="utf-8")
+        updated = apply_markers(orig, inv)
+        if orig != updated:
+            drifted.append(p.name)
+            if args.write:
+                p.write_text(updated, encoding="utf-8")
+
+    if args.check and drifted:
+        print(f"[sync_docs_inventory] DRIFT detected in: {', '.join(drifted)} (expected {inv})", file=sys.stderr)
+        return 1
+    print(f"[sync_docs_inventory] OK: {json.dumps(inv, sort_keys=True)}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

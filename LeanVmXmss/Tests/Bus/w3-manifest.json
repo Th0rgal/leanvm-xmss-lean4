@@ -1,0 +1,33 @@
+{
+  "name": "w3-flat-witness-bus",
+  "xmss1400": {
+    "timing_ms": {
+      "total": 165555,
+      "iv": 1657,
+      "exec": 14504,
+      "bundle": 97349,
+      "bus": 52045
+    },
+    "peak_rss_kib": 10923776,
+    "parity": "PASS",
+    "anchors": {
+      "witness": "EXEC|1146537|8668972|24|262098,237184,169439,159273,57477,261066|0",
+      "bus": "STREAM|954|d455e52fefd45ea541c03a0bdc4482a0b8f7813641128ecc4d5fb051d885b7f7"
+    }
+  },
+  "audits": {
+    "witness_flat_rejections": 0,
+    "bus_flat_rejections": 0
+  },
+  "files": {
+    "Model/Witness/Flat.lean": "858387dac38fd4bf64b311c4d366652bc8c3437310ab8ec5ec694082f302d584",
+    "Model/Bus/Flat.lean": "6925c6d479123174a379c8818cad0d8a209db8bf321d2c80e6a7d3155cfc56d1",
+    "Model/Bus/Native.lean": "2fcab5f333d0ed6a051cdf457b759c687c71543025be4ad62c5303e245d3c7fc",
+    "Proofs/Witness/FlatRefinement.lean": "12b6a93e42d409fc35ae6e90da66f419b4a1ea6762e7c8ae3dc029ce755b96f5",
+    "Proofs/Bus/FlatRefinement.lean": "c49573a51093797af8653ed01a17feb7af0714301fc142397b43d5453f4e7692",
+    "Tests/Witness/FlatCheck.lean": "0edb152294f45a4b59cd3e5043d7a47137ec5625e40ef687c0a4cd5c61ccadd5",
+    "Tests/Witness/FlatAxiomAudit.lean": "d870e7b474c9fd297e1d4b9a9afc0a27ff23cd4297e2fe7606902e40f87c144a",
+    "Tests/Bus/FlatCheck.lean": "6cd156e4c9356e5d2b02f6fd73f8c87a1489a319d2d4e186f8ed52aff2bd3f56",
+    "Tests/Bus/FlatAxiomAudit.lean": "54bacb8cd1368ad8296bc8ee8a1cf133dad8fbf83b471ec93c6e751cdd94fe21"
+  }
+}

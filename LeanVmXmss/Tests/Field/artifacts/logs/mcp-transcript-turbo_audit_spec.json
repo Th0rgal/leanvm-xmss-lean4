@@ -1,0 +1,201 @@
+[
+  {
+    "request": {
+      "jsonrpc": "2.0",
+      "id": 0,
+      "method": "tools/list",
+      "params": {}
+    },
+    "response": {
+      "id": 2,
+      "jsonrpc": "2.0",
+      "result": {
+        "tools": [
+          {
+            "description": "Stage 0 (CAS/hygiene) -> Stage 1 (TPU/LNIR Fast-Check + Vacuity Gate) -> Stage 2 (Zygote + Accelerators) surgical verification funnel with 4x-10x token compaction.",
+            "inputSchema": {
+              "properties": {
+                "compact": {
+                  "default": true,
+                  "type": "boolean"
+                },
+                "decl": {
+                  "type": "string"
+                },
+                "file": {
+                  "type": "string"
+                },
+                "project_dir": {
+                  "description": "Request workspace (overrides the server default)",
+                  "type": "string"
+                },
+                "tpu": {
+                  "default": true,
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "file"
+              ],
+              "type": "object"
+            },
+            "name": "turbo_agent_step"
+          },
+          {
+            "description": "Check a single declaration or file in isolation with PrefixEnv sharding and compact diagnostics.",
+            "inputSchema": {
+              "properties": {
+                "compact": {
+                  "default": true,
+                  "type": "boolean"
+                },
+                "decl": {
+                  "type": "string"
+                },
+                "file": {
+                  "type": "string"
+                },
+                "project_dir": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "file"
+              ],
+              "type": "object"
+            },
+            "name": "turbo_check_decl"
+          },
+          {
+            "description": "Unified multi-backend (`auto` | `cpu` | `gpu` | `tpu`) single-theorem or batch counterexample search with local witness re-certification (0 false positives).",
+            "inputSchema": {
+              "properties": {
+                "backend": {
+                  "default": "auto",
+                  "type": "string"
+                },
+                "compact": {
+                  "default": true,
+                  "type": "boolean"
+                },
+                "decl": {
+                  "type": "string"
+                },
+                "file": {
+                  "type": "string"
+                },
+                "items": {
+                  "type": "array"
+                },
+                "project_dir": {
+                  "description": "Request workspace (overrides the server default)",
+                  "type": "string"
+                },
+                "stmt_src": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": "turbo_fast_check"
+          },
+          {
+            "description": "Run Tier 1 (vacuity, tautology, constant shadowing) & Tier 2 (unused private decls, horizontal packing) specification audit on a Lean file or declaration in < 1 ms.",
+            "inputSchema": {
+              "properties": {
+                "decl": {
+                  "type": "string"
+                },
+                "file": {
+                  "type": "string"
+                },
+                "project_dir": {
+                  "description": "Request workspace (overrides the server default)",
+                  "type": "string"
+                },
+                "require_nonempty": {
+                  "default": false,
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "file"
+              ],
+              "type": "object"
+            },
+            "name": "turbo_audit_spec"
+          },
+          {
+            "description": "Git-aware incremental PR verifier: diffs against `--base` and verifies modified theorem proofs in isolation.",
+            "inputSchema": {
+              "properties": {
+                "base": {
+                  "default": "HEAD",
+                  "type": "string"
+                },
+                "disallow_statement_changes": {
+                  "default": false,
+                  "type": "boolean"
+                },
+                "mode": {
+                  "default": "trusted",
+                  "type": "string"
+                },
+                "project_dir": {
+                  "default": ".",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": "turbo_pr_verify"
+          },
+          {
+            "description": "Return live multi-backend & federated cluster health, Law 15 optimal route selection, and the Lean C-ABI vs Rust speed audit.",
+            "inputSchema": {
+              "properties": {
+                "bench_cabi": {
+                  "default": true,
+                  "type": "boolean"
+                },
+                "project_dir": {
+                  "description": "Request workspace (overrides the server default)",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": "turbo_cluster_status"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "request": {
+      "jsonrpc": "2.0",
+      "id": 27,
+      "method": "tools/call",
+      "params": {
+        "name": "turbo_audit_spec",
+        "arguments": {
+          "file": "Proofs/Field/NativeKernel.lean",
+          "project_dir": "/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/xmss-hub-unified/LeanVmXmss"
+        }
+      }
+    },
+    "response": {
+      "id": 27,
+      "jsonrpc": "2.0",
+      "result": {
+        "content": [
+          {
+            "text": "{\"cache_hit\":true,\"decl\":\"file\",\"droppable_hypotheses\":[],\"elapsed_ms\":1.445,\"file\":\"Proofs/Field/NativeKernel.lean\",\"forbidden_scope_decls\":[],\"horizontal_packing_warnings\":[],\"ms\":1.445,\"ok\":true,\"policy\":\"default\",\"shadowed_constants\":[],\"specs\":[{\"assessment\":\"non_vacuous_and_tight\",\"decl\":\"LeanVmXmss.Proofs.Field.nativeSelect_toBitVec\",\"droppable_hypotheses\":[],\"neg_witness\":\"postcondition_discriminates((nativeSelect a b i).toBitVec = if b.toBitVec.getLsbD (i.toNat % 64) then a.toBitVec else 0)\",\"pos_witness\":\"precondition_satisfiable(unconstrained_or_symbolic)\",\"stub_defs\":[],\"tight\":true,\"trivial\":false,\"vacuous\":false},{\"assessment\":\"non_vacuous_and_tight\",\"decl\":\"LeanVmXmss.Proofs.Field.nativeReduce_correct\",\"droppable_hypotheses\":[],\"neg_witness\":\"postcondition_discriminates(nativeReduce (UInt64.ofBitVec (p.setWidth 64))\\n      (UInt64.ofBitVec ((p >>> 64).setWidth 64)) = reduce p)\",\"pos_witness\":\"precondition_satisfiable(unconstrained_or_symbolic)\",\"stub_defs\":[],\"tight\":true,\"trivial\":false,\"vacuous\":false},{\"assessment\":\"non_vacuous_and_tight\",\"decl\":\"LeanVmXmss.Proofs.Field.nativeClmulLo_correct\",\"droppable_hypotheses\":[],\"neg_witness\":\"postcondition_discriminates((nativeClmulLo a b).toBitVec = (clmul a b).setWidth 64)\",\"pos_witness\":\"precondition_satisfiable(unconstrained_or_symbolic)\",\"stub_defs\":[],\"tight\":true,\"trivial\":false,\"vacuous\":false},{\"assessment\":\"non_vacuous_and_tight\",\"decl\":\"LeanVmXmss.Proofs.Field.nativeClmulHi_correct\",\"droppable_hypotheses\":[],\"neg_witness\":\"postcondition_discriminates((nativeClmulHi a b).toBitVec = (clmul a b >>> 64).setWidth 64)\",\"pos_witness\":\"precondition_satisfiable(unconstrained_or_symbolic)\",\"stub_defs\":[],\"tight\":true,\"trivial\":false,\"vacuous\":false},{\"assessment\":\"non_vacuous_and_tight\",\"decl\":\"LeanVmXmss.Proofs.Field.nativeMul_correct\",\"droppable_hypotheses\":[],\"neg_witness\":\"postcondition_discriminates(nativeMul a b = mul a b)\",\"pos_witness\":\"precondition_satisfiable(unconstrained_or_symbolic)\",\"stub_defs\":[],\"tight\":true,\"trivial\":false,\"vacuous\":false},{\"assessment\":\"non_vacuous_and_tight\",\"decl\":\"LeanVmXmss.Proofs.Field.nativeSquare_correct\",\"droppable_hypotheses\":[],\"neg_witness\":\"postcondition_discriminates(nativeSquare a = square a)\",\"pos_witness\":\"precondition_satisfiable(unconstrained_or_symbolic)\",\"stub_defs\":[],\"tight\":true,\"trivial\":false,\"vacuous\":false},{\"assessment\":\"non_vacuous_and_tight\",\"decl\":\"LeanVmXmss.Proofs.Field.nativeKaratsuba_correct\",\"droppable_hypotheses\":[],\"neg_witness\":\"postcondition_discriminates(nativeKaratsuba a b = karatsubaMul a b)\",\"pos_witness\":\"precondition_satisfiable(unconstrained_or_symbolic)\",\"stub_defs\":[],\"tight\":true,\"trivial\":false,\"vacuous\":false},{\"assessment\":\"non_vacuous_and_tight\",\"decl\":\"LeanVmXmss.Proofs.Field.nativeInv_correct\",\"droppable_hypotheses\":[],\"neg_witness\":\"postcondition_discriminates(nativeInv a = inv a)\",\"pos_witness\":\"precondition_satisfiable(unconstrained_or_symbolic)\",\"stub_defs\":[],\"tight\":true,\"trivial\":false,\"vacuous\":false},{\"assessment\":\"non_vacuous_and_tight\",\"decl\":\"LeanVmXmss.Proofs.Field.nativeEinv_correct\",\"droppable_hypotheses\":[],\"neg_witness\":\"postcondition_discriminates(nativeEinv a = einv a)\",\"pos_witness\":\"precondition_satisfiable(unconstrained_or_symbolic)\",\"stub_defs\":[],\"tight\":true,\"trivial\":false,\"vacuous\":false}],\"status\":\"ok\",\"stub_defs\":[],\"tight_specs\":9,\"total_specs_audited\":9,\"trivial_spec_names\":[],\"trivial_specs\":0,\"unused_private_decls\":[],\"vacuous\":false,\"vacuous_spec_names\":[],\"vacuous_specs\":0,\"verdict\":\"specs_audited\",\"warnings\":[]}",
+            "type": "text"
+          }
+        ],
+        "isError": false
+      }
+    }
+  }
+]

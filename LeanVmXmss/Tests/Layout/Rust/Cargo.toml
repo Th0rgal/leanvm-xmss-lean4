@@ -1,0 +1,15 @@
+[package]
+name = "layout-oracle"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+
+[[bin]]
+name = "layout-oracle"
+path = "src/main.rs"
+
+[dependencies]
+leanvm_core = { path = "../../../../references/leanVM/crates/leanvm_core" }
+primitives = { path = "../../../../references/leanVM/crates/primitives" }
+verifier = { path = "../../../../references/leanVM/crates/verifier" }

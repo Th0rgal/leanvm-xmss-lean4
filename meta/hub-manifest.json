@@ -1,0 +1,202 @@
+{
+  "status": "PASS_READY_FOR_SNAPSHOT",
+  "machine_id": "mmn4z6fyj2",
+  "source_snapshot": "orb-snap-default-xmss-p0-59c2984-recovere-95at",
+  "hub": "/var/lib/orb-node/work/caches/xmss-hub-unified",
+  "original_p0_sha256": {
+    "bin/leanvm": "81462675790464e48e63eb0259464f4439b1f7043385a0de5e16d24696805b37",
+    "fixtures/leaves.bin": "7ea4566b9bf56f22ae512c215f1f5cea369d85e86f458dc8419ab42046bd1a66",
+    "fixtures/ethereum-proof.bin": "bab93b8615b1094a6d4a59c7efbda144a6e41654a9cdb37327391494f26194a2",
+    "fixtures/vm-proof.bin": "a3ef22b26d8865fdee3778922d4a29346ee28ef2f8a42bb749e9b6b67173157f"
+  },
+  "seed_sha256": {
+    "compiler-fix.patch": "05d8024587ec0046b363a8821a899a5bd7c75a5eea56a68515dd558e1b8d526d",
+    "compiler-fix-report.json": "5a3b5e980359392001a5f0b4dd99f7b2a3fba17c93297788e73d42af3a07026a",
+    "hub-seed-payload.tar.gz": "c8da9cd7cfd95939ed4a8020ae4cc6ae2b12b23c6f6ffa2fdba4f1108478ed9b",
+    "hub-seed-payload.base64": "10d0771b267b107840b6677c9ee4a5c89ae9f0cfdecf9a92ab1ba750f6632dfd",
+    "field-sources-only.tar.gz": "cf3b8ce27a69ec0a0d9c0b43124005a35c8d1d43b04b113e98d8ba71d4119dd3"
+  },
+  "sources": {
+    "references/leanVM": {
+      "head": "59c2984df79cc9ff1914e547c5d5d390fffc8f3e",
+      "porcelain": "",
+      "remote": "https://github.com/leanEthereum/leanVM.git"
+    },
+    "references/turbo-lean-frozen": {
+      "head": "29d85f7da2d963750f77d76d5323408a73386f14",
+      "porcelain": "",
+      "remote": "https://github.com/Th0rgal/turbo-lean.git"
+    },
+    "toolchain/turbo-lean": {
+      "head": "29d85f7da2d963750f77d76d5323408a73386f14",
+      "porcelain": "M lean/LeanNative/Backend/LLVM.lean\n M lean/LeanNative/Driver/BuildExe.lean\n?? scripts/fixtures/\n?? scripts/test_build_exe_p0.py",
+      "remote": "https://github.com/Th0rgal/turbo-lean.git"
+    }
+  },
+  "patch_applied": true,
+  "binaries": {
+    "turbo-lean": {
+      "path": "/var/lib/orb-node/work/caches/xmss-hub-unified/bin/turbo-lean",
+      "target": "/var/lib/orb-node/work/caches/xmss-hub-unified/targets/rust/release/turbo-lean",
+      "sha256": "23db8f6e7e61e3210e213bd175d9374b50b0294207c48b039d5b42409aeb7f70"
+    },
+    "lean-native": {
+      "path": "/var/lib/orb-node/work/caches/xmss-hub-unified/bin/lean-native",
+      "target": "/var/lib/orb-node/work/caches/xmss-hub-unified/toolchain/turbo-lean/lean/.lake/build/bin/lean-native",
+      "sha256": "79b805002e329a6eee167403265daa91b50467a4169c8e735d0e843eca3cc6ba"
+    }
+  },
+  "durable_caches": {
+    "cargo-home": "/var/lib/orb-node/work/caches/xmss-hub-unified/cargo-home",
+    "targets/rust": "/var/lib/orb-node/work/caches/xmss-hub-unified/targets/rust",
+    "turbo-cache": "/var/lib/orb-node/work/caches/xmss-hub-unified/turbo-cache",
+    "xdg-cache": "/var/lib/orb-node/work/caches/xmss-hub-unified/xdg-cache",
+    "tmp": "/var/lib/orb-node/work/caches/xmss-hub-unified/tmp"
+  },
+  "elan_home": "/var/lib/orb-node/work/caches/elan",
+  "toolchain_versions": {
+    "lean": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)",
+    "cargo": "cargo 1.97.1 (c980f4866 2026-06-30)",
+    "trusted_git": "git version 2.49.1"
+  },
+  "smoke_tests": {
+    "field-verify": {
+      "command": "python3 /var/lib/orb-node/work/caches/xmss-hub-unified/LeanVmXmss/Tests/Field/verify.py",
+      "environment": "/var/lib/orb-node/work/caches/xmss-hub-unified/env.sh",
+      "exit_code": 0,
+      "started_unix": 1793956255.970058,
+      "elapsed_seconds": 148.6568477153778,
+      "log": "/var/lib/orb-node/work/caches/xmss-hub-unified/artifacts/field-verify.log",
+      "log_sha256": "ae7ec4013310ff6819bba52f721832efdf825db91765f8ddafec2bd06593d5a6"
+    },
+    "build-exe-p0": {
+      "command": "python3 /var/lib/orb-node/work/caches/xmss-hub-unified/toolchain/turbo-lean/scripts/test_build_exe_p0.py",
+      "environment": "/var/lib/orb-node/work/caches/xmss-hub-unified/env.sh",
+      "exit_code": 0,
+      "started_unix": 1793956256.0219216,
+      "elapsed_seconds": 6.100308179855347,
+      "log": "/var/lib/orb-node/work/caches/xmss-hub-unified/artifacts/build-exe-p0.log",
+      "log_sha256": "5341d557c5f84af7b3dc0af4fdbe48472fe26271aad18a1f09c229efa1794540"
+    }
+  },
+  "canary_evidence": {
+    "k": 262,
+    "e": 131,
+    "uint64": [
+      0,
+      9223372036854775808,
+      18446744073709551615
+    ],
+    "standalone": true,
+    "native_clmul": true
+  },
+  "secret_scan": {
+    "method": "Strict scan plus per-hit published archive Cargo.lock checksum and exact member match; binary hits require marker-only evidence without PEM body; no path-only exemptions",
+    "files": 91591,
+    "bytes": 15331720145,
+    "matching_paths": [],
+    "passed": true,
+    "git_repositories": [
+      {
+        "path": "/var/lib/orb-node/work/caches/xmss-p0-59c2984-recovery/repo",
+        "remotes": [
+          "origin\thttps://github.com/leanEthereum/leanVM.git (fetch)",
+          "origin\thttps://github.com/leanEthereum/leanVM.git (push)"
+        ]
+      },
+      {
+        "path": "/var/lib/orb-node/work/caches/xmss-hub-unified/toolchain/turbo-lean",
+        "remotes": [
+          "origin\thttps://github.com/Th0rgal/turbo-lean.git (fetch)",
+          "origin\thttps://github.com/Th0rgal/turbo-lean.git (push)"
+        ]
+      },
+      {
+        "path": "/var/lib/orb-node/work/caches/xmss-hub-unified/toolchain/turbo-lean/lean/.lake/packages/lean-sys",
+        "remotes": [
+          "origin\thttps://github.com/Th0rgal/lean-sys.git (fetch)",
+          "origin\thttps://github.com/Th0rgal/lean-sys.git (push)"
+        ]
+      },
+      {
+        "path": "/var/lib/orb-node/work/caches/xmss-hub-unified/references/turbo-lean-frozen",
+        "remotes": [
+          "origin\thttps://github.com/Th0rgal/turbo-lean.git (fetch)",
+          "origin\thttps://github.com/Th0rgal/turbo-lean.git (push)"
+        ]
+      },
+      {
+        "path": "/var/lib/orb-node/work/caches/xmss-hub-unified/references/leanVM",
+        "remotes": [
+          "origin\thttps://github.com/leanEthereum/leanVM.git (fetch)",
+          "origin\thttps://github.com/leanEthereum/leanVM.git (push)"
+        ]
+      }
+    ],
+    "provenance_path": "/var/lib/orb-node/work/caches/xmss-hub-unified/artifacts/secret-provenance.json",
+    "provenance_sha256": "e0be76df7d2c83b16779ee1faf7864f4e73caa487f2db659217b0bd18c74232f",
+    "proven_hit_count": 15
+  },
+  "blocker": null,
+  "snapshot": {
+    "requested_name": "xmss-hub-unified-v2",
+    "machine_id": "mmn4z6fyj2",
+    "supersedes": "orb-snap-default-xmss-hub-unified-v1-4pz2"
+  },
+  "build_note": "turbo-lean native DAG compiled modules; this frozen version does not link executable targets. One-time lake build lean-native bootstrapped final executable; no lake inner loops used.",
+  "verification": {
+    "log_directory": "/var/lib/orb-node/work/caches/xmss-hub-unified/artifacts/logs/verification-20261106T091056030082Z",
+    "vectors": 245,
+    "boundary_and_extension_vectors": 85,
+    "pseudorandom_vectors": 160,
+    "values_per_vector": 15,
+    "rust_lean_equal": true,
+    "vectors_sha256": "0bd0da25d2a07828c2cbf494971ed48048fd28c73d4864d4b5ef903518a5f949",
+    "output_sha256": "2c119329521a048a4ef62a07722785a2a70b0f25108324b7b63a4f99146f8496",
+    "sources": {
+      "Model/Field/Scalar.lean": "d3bcba5fee02876057914640708d4de61072e975ee0e3d9d606ac01b372423e1",
+      "Proofs/Field/Basic.lean": "752956d74f41e0717953c04379db66eeb89139d8865e5d701a1f5fcd983b10b6",
+      "Proofs/Field/Convolution.lean": "dc159e4d251ad996d5d23976f4e364c3fbe68925d716499afef31140185c9501",
+      "Proofs/Field/Extension.lean": "dba88f621b7b200577cabdaa76adae09696257fe5a30b3916cc2947c503297da",
+      "Proofs/Field/Quotient.lean": "6c7880540083a1b7d25168508ff5e9afdabf564f2502217b99b51858b35237aa",
+      "Proofs/Field/Reduction.lean": "1f29c860f17fb19f1a2cb8aeddd3115b083fb5771e9a23b1bb896818cd07ec70",
+      "Proofs/Field/Squares.lean": "5d44cca46643410f7b5601978141840578a9a92f9b925877975e63354acb324b",
+      "Spec/Field/Basic.lean": "299e29a09d38ca9c7b0db90b8e4c63979f344ea2151dd294f2aef0e0c2843961",
+      "Spec/Field/Quotient.lean": "9893e9c3872035c7195b500a4130efaf29aca056b73554c1e15dfe91d760b6aa",
+      "Tests/Field/AxiomAudit.lean": "d2435b690f1e6bdbaf727a52389a090655d6ba8a3cd1aeda418fc19fa4fd57d3",
+      "Tests/Field/Differential.lean": "3ec0252a8c17f46941f969f627167334ed1834ae7286a167c7ae09cae37d27d0",
+      "Tests/Field/Rust/Cargo.lock": "b6c1a17c5bfe81909e045df0adc790a02a2e2a4390d055908ea4d64cd758a8a0",
+      "Tests/Field/Rust/Cargo.toml": "0702de2d6c7d4eb744542133df535c0f12dc39b7689af58fb014fc38add02857",
+      "Tests/Field/Rust/src/main.rs": "8de36766600fc15aef7d3a22d393ddd2fe66945c1e1efca2807580675c68ab7c",
+      "Tests/Field/ToolProbe.lean": "7398beb00b01807122d71f0b2fb726125870c7de2fdb096710ad28cbadf26664",
+      "Tests/Field/Witnesses.lean": "9497eb8a20cbb513bcea33019c857569697f0619c0ed68b4da49ed5b8f9d5fca",
+      "Tests/Field/mcp_driver.py": "5501088e695f4313a466e70f6c22cc8eeef2fea55d0667060c8cbbf403ae0aee",
+      "Tests/Field/vectors.py": "1eb1b5752c59b85148d8f30c8049a5430a6a3974f1376f9f6595ad6268eee6ae",
+      "Tests/Field/verify.py": "580d8d8ec7eef927888e1a6b0b0d293366b7ff5e7d9181c4bc2c9e198f4c5e32",
+      "lake-manifest.json": "aa8a9b474a50eb82ba54e56215330ec9b2931d5feede750f41be8cbecd807c9c",
+      "lakefile.toml": "b37a78804722fc2f4fe0614bf278e2bba8bde604d8c6232dac2f93c44afbf851",
+      "lean-toolchain": "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"
+    }
+  },
+  "verifier_adaptation": {
+    "authorization": "Parent explicit authorization: definition-only audit no_specs_found exception, strict theorem/witness audits unchanged",
+    "before_sha256": "add87b8c8ddc2401cd5d6e962404c6bfcd8a19accf2f94dcf8eab09862399092",
+    "after_sha256": "580d8d8ec7eef927888e1a6b0b0d293366b7ff5e7d9181c4bc2c9e198f4c5e32"
+  },
+  "secret_provenance": {
+    "path": "/var/lib/orb-node/work/caches/xmss-hub-unified/artifacts/secret-provenance.json",
+    "sha256": "e0be76df7d2c83b16779ee1faf7864f4e73caa487f2db659217b0bd18c74232f",
+    "passed": true,
+    "published_crate_exact_files": 12,
+    "binary_marker_only": 3,
+    "unproven_paths": [],
+    "restored_partial_clone_metadata": [
+      {
+        "repository": "/var/lib/orb-node/work/caches/xmss-hub-unified/toolchain/turbo-lean/lean/.lake/packages/lean-sys",
+        "promisor_pack_count": 3,
+        "promisor": true,
+        "partialclonefilter": "tree:0"
+      }
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+[package]
+name = "shard-c-oracle"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+
+[[bin]]
+name = "schedule-export"
+path = "generated/lib.rs"
+
+[[bin]]
+name = "vm-synthetic"
+path = "src/synthetic.rs"
+
+[dependencies]
+rec_aggregation = { path = "../../../../references/leanVM/crates/rec_aggregation" }
+leanvm_core = { path = "../../../../references/leanVM/crates/leanvm_core" }
+primitives = { path = "../../../../references/leanVM/crates/primitives" }
+signatures = { path = "../../../../references/leanVM/crates/signatures" }

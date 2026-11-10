@@ -1,0 +1,24 @@
+[package]
+name = "whir-oracle"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+
+[[bin]]
+name = "whir-oracle"
+path = "src/main.rs"
+
+[dependencies]
+leanvm_core = { path = "../../../../references/leanVM/crates/leanvm_core" }
+keccak_gkr = { path = "../../../../references/leanVM/crates/keccak_gkr" }
+verifier = { path = "../../../../references/leanVM/crates/verifier" }
+rec_aggregation = { path = "../../../../references/leanVM/crates/rec_aggregation" }
+signatures = { path = "../../../../references/leanVM/crates/signatures" }
+primitives = { path = "../../../../references/leanVM/crates/primitives" }
+fiat_shamir = { path = "../../../../references/leanVM/crates/fiat_shamir" }
+bincode = "1"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1

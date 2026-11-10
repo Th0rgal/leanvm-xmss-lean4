@@ -1,0 +1,20 @@
+[package]
+name = "witness-l0-oracle"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+
+[[bin]]
+name = "witness-l0-oracle"
+path = "src/main.rs"
+
+[dependencies]
+leanvm_core = { path = "../../../../references/leanVM/crates/leanvm_core" }
+primitives = { path = "../../../../references/leanVM/crates/primitives" }
+fiat_shamir = { path = "../../../../references/leanVM/crates/fiat_shamir" }
+rec_aggregation = { path = "../../../../references/leanVM/crates/rec_aggregation" }
+
+[profile.release]
+lto = "thin"
+codegen-units = 1

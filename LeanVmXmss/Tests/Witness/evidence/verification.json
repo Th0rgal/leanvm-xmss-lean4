@@ -1,0 +1,148 @@
+{
+  "status": "COMPLETE",
+  "strict_audit": {
+    "count": 191,
+    "rejections": 0,
+    "axiom_audit_file": "Tests/Witness/AxiomAudit.lean"
+  },
+  "audit_spec": {
+    "file": "Proofs/Witness/Refinement.lean",
+    "status": "ok",
+    "total_specs_audited": 6,
+    "tight_specs": 6,
+    "trivial_specs": 0,
+    "vacuous_specs": 0
+  },
+  "parity": {
+    "synthetic": "SYNTHETIC_PARITY|PASS",
+    "xmss1400": "XMSS1400_PARITY|PASS",
+    "exec": "EXEC|1146537|8668972|24|262098,237184,169439,159273,57477,261066|0",
+    "announce": "ANNOUNCE|ccfaf3f3af61291db3713301f7443a6ad5cf735aa14b86a93877b74da5088ba8",
+    "root": "ROOT|5fc4b4066b9a06cd,a3cb82a1cfbbce13,0|ce8a26e028d05121,13fe621d082e4e47,0",
+    "chal": "CHAL|a2b418e76b2986b6,8a9c5a99bc97b4bc,7bf20810f39e8591|e7b79f503981b159,66f0c9544340bf84,ef204c9e0b191be"
+  },
+  "commands": [
+    {
+      "label": "build",
+      "argv": [
+        "turbo-lean",
+        "build",
+        "--project-dir",
+        ".",
+        "--max-memory-mb",
+        "6144",
+        "Spec.Witness.Basic",
+        "Model.Witness.Scalar",
+        "Proofs.Witness.Refinement",
+        "Tests.Witness.Check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Spec-Witness-Basic.lean",
+      "argv": [
+        "turbo-lean",
+        "check",
+        "--project-dir",
+        ".",
+        "--max-memory-mb",
+        "6144",
+        "--no-auto-worktree-link",
+        "Spec/Witness/Basic.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Model-Witness-Scalar.lean",
+      "argv": [
+        "turbo-lean",
+        "check",
+        "--project-dir",
+        ".",
+        "--max-memory-mb",
+        "6144",
+        "--no-auto-worktree-link",
+        "Model/Witness/Scalar.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Proofs-Witness-Refinement.lean",
+      "argv": [
+        "turbo-lean",
+        "check",
+        "--project-dir",
+        ".",
+        "--max-memory-mb",
+        "6144",
+        "--no-auto-worktree-link",
+        "Proofs/Witness/Refinement.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "check-Tests-Witness-Check.lean",
+      "argv": [
+        "turbo-lean",
+        "check",
+        "--project-dir",
+        ".",
+        "--max-memory-mb",
+        "6144",
+        "--no-auto-worktree-link",
+        "Tests/Witness/Check.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "axiom-audit",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "Tests/Witness/AxiomAudit.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "audit-spec-Proofs-Witness-Refinement.lean",
+      "argv": [
+        "turbo-lean",
+        "--json",
+        "audit-spec",
+        "Proofs/Witness/Refinement.lean"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "native-build",
+      "argv": [
+        "lean-native",
+        "build-exe",
+        "--dynamic-runtime",
+        "--input",
+        "Tests/Witness/Check.lean",
+        "-o",
+        "/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/xmss-hub-unified/bin/witness-check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "synthetic-parity",
+      "argv": [
+        "/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/xmss-hub-unified/bin/witness-check",
+        "synthetic"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "xmss1400-parity",
+      "argv": [
+        "/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/xmss-hub-unified/bin/witness-check",
+        "xmss",
+        "/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/p1-shard-c-out/oracle"
+      ],
+      "exit_code": 0
+    }
+  ]
+}

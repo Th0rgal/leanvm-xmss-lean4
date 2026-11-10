@@ -1,0 +1,204 @@
+[
+  {
+    "request": {
+      "jsonrpc": "2.0",
+      "id": 0,
+      "method": "tools/list",
+      "params": {}
+    },
+    "response": {
+      "id": 2,
+      "jsonrpc": "2.0",
+      "result": {
+        "tools": [
+          {
+            "description": "Stage 0 (CAS/hygiene) -> Stage 1 (TPU/LNIR Fast-Check + Vacuity Gate) -> Stage 2 (Zygote + Accelerators) surgical verification funnel with 4x-10x token compaction.",
+            "inputSchema": {
+              "properties": {
+                "compact": {
+                  "default": true,
+                  "type": "boolean"
+                },
+                "decl": {
+                  "type": "string"
+                },
+                "file": {
+                  "type": "string"
+                },
+                "project_dir": {
+                  "description": "Request workspace (overrides the server default)",
+                  "type": "string"
+                },
+                "tpu": {
+                  "default": true,
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "file"
+              ],
+              "type": "object"
+            },
+            "name": "turbo_agent_step"
+          },
+          {
+            "description": "Check a single declaration or file in isolation with PrefixEnv sharding and compact diagnostics.",
+            "inputSchema": {
+              "properties": {
+                "compact": {
+                  "default": true,
+                  "type": "boolean"
+                },
+                "decl": {
+                  "type": "string"
+                },
+                "file": {
+                  "type": "string"
+                },
+                "project_dir": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "file"
+              ],
+              "type": "object"
+            },
+            "name": "turbo_check_decl"
+          },
+          {
+            "description": "Unified multi-backend (`auto` | `cpu` | `gpu` | `tpu`) single-theorem or batch counterexample search with local witness re-certification (0 false positives).",
+            "inputSchema": {
+              "properties": {
+                "backend": {
+                  "default": "auto",
+                  "type": "string"
+                },
+                "compact": {
+                  "default": true,
+                  "type": "boolean"
+                },
+                "decl": {
+                  "type": "string"
+                },
+                "file": {
+                  "type": "string"
+                },
+                "items": {
+                  "type": "array"
+                },
+                "project_dir": {
+                  "description": "Request workspace (overrides the server default)",
+                  "type": "string"
+                },
+                "stmt_src": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": "turbo_fast_check"
+          },
+          {
+            "description": "Run Tier 1 (vacuity, tautology, constant shadowing) & Tier 2 (unused private decls, horizontal packing) specification audit on a Lean file or declaration in < 1 ms.",
+            "inputSchema": {
+              "properties": {
+                "decl": {
+                  "type": "string"
+                },
+                "file": {
+                  "type": "string"
+                },
+                "project_dir": {
+                  "description": "Request workspace (overrides the server default)",
+                  "type": "string"
+                },
+                "require_nonempty": {
+                  "default": false,
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "file"
+              ],
+              "type": "object"
+            },
+            "name": "turbo_audit_spec"
+          },
+          {
+            "description": "Git-aware incremental PR verifier: diffs against `--base` and verifies modified theorem proofs in isolation.",
+            "inputSchema": {
+              "properties": {
+                "base": {
+                  "default": "HEAD",
+                  "type": "string"
+                },
+                "disallow_statement_changes": {
+                  "default": false,
+                  "type": "boolean"
+                },
+                "mode": {
+                  "default": "trusted",
+                  "type": "string"
+                },
+                "project_dir": {
+                  "default": ".",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": "turbo_pr_verify"
+          },
+          {
+            "description": "Return live multi-backend & federated cluster health, Law 15 optimal route selection, and the Lean C-ABI vs Rust speed audit.",
+            "inputSchema": {
+              "properties": {
+                "bench_cabi": {
+                  "default": true,
+                  "type": "boolean"
+                },
+                "project_dir": {
+                  "description": "Request workspace (overrides the server default)",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": "turbo_cluster_status"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "request": {
+      "jsonrpc": "2.0",
+      "id": 4,
+      "method": "tools/call",
+      "params": {
+        "name": "turbo_fast_check",
+        "arguments": {
+          "file": "Tests/Field/ToolProbe.lean",
+          "decl": "LeanVmXmss.Tests.Field.toolProbe",
+          "project_dir": "/var/lib/sandboxed-node/.scratch/b2c1c0b9-4d89-47e7-ab06-c94b999a4cce/opencode/xmss-hub-unified/LeanVmXmss",
+          "backend": "cpu",
+          "compact": false
+        }
+      }
+    },
+    "response": {
+      "id": 4,
+      "jsonrpc": "2.0",
+      "result": {
+        "content": [
+          {
+            "text": "{\"abi_version\":2,\"active_trm_slice\":\"cpu_l1_s0_s1_int8 (d=16..32, h=32..64)\",\"backend\":\"lean_cabi_simd\",\"backend_pref\":\"cpu\",\"batch_size\":1,\"classified_target\":\"local_cpu_simd\",\"counterexample_triage\":null,\"decl\":\"LeanVmXmss.Tests.Field.toolProbe\",\"device\":\"Local x86_64 SIMD + Lean 4 C-ABI (7 cores)\",\"elapsed_ms\":0.086,\"eps_tier_permille\":0,\"failover_occurred\":false,\"false_positives\":0,\"lean_native_certified\":true,\"ok\":true,\"outgoing_ttl\":2,\"remote_contacted\":false,\"results\":[{\"cbv_offload_recommended\":false,\"decl\":\"LeanVmXmss.Tests.Field.toolProbe\",\"false_positives\":0,\"locally_recertified\":true,\"min_sample_idx\":18446744073709551615,\"ok\":true,\"router_action\":\"pass\",\"router_code\":0,\"status\":\"ok\",\"survival_permille\":880,\"winning_tactic_hint\":\"simp_only\"}],\"routed_node_id\":\"local:cpu-simd-cabi\",\"routed_target\":\"local_cpu_simd\",\"routing_reason\":\"explicit_backend_cpu\",\"speculate_forest_endpoint\":\"/v1/speculate-forest\",\"status\":\"ok\",\"suggested_hypothesis\":null,\"tpu_speculate_forest_endpoint\":\"/v1/tpu-speculate-forest\",\"trm_slice\":\"tpu_v6e_s4_bf16 (d=128, h=256)\",\"verified\":true,\"violations\":0,\"witness_summary\":null}",
+            "type": "text"
+          }
+        ],
+        "isError": false
+      }
+    }
+  }
+]

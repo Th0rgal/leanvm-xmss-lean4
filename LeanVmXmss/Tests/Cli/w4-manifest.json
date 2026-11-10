@@ -1,0 +1,99 @@
+{
+  "shard": "w4-cli-traces-tierb",
+  "description": "Pure-Lean aggregate_with_stats input/statement/hints pipeline, pluggable CLI prover, Rust e2e-oracle (trace export / serialized-proof verify / Ethereum wire verify / fresh inputs / benchmark), Tier B alternating benchmark runner with stats and RSS capture.",
+  "gate": {
+    "status": "COMPLETE",
+    "commands": 40
+  },
+  "axiom_audit": "CLI_STRICT_AUDIT_COUNT 130, CLI_STRICT_AUDIT_REJECTIONS 0 (LEAN_PATH=.lake/build/lib/lean lean Tests/Cli/AxiomAudit.lean; axioms within [propext, Quot.sound])",
+  "spec_frozen": "all 20 Spec/**/*.lean SHA-256 identical to the pre-edit baseline",
+  "e2e_oracle_subcommands": [
+    "export-trace <syn:name|xmss-dir> <out.json>",
+    "verify-trace <case> <trace.json>",
+    "export-proof <case> <out.bin> (bincode fixint CPU proof)",
+    "verify-vm <case> <proof.bin> (3 verify passes, ms, proof bytes, non-zero exit on tamper)",
+    "check-vm <dir> (execution.json parity)",
+    "export-eth-proof <dir> <out.bin> (aggregate + wire round trip + mirror statement)",
+    "verify-eth <xmss-inputs.bin> <eth-proof.bin> (3 verify passes, wire bytes, proof_size())",
+    "check-eth <dir> (legacy aggregate check)",
+    "gen-fresh-inputs <count> <seed_u64> <out-dir> [guest-dir]",
+    "benchmark <dir> [--repeat R] [--cooldown-ms M] [--log-inv-rate 1]"
+  ],
+  "source_sha256": {
+    "Model/Cli/Inputs.lean": "4c9735db7047d1e4cc38465acbfe1a2c557528f1e06adb81664ea8cd1b565cbf",
+    "Model/Cli/Aggregate.lean": "4b4a75f1ffc73cdf4eb06bdedba0ed43103b598d4d8d080854ad3b85967fbba9",
+    "Tests/Cli/Check.lean": "8252f9e82c40b379846f918aa4e8b6039fa4adceecb048dc245ad781d54fc61d",
+    "Tests/Cli/AxiomAudit.lean": "666425da7a6861946a98e9bfa42614e69a88d7d13631e7d76c59b6d4da419fdc",
+    "Tests/Cli/verify.py": "33f69facb8ab5f745b7d9168b44015a03732ec340701947cdcd6474c9cd660ad",
+    "Tests/Cli/tier_b_runner.py": "52d3a7b033207ca50db84d2ba759654fea60eb5e9f0b22a5e4ce527961906435",
+    "Tests/Cli/Rust/Cargo.toml": "265290b3707c033ad41fc07f014a789ca329798ad9f2ede9796afccd1138919c",
+    "Tests/Cli/Rust/Cargo.lock": "a40b53ed2b85caa85b1036678d80b5f89b3f76be1269e7a026a26f303bc1cb96",
+    "Tests/Cli/Rust/src/main.rs": "e207d1418e0ec1796fcc94a66616084dfeaf4837b84f3faad6e06251ee64874c"
+  },
+  "traces_sha256": {
+    "synthetics": "9d9120bbf1ef1de603973d926f72128acfcdc5275af94f6597d3a2fcedcc586b",
+    "syn_tiny": "f45b6d4c60349682403261805e2d75f8e0f02693504ff63143c6f3b948678724",
+    "syn_jump": "38936026110a068b141ee8a4085295d3c7a06006b3c3c87d44cecbe74562ab5a",
+    "syn_deref": "094666667b682d320c7302e526153b010fb0a05a5873b08b92f88f4005b9f763",
+    "syn_keccak": "01765458eaf0365b44afb7633e39a1674982a560f3bd5511fdcd1430c5dc9116",
+    "xmss4": "2570125b86e6c47c4508cdc79d8ffd2fa1d2a6801e04c6e1901f023319486127",
+    "xmss16": "c1d986bb71146ad7547cc8042c926bf963ac69a7555d218e4bf13576d6c0ca8c"
+  },
+  "tier_b": {
+    "protocol": "alternating fresh-process pairs (5 per fixture), --repeat 3, --log-inv-rate 1, 2s cooldown; per-pass unrounded nanos; arithmetic mean / sample stddev / 95% CI; ru_maxrss via /usr/bin/time -v; statements match across implementations; Rust verification ok",
+    "xmss4/rust-e2e": {
+      "mean_nanos": 7820277414,
+      "stddev_nanos": 971304062,
+      "ci95_nanos": 537943757,
+      "ru_maxrss_kib": 427580,
+      "passes": 15
+    },
+    "xmss4/lean-cli-stub": {
+      "mean_nanos": 19092787,
+      "stddev_nanos": 4621928,
+      "ci95_nanos": 2559793,
+      "ru_maxrss_kib": 92288,
+      "passes": 15
+    },
+    "xmss4/lean-cli-vm": {
+      "mean_nanos": 350913721,
+      "stddev_nanos": 62798335,
+      "ci95_nanos": 34780017,
+      "ru_maxrss_kib": 155640,
+      "passes": 15
+    },
+    "xmss16/rust-e2e": {
+      "mean_nanos": 10908101032,
+      "stddev_nanos": 1103207434,
+      "ci95_nanos": 610996675,
+      "ru_maxrss_kib": 410524,
+      "passes": 15
+    },
+    "xmss16/lean-cli-stub": {
+      "mean_nanos": 76389483,
+      "stddev_nanos": 18994494,
+      "ci95_nanos": 10519846,
+      "ru_maxrss_kib": 92160,
+      "passes": 15
+    },
+    "xmss16/lean-cli-vm": {
+      "mean_nanos": 583775700,
+      "stddev_nanos": 99200268,
+      "ci95_nanos": 54940741,
+      "ru_maxrss_kib": 161408,
+      "passes": 15
+    },
+    "smoke": "Rust-vs-Rust dry-run + Lean CLI stub on xmss4 (2 pairs) PASS"
+  },
+  "key_results": {
+    "cli_oracle_xmss4": "cycles=21465 memory_cells_used=65536 (matches execution.json)",
+    "cli_oracle_xmss16": "cycles=31140 memory_cells_used=117322 (matches execution.json)",
+    "cli_parity_xmss1400": "statement_digest=ded8679e548f3d7c810a3c50e1c69b4fed50773b35189e3a67d7728accafe423",
+    "cpu_proof_roundtrip": "bincode fixint serialized CPU proofs verify 3x from file (xmss4 240912 B, xmss16 proof bytes recorded in evidence); a tampered proof byte is rejected with non-zero exit",
+    "e2e_eth_xmss4": "export-eth-proof + verify-eth from xmss-inputs.bin alone PASS, wire_bytes=270681 proof_size()=270120",
+    "e2e_eth_xmss16": "export-eth-proof + verify-eth PASS, wire_bytes=256105",
+    "fresh_inputs": "gen-fresh-inputs <count> <seed> <dir>: fresh mock (pk, message, sig) records, Lean CLI reproduces statement + hints + VM execution",
+    "trace_walks": "phase-by-phase scalar counts close each proof stream exactly (announce/l0_root/bus_gkr/bus_memory/constraints_scalars/table_evals/r_pi/keccak_scalars/ring_switch_scalars/whir_scalars), one Merkle batch per WHIR level; traces additionally record bus_scalars, whir rounds, merkle_bytes, proof_size, ethereum_proof_wire_bytes"
+  },
+  "recovery_note": "VM mmn553y33j reaped owner_completed ~2 min after mission bcff8e91-0704-4645-b8f8-be659c232cfd finished; all 8 handwritten source files were deterministically replayed from persisted mission trace events and verified 8/8 byte-identical against the on-VM manifest SHA-256s. Cargo.lock (a40b53ed...) and deterministic traces regenerate offline on the integration VM via cargo build --release --offline and Tests/Cli/verify.py."
+}

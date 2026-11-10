@@ -1,0 +1,1402 @@
+{
+  "commits_made": false,
+  "compiler_p0_blockers": [
+    "Preinstalled lean-native built for Lean 4.31 vs image Lean 4.35; must rebuild from frozen turbo-lean@29d85f7",
+    "BuildExe runtime archive path hardcoded to stale machine path",
+    "BuildExe link order allows emitted C fallback symbols to shadow optimized LNIR/LLVM symbols",
+    "Tagged-pointer ABI wrapper drops UInt64 bit 63 when crossing boxed boundary (direct scalar ABI preserves all 64 bits)",
+    "System clang 18 rejects -march=znver5 while bundled Lean clang 23 supports it; default archive target-cpu was x86-64-v2",
+    "parFor allocates buffer and executes serially; tuple/ADT field mutation rejected in Stage 1B"
+  ],
+  "hub_v2_parent_validation": {
+    "catalog_note": "Evicted and absent from catalog (W10 launch action aa6cb63b-2b33-4996-8a36-4d5f78c4935a returned snapshot_not_found; third-party snapshots 2zvy/zafh unchanged). Historical restoration verification remains valid.",
+    "catalog_status": "evicted_absent_from_catalog",
+    "fanout_accepted": true,
+    "historical_catalog_size_bytes": 4420644,
+    "local_hub_manifest_sha256": "920e7e5db04119ffff8f68a8362d0e4d65caa7567a3bf63bc344f4a636438d46",
+    "local_verification_adaptation_diff_sha256": "d6b03f09add3e5d9ab38c2c89f40851100e56ffbe5e19203d2cf888621089483",
+    "probe_machine_id": "mm7qnrb8yz",
+    "probe_mission_id": "6ba6e383-b749-4763-bff4-83ccace0f29b",
+    "probe_status": "completed_DONE_vm_destroyed_fae85936-6c05-433e-9df6-59dd16c27574",
+    "provenance_expected_sha256": "e0be76df7d2c83b16779ee1faf7864f4e73caa487f2db659217b0bd18c74232f",
+    "provenance_local_status": "Exact post-finish secret-provenance.json harvested and verified (15/15 hits proven, 0 unproven; pre-finish copy deleted).",
+    "restoration_verified": true,
+    "snapshot": "orb-snap-default-xmss-hub-unified-v2-z2kt",
+    "source_machine_preserved": "mmn4z6fyj2 destroyed after gate closure via action e180b964-1f9b-4f4f-abbb-663aa8fadc6f"
+  },
+  "hub_v3_warm": {
+    "created_at": "2026-11-09T14:55:42.433514988Z",
+    "hub_root": "/var/lib/orb-node/work/caches/xmss-hub-v3",
+    "in_snapshot_post_warmup_manifest_sha256": "d2d68f217d11af1ca2533eadd50b853a04a3d1a1253660410b629408129de751",
+    "local_pre_warmup_manifest_sha256": "b31bed5f54a1e9dbf09db6c7947ee27bd726870bc132d407ddbd8d138499fd4a",
+    "native_c_cache_module_count": 99,
+    "recorded_at": "2026-11-09T15:23:00Z",
+    "seed_tar_sha256": "2eefb017557ca9240b0032a78af6ec5d2af17ed10e21a907be2cde54f6cd0d10",
+    "seed_tar_xz_sha256": "81ccb2e37eed8c9bf105cbc3d31821d937e58bca49d4fa24e1f11d5025d13c13",
+    "size_bytes": 18106494976,
+    "snapshot_action_id": "1b84ba87-80cd-4287-88ac-d8082751be7c",
+    "snapshot_label": "xmss-hub-v3-warm",
+    "snapshot_name": "orb-snap-verity-core-xmss-hub-v3-warm-jzch",
+    "sole_code_diff_vs_seed": "Tests/Bus/Check.lean calls proveBusAndConstraints program iv initInput bundle",
+    "source_machine_id": "mmebnuhpt9",
+    "source_machine_state": "destroyed",
+    "source_mission_id": "36345237-85cd-4d69-9bfc-77d601c8fc31",
+    "status": "ready"
+  },
+  "integration_policy": "No commits, pushes, PRs or merges authorized. Store durable artifacts exclusively under /var/lib/orb-node/work/caches/... and verify ready snapshots before destroying VMs.",
+  "last_updated": "2026-11-10T02:45:00Z",
+  "lifecycle_reconciliation": {
+    "baseline_recovery_vm_mmcdd8gqsp": "destroyed confirmed2026-11-06T07:47:52Z; ledger closed0.04862USD; ready snapshot95at preserves outputs",
+    "compiler_initial_snapshot_qu9k": "Evicted by 2-snapshot project cap; live compiler worker 13e62f04 explicitly steered NOT to call snapshot_managed_machine and instead emit compiler-fix.patch + synced cache on mmy987xvnq (TTL extended +60m)",
+    "hub_smoke_repair_in_progress": "09:15 sweep: Both smoke tests PASS exit0 (`build-exe-p0` log sha256 `5341d557c5f84af7b3dc0af4fdbe48472fe26271aad18a1f09c229efa1794540`, `field-verify` log sha256 `ae7ec4013310ff6819bba52f721832efdf825db91765f8ddafec2bd06593d5a6` with narrow `Spec`/`Model` `no_specs_found` handling only) and snapshot `orb-snap-default-xmss-hub-unified-v1-4pz2` reached `ready` (15637204992 B), while `orb-snap-default-xmss-p0-59c2984-recovere-95at` also remains `ready`. HOWEVER, seq188 classified the 15 PEM-marker hits by directory path (`rustup-home`/`targets`/`cargo-home/registry`) before consuming queued clarification `f27a2aff` (`429a1dbf-1a12-4c9c-9687-d5e8a9c3440e`). Steering `4ee3510c-eda2-481e-bb1c-0ab542429788` (`cd7221ad`) blocks fan-out from `4pz2` until per-hit Cargo.lock/.crate checksum + marker-only provenance, promisor config restoration, local manifest/diff harvest, and corrected snapshot `xmss-hub-unified-v2` are verified.",
+    "hub_v2_z2kt_eviction": "W10: orb-snap-default-xmss-hub-unified-v2-z2kt evicted and absent from catalog (action aa6cb63b-2b33-4996-8a36-4d5f78c4935a failed snapshot_not_found); historical restoration remains valid; third-party snapshots 2zvy/zafh unchanged; B v3 launched on C VM fork (action f15ce203-0124-47ca-b32d-0bc86479a95c) without snapshot mutation.",
+    "snapshot_retention_risk": "Core keeps only newest 2 project snapshots: orb-snap-default-xmss-p1-field-59c2984-zvue was evicted at ~09:02 when unrelated orb-snap-default-orb-state-r0-warm-t7ce entered (Field sources already safely preserved locally with verified SHA256). Creating xmss-hub-unified-v1 will evict 95at, so unified hub MUST retain full /var/lib/orb-node/work/caches/xmss-p0-59c2984-recovery intact."
+  },
+  "local_preserved_artifacts": {
+    "compiler-fix-bundle.tar.gz": "d18a248eb55d572d149892d261880eb7c88178d4f07af514014a199f62cd5b6e",
+    "compiler-fix-report.json": "5a3b5e980359392001a5f0b4dd99f7b2a3fba17c93297788e73d42af3a07026a",
+    "compiler-fix.patch": "05d8024587ec0046b363a8821a899a5bd7c75a5eea56a68515dd558e1b8d526d",
+    "dir": "/var/lib/sandboxed-node/23bad383-5b27-4b83-9a84-d86d34223509/preserved",
+    "field-sources-only.tar.gz": "cf3b8ce27a69ec0a0d9c0b43124005a35c8d1d43b04b113e98d8ba71d4119dd3",
+    "hub-manifest.json": "920e7e5db04119ffff8f68a8362d0e4d65caa7567a3bf63bc344f4a636438d46",
+    "hub-seed-payload.tar.gz": "c8da9cd7cfd95939ed4a8020ae4cc6ae2b12b23c6f6ffa2fdba4f1108478ed9b",
+    "secret-provenance.json": "e0be76df7d2c83b16779ee1faf7864f4e73caa487f2db659217b0bd18c74232f",
+    "shard_a_v1_reconstructed_source_dir": "preserved/p1-shards/shard-a/reconstructed-source (24/24 exact sources recovered; latest original archive not emitted, only earlier v1 archive preserved)",
+    "shard_a_v1_reconstructed_tgz": {
+      "sha256": "70bfd625f87602b963860ba9c254f1b16253c462473ef364ca7d576bc85a33f7",
+      "size_bytes": 16742
+    },
+    "shard_a_v2_compact_harvest": {
+      "archive": "shard-a-sources-and-summary.tar.gz",
+      "archive_bytes": 30546,
+      "archive_sha256": "d5c574406624110efbbc354bd78a0c89e5941c1bbcd432f6a96dd50f4f510bae",
+      "dir": "preserved/p1-shards/shard-a/v2-compact",
+      "field_19_bundle_archive": "field-a-v2-sources-19.tar.gz",
+      "field_19_bundle_bytes": 15697,
+      "field_19_bundle_sha256": "a6a5d7b640dc52bc39e3456c0c1b81701703d756a90dcaef08722afcf8ec290c",
+      "member_count": 36,
+      "member_sha256_confinement": "PASS (36/36)",
+      "sources_34_bundle_archive": "shard-a-v2-sources-34.tar.gz",
+      "sources_34_bundle_bytes": 26049,
+      "sources_34_bundle_sha256": "56288e24cd4ec96dbc9499beff5e07c45f8261ba35957af16e5a989fd3185bb5",
+      "status": "verify_exit_0_held_from_maxwell_pending_v3_substantial_lnir_and_mcp"
+    },
+    "shard_b_v1_reviews": [
+      "preserved/p1-shards/shard-b/maxwell-astra-review.json",
+      "preserved/p1-shards/shard-b/maxwell-gemini-review.json"
+    ],
+    "shard_b_v2_incomplete_harvest": {
+      "archive": "shard-b-keccak-transcript.tar.gz",
+      "archive_bytes": 20831,
+      "archive_sha256": "ed97ff00b9b27c909901fb0f3e2a7f8b80098a8d432236c44a78df0fd66da61f",
+      "dir": "preserved/p1-shards/shard-b/20261106T115352Z",
+      "member_count": 32,
+      "member_sha256_confinement": "PASS (32/32)",
+      "status": "INCOMPLETE_not_accepted"
+    },
+    "shard_c_v1_stale_checkpoint": {
+      "archive_bytes": 49090,
+      "archive_sha256": "ae85ddc014d75293aaed52c4e0736d3cb4f6633bf05ba4a6054b817a78b2be6e",
+      "derived_manifest_sha256": "23f6729bd0f0f1604fa323acec2a3981276aa845ff534c43d26c3d787c8c3c4c",
+      "dir": "preserved/p1-shards/shard-c/v1-partial-archive",
+      "harvest_verification_sha256": "75cec0c118af9ceec865915c4c31a734f46f3fb75a0afeb5ecbcbc9a0795dfd6",
+      "member_count": 63,
+      "status": "stale_before_full_vm_pass_not_accepted"
+    },
+    "shard_c_w10_fresh_checkpoint": {
+      "archive": "shard-c-xmss-vm-20261106T115447Z.tar.gz",
+      "archive_bytes": 60762,
+      "archive_sha256": "21a44bbf6160e6a2b84c6ab903d8abd735ae8ed16e333ffa1227efd2ecb47541",
+      "dir": "preserved/p1-shards/shard-c/20261106T115447Z",
+      "manifest_status": "INCOMPLETE (full VM PASS)",
+      "member_count": 80,
+      "member_sha256_confinement": "PASS (80/80)",
+      "status": "INCOMPLETE_not_accepted"
+    },
+    "shard_c_w11_checkpoint": {
+      "archive": "shard-c-w11-20261106T131309Z.tar.gz",
+      "archive_bytes": 14704,
+      "archive_sha256": "7c4a8225f8e3c72b738f7f94e0c5c4c9f6646bd895177ffa4f3c79f3b370077c",
+      "dir": "preserved/p1-shards/shard-c/20261106T131309Z",
+      "manifest_status": "BLOCKED_PARTIAL (PowersValid 16 strict specs PASS, 10 synthetic diffs PASS, 1 LCNF lowered; pre-Field-delivery)",
+      "member_count": 18,
+      "member_sha256_confinement": "PASS (18/18)",
+      "status": "INCOMPLETE_not_accepted"
+    },
+    "v2-restoration-probe-receipt.json": "d84ba5a5b75152f5c9694c393ce1c08542da290b335f0fb573f2a95f1fe07f8d",
+    "verification-adaptation.diff": "d6b03f09add3e5d9ab38c2c89f40851100e56ffbe5e19203d2cf888621089483"
+  },
+  "next_check": "Wakeup #23: Sweep A 2c3e44ff (mm6zs2b5gd), B v4 a54855c3 (mm3j2ada6y), and C v3 533f8bfc (mmfqv4fzwx). Important: both B v4 and C v3 were forked from A VM mm6zs2b5gd, so B v4 may NOT actually have B v3's 16:29Z tree on disk (it may only have hub-v2 / B v2 state unless B v4 recovers from local preserved/p1-shards/shard-b/20261106T115352Z); inspect B v4's first tool calls immediately and deliver B v2 archive ed97ff00... + Field bundle 2d23ba3a... if its disk lacks B v3 state! Similarly inspect C v3's disk inventory and deliver W11 delta 7c4a8225... if missing. Check A progress on 7/7 MCP + non-standalone LNIR + verify.py.",
+  "objective": "Lean 4 native full leanVM XMSS1400 prover; unchanged verifier; reproducibly faster and lower RSS on Boat",
+  "observed_p0_metrics_unpreserved_initial_run": {
+    "cycles": 1146537,
+    "ethereum_proof_wire_bytes": 448833,
+    "machine": "Boat xlarge-c (mmkwmn28jt, AMD Ryzen 9950X 16 vCPU, auto-reaped before artifact harvest)",
+    "peak_rss_bytes": 6330331136,
+    "peak_rss_gib": 5.895580291748047,
+    "phase_breakdown_tracing_ms": {
+      "build_witness": 53.8,
+      "commit_ntt_merkle": 198.0,
+      "execute_program": 193.0,
+      "keccak_reduction": 438.0,
+      "pcs_open": 269.0,
+      "prove_bus": 448.0,
+      "prove_constraints": 58.5
+    },
+    "proving_mean_s": 1.624,
+    "proving_passes_s": [
+      1.543,
+      1.711,
+      1.619
+    ],
+    "verifying_mean_ms": 11.03,
+    "vm_proof_bytes": 358656
+  },
+  "p1_accepted": true,
+  "p1_active_shards": {
+    "shard_a_field": {
+      "acceptance_status": "NOT_ACCEPTED",
+      "action_id": "2c436295-df17-46d0-bbd2-55a36fe79a8e",
+      "cache_out": "/var/lib/orb-node/work/caches/p1-shard-a-out/",
+      "field_basic_axioms": "Compiler inventory total=559 theorems=379 unsafe=0 extern=0 unsafe_rec=0; axiom whitelist propext and Quot.sound",
+      "field_basic_sha256": "496122551dd021bde21fb9872a035fceaf289fe2ce54f418f47141a8ae4e74a2",
+      "field_basic_v2_sha256": "d49923be4522321de1e1c7cbd2e65d31ee0480a5442abd60fd7546b96b1b4f3c",
+      "field_basic_w12_sha256": "2519ed3878ae7346ee140d2c414daf6fe84d88a291a2aed04b4e719bcce238f9",
+      "field_transport_status": "19-file v2 bundle (a6a5d7b6...) INSTALLED on C and B v3; updated structural Spec/Field/Basic.lean (2,206 B, SHA 2519ed38...) harvested at preserved/p1-shards/shard-a/v3-basic-structural/ and delivered to B v3 (09075735) and C (89051e47)",
+      "health": "active_healthy",
+      "latest_sweep": "2026-11-06 W17: Isolated carryless mul LNIR binary passes 406/406 vectors; all 3 MCP tools pass on Associativity.lean (240s timeout, 16 specs, 0 vacuous) and Basic.lean. Full field-native module build (with inv/Karatsuba) still hits timeout, and Codecs.lean isolated MCP check hits olean search-path freshness. Worker active; VM expires 16:38:24Z.",
+      "launch_action_status": "completed",
+      "machine_expires_at": "2026-11-06T20:08:24.722120061Z",
+      "machine_id": "mm6zs2b5gd",
+      "machine_name": "large-m",
+      "mission_id": "2c3e44ff-1959-42c5-b1f5-a571308efebd",
+      "node_id": "managed-mm6zs2b5gd",
+      "owned_paths": [
+        "LeanVmXmss/{Spec,Model,Proofs,Tests}/Field/**"
+      ],
+      "previous_sweep_1007z": "10:07Z PARTIAL: worker acknowledged steering dcadc06e-18ca-4d8c-9fbc-0e7273f105bb; adding explicit theorem-inventory gate in verify.py so missing algebra/codec/Frobenius proofs fail acceptance, and actively closing remaining obligations.",
+      "track": "xmss1400-p1-shard-a-v3",
+      "v1_action_id": "ae8bd2b9-9f83-4913-bcaa-7a59f62ee10a",
+      "v1_machine_id": "mmwdzj45wu",
+      "v1_machine_name": "large-b",
+      "v1_machine_status": "destroyed_owner_completed",
+      "v1_mission_id": "d855332a-b203-407c-b322-ab76940eb754",
+      "v1_source_recovery": {
+        "archive_note": "Latest original archive not emitted; only earlier v1 archive preserved",
+        "reconstructed_dir": "preserved/p1-shards/shard-a/reconstructed-source",
+        "reconstructed_tgz_bytes": 16742,
+        "reconstructed_tgz_sha256": "70bfd625f87602b963860ba9c254f1b16253c462473ef364ca7d576bc85a33f7",
+        "recovered_sources": "24/24 exact sources"
+      },
+      "v1_status": "PARTIAL_BLOCKED (11 missing obligations)",
+      "v2_compact_archive_sha256": "d5c574406624110efbbc354bd78a0c89e5941c1bbcd432f6a96dd50f4f510bae",
+      "v2_machine_id": "mmgu95ufvs",
+      "v2_machine_status": "destroyed_owner_completed",
+      "v2_mission_id": "41108234-5367-4582-afcf-7924f6e240c0",
+      "v2_status": "completed_verify_exit_0_harvested (held from Maxwell to close substantial LNIR>=5 kernels, extended MCP, and isUnsafe/isExtern audit in v3)",
+      "v2_track": "xmss1400-p1-shard-a-v2",
+      "v3_fork_action_id": "f7b71a5f-e313-41fd-81e2-6c7729192950",
+      "v3_fork_status": "completed (forked from mmhjuuwuhn -> mm6zs2b5gd / large-m)",
+      "v3_source_bundle_delivery_actions": [
+        "4dd786f8-0a1a-4987-be39-90faf97782ed",
+        "5961ef42-35fa-442b-a9bb-38648bbd809d",
+        "5ade725c-9aad-4725-b739-e8061f6f74f0",
+        "dea9c25e-3a57-4da4-ba97-fa6dbaf252da"
+      ],
+      "w13_audit_exception_action_id": "61b3809d-9227-46ac-9b94-3184afa77fdb",
+      "w13_audit_exception_status": "RETRACTED by 574a2b2b-e5c9-4ea3-899d-0ebc80ebef8e; strict gate restored",
+      "w14_natrec_action_id": "6adc6771-7ed1-401f-b484-b1a8e604f740",
+      "w14_natrec_status": "completed (message accepted, queued: false)",
+      "w15_recursors_bundle": {
+        "archive": "shard-a-recursors-sources.tar.gz",
+        "archive_bytes": 16232,
+        "archive_sha256": "2d23ba3a6cbf3a2633dd9ae9f57a5051a9144ef891fc87758837b90aa9438a1b",
+        "authenticated_input_sha256": "56288e24cd4ec96dbc9499beff5e07c45f8261ba35957af16e5a989fd3185bb5",
+        "base64_payload_chars": 21644,
+        "dir": "preserved/p1-shards/shard-a/v3-recursors",
+        "manifest_bytes": 3660,
+        "manifest_sha256": "3c1d07ae221e6d997a17eeb6833d385cb38969414a70ee4850b02ebcf100de84",
+        "member_count": 19,
+        "member_sha256_confinement": "PASS (19/19)",
+        "scope": "Authenticated Spec/Model/Proofs Field members only; excludes NativeKernel and Tests/Field"
+      },
+      "w21_lease_extension_action_id": "71058e4b-da6b-4f90-8089-732af7c1598a"
+    },
+    "shard_b_keccak_transcript": {
+      "acceptance_status": "NOT_ACCEPTED",
+      "action_id": "768aac5b-83df-492e-9f39-8fbb2d972ec6",
+      "archive_delivery_action_id": "099b328f-bb47-4088-8492-0d30dae7d65f",
+      "archive_delivery_message_id": "ac143b22-ae77-5a8b-841a-1ac4af27f371",
+      "archive_delivery_status": "completed (accepted, queued)",
+      "astra_payload_action": "98f237e5-faad-4ae2-a3f6-b25af2f99a1f",
+      "astra_review_mission": "26835166-00cc-4e92-8cc3-4ffa63c06f9b",
+      "astra_verdict": "FAIL",
+      "astra_vm": "mmn7mmz8bf",
+      "astra_vm_status": "destroyed_owner_completed (confirmed via action 64c30c34-d481-4476-898d-e3ef73172f96)",
+      "cache_out": "/var/lib/orb-node/work/caches/p1-shard-b-out/",
+      "field_a_v2_delivery_actions": [
+        "e922a779-bf0a-4bbd-a107-fe5703557fd7",
+        "6eda96cc-4da1-455e-9d99-222f2af91849",
+        "75d45902-7c8f-4104-926b-4593e1677588"
+      ],
+      "field_a_v2_install_status": "INSTALLED_AND_VERIFIED (19-file bundle SHA a6a5d7b640dc52bc39e3456c0c1b81701703d756a90dcaef08722afcf8ec290c; worker confirmed all SHA checks before install)",
+      "field_basic_v3_delivery_action_id": "09075735-b791-4d78-9e9a-2cc9aae37f40",
+      "field_basic_v3_delivery_status": "completed (queued: true; SHA 2519ed38...)",
+      "gemini_initial_review_mission": "c18fda4c-7891-4fe7-8007-3a7bec42e20f",
+      "gemini_initial_status": "No verdict: completed waiting for archive; VM reaped before payload delivery. Replacement local read-only consultation requested.",
+      "gemini_replacement_action": "cef19e70-9129-4816-adbf-271423f50821",
+      "gemini_review_mission": "e18f9659",
+      "gemini_verdict": "FAIL",
+      "health": "active_healthy",
+      "latest_sweep": "2026-11-06 W21: B remains healthy at heartbeat 16:28:50Z on job f3caf19c and run 635f10dc. Strict audit reached 910/910 (849 Shard B constants, 0 forbidden dependencies, 0 unsafe_rec) and verify.py passes all 14 lake targets + all 12 MCP checks across Keccak, Transcript and Merkle; verify.py fails closed only on explicit remaining gates (heap refinement/inclusion completeness, full prover/verifier refinement, general kernel-linked native sponge lowering).",
+      "launch_action_status": "completed",
+      "lease_extension_action_id": "ef399dec-d5d5-4081-b359-df3df80b2694",
+      "lease_extension_status": "completed (+180m to 17:26:05Z; extended +120m at W20 via e92e933e-d952-46a5-ac34-3393c609fd62 to 19:26:05Z)",
+      "local_artifacts": "preserved/p1-shards/shard-b/",
+      "machine_expires_at": "2026-11-06T19:26:05.101004976Z",
+      "machine_id": "mmeg5xe3bp",
+      "machine_name": "large-c",
+      "mission_id": "98902a45-a4fe-45d9-953d-1ad0f6d1365b",
+      "model": "openai/gpt-6.1-sol",
+      "node_id": "managed-mmeg5xe3bp",
+      "owned_paths": [
+        "LeanVmXmss/{Spec,Model,Proofs,Tests}/{Keccak,Transcript,Merkle}/**"
+      ],
+      "preserved_reviews": [
+        "preserved/p1-shards/shard-b/maxwell-astra-review.json",
+        "preserved/p1-shards/shard-b/maxwell-gemini-review.json"
+      ],
+      "project": "default",
+      "track": "xmss1400-p1-shard-b-v3",
+      "v1_action_id": "b945bac2-8376-4585-ac56-2db2011aeb77",
+      "v1_archive_sweep": "DONE, locally harvested and integrity-verified: 27193B archive SHA256 9276a59a14a8de98e417999d814433e5cc2a59c66d719858d6235fedb98f6b1d; 55 safe members, 20 source hashes and archived verification receipts match. Worker VM auto-destroyed owner_completed despite requested 45m retention.",
+      "v1_machine_id": "mmj78bb29g",
+      "v1_machine_name": "large-f",
+      "v1_mission_id": "92cf4809-232d-43f1-a9cf-ad5325701091",
+      "v1_rejection_blockers": [
+        "definitional collapse",
+        "missing Merkle completeness/contracts/pruned transport",
+        "private audit omissions",
+        "native zero lowering"
+      ],
+      "v1_status": "REJECTED (independent FAIL from Astra 26835166 and Gemini e18f9659)",
+      "v2_action_id": "44b70e5e-9df6-4820-b4db-bdf97059d992",
+      "v2_harvest": {
+        "archive": "shard-b-keccak-transcript.tar.gz",
+        "archive_bytes": 20831,
+        "archive_sha256": "ed97ff00b9b27c909901fb0f3e2a7f8b80098a8d432236c44a78df0fd66da61f",
+        "dir": "preserved/p1-shards/shard-b/20261106T115352Z",
+        "fixed": "Line 90 horizontal_packing warning in Proofs/Transcript/Registers.lean",
+        "member_count": 32,
+        "member_sha256_confinement": "PASS (32/32)",
+        "remaining_obligations": [
+          "Merkle",
+          "pruned",
+          "octopus",
+          "replay",
+          "5-mutant differential",
+          "native permutation",
+          "strict audit"
+        ]
+      },
+      "v2_machine_id": "mmrjymm2bg",
+      "v2_machine_status": "destroyed",
+      "v2_mission_id": "e5ea90e8-a89b-419b-9ac3-67749a805a43",
+      "v2_status": "completed_INCOMPLETE",
+      "v2_track": "xmss1400-p1-shard-b-v2",
+      "v3_fork_action_id": "f15ce203-0124-47ca-b32d-0bc86479a95c",
+      "v3_fork_status": "completed (forked from C VM mmhjuuwuhn without snapshot mutation)",
+      "v3_snapshot_launch_refusal_reason": "snapshot_not_found (z2kt evicted)",
+      "v3_snapshot_launch_refused_action_id": "aa6cb63b-2b33-4996-8a36-4d5f78c4935a",
+      "w11_continuation_action_id": "74e6eb99-34eb-42fe-b1aa-2b861f105116",
+      "w11_continuation_status": "completed (steer_between_tools accepted, queued)",
+      "w13_audit_exception_action_id": "c56717ae-3636-483d-82eb-4e4c49751876",
+      "w13_audit_exception_status": "RETRACTED by 4a875f0b-2fa9-4e2e-87bc-dd167e85f332; strict gate restored",
+      "w14_hold_action_id": "2eb27bf5-c47f-41d3-8ba3-a76d580d9fb1",
+      "w14_hold_status": "completed (queued: true)",
+      "w15_field_bundle_delivery": {
+        "chunk_action_ids": [
+          "9e0f3b45-7ae3-43e6-bc7b-a3b441da89a4",
+          "8e140cad-dd17-4dc3-bb6f-c96f30d15c51",
+          "674b5c3a-7505-40d7-8cdd-b4da5487020a"
+        ],
+        "expected_archive_sha256": "2d23ba3a6cbf3a2633dd9ae9f57a5051a9144ef891fc87758837b90aa9438a1b",
+        "field_files_modified": false,
+        "manifest_action_id": "e6c93e92-f6ed-422f-a2b8-183fd2ad1a06",
+        "missing_chars_in_chunk_3": 4,
+        "received_lengths": [
+          8000,
+          8000,
+          5640
+        ],
+        "status": "received_but_rejected_short_chunk_3",
+        "superseded_incomplete_chunk_action_id": "67876aba-9632-431f-9180-904e4aaebdc1"
+      },
+      "w15_imported_keccak": {
+        "acceptance": "NOT_ACCEPTED",
+        "execution_equal": true,
+        "execution_inputs": 5,
+        "kernel_refinement_checked": false,
+        "lnir_sha256": "596469964a0360d20d5676feadf9186b5e7676a2bcaa2f88a8cbb221bd9097f0",
+        "lowered_declarations": 50,
+        "module": "Tests.Keccak.ImportedNative"
+      },
+      "w16_corrected_chunk_3": {
+        "expected_archive_sha256": "2d23ba3a6cbf3a2633dd9ae9f57a5051a9144ef891fc87758837b90aa9438a1b",
+        "part_action_ids": [
+          "98669b0f-de17-4585-9fae-747eb2619de9",
+          "f3602b3d-86d9-4027-a10f-f34531f1151c",
+          "b7db26f4-cbcf-4674-96ed-fa985ff211b3"
+        ],
+        "part_lengths": [
+          1900,
+          1900,
+          1844
+        ],
+        "status": "installed_and_strict_audit_passed"
+      },
+      "w18_field_install": {
+        "archive_bytes": 16232,
+        "archive_sha256": "2d23ba3a6cbf3a2633dd9ae9f57a5051a9144ef891fc87758837b90aa9438a1b",
+        "members": 19,
+        "status": "INSTALLED_AND_VERIFIED",
+        "strict_audit": "869/869",
+        "unsafe_rec_names": 0
+      },
+      "w19": {
+        "acceptance_status": "NOT_ACCEPTED",
+        "current_work": "cancel characteristic-2 sumcheck failure and reconstruct the proof",
+        "health": "active_healthy",
+        "heartbeat_at": "2026-11-06T16:05:44Z",
+        "machine_expires_at": "2026-11-06T17:26:05Z",
+        "reap_at": null,
+        "remote_job_id": "f61e351f-816e-4e01-ad2f-46fedc4e9172",
+        "run_id": "4d45d7a8-d8c6-4e15-ad1c-7f96e4d74c81",
+        "strict_audit": "887/887"
+      },
+      "w20": {
+        "acceptance_status": "NOT_ACCEPTED",
+        "checkpoint_bytes": 39001,
+        "checkpoint_sha256": "775c61da97b0ef5af79f41e6d5ab5564ff69817d62db2e742477bfd35c23daa3",
+        "health": "active_healthy",
+        "heartbeat_at": "2026-11-06T16:15:11.099356061Z",
+        "lease_extension_w20_action_id": "e92e933e-d952-46a5-ac34-3393c609fd62",
+        "machine_expires_at": "2026-11-06T19:26:05.101004976Z",
+        "mcp_checks": "12/12 PASS via copied project under p1-shard-b-out",
+        "reap_at": null,
+        "remaining_gates": "protocol sumcheck compatibility derivation, Merkle heap/pruned proofs, kernel-linked native sponge lowering, verify.py exit 0",
+        "remote_job_id": "f61e351f-816e-4e01-ad2f-46fedc4e9172",
+        "run_id": "4d45d7a8-d8c6-4e15-ad1c-7f96e4d74c81",
+        "strict_audit": "896/896"
+      },
+      "w21": {
+        "acceptance_status": "NOT_ACCEPTED",
+        "health": "active_healthy",
+        "heartbeat_at": "2026-11-06T16:28:50.240207568Z",
+        "machine_expires_at": "2026-11-06T19:26:05.101004976Z",
+        "mcp_checks": "12/12 PASS inside verify.py",
+        "reap_at": null,
+        "remaining_gates": "heap refinement/inclusion completeness, full prover/verifier refinement, general kernel-linked native sponge lowering",
+        "remote_job_id": "f3caf19c-7d1c-4e61-a612-4db6c9249b0d",
+        "run_id": "635f10dc-97e2-4a0c-86c1-047d2f621566",
+        "strict_audit": "910/910 (849 Shard B constants, 0 unsafe_rec, 0 external runtime)"
+      }
+    },
+    "shard_c_xmss_vm": {
+      "acceptance_status": "NOT_ACCEPTED (mission completed and VM destroyed before Field unsafe_rec=0 arrived; post-W11 patches exist only in mission events; no post-W11 archive)",
+      "action_id": "a637b599-0716-4b38-999f-89579a02ed52",
+      "cache_out": "/var/lib/orb-node/work/caches/p1-shard-c-out/",
+      "field_a_v2_delivery_actions": [
+        "14e146f3-08d5-4044-b33f-2c054fde0877",
+        "6b8da85f-b5ff-4b19-8fd5-fa1441c21d34",
+        "5818a390-466b-4d46-8891-1de42dbb6b4b"
+      ],
+      "field_a_v2_install_status": "INSTALLED_AND_VERIFIED (19-file bundle SHA a6a5d7b640dc52bc39e3456c0c1b81701703d756a90dcaef08722afcf8ec290c; worker confirmed all SHA checks before install)",
+      "field_basic_v3_delivery_action_id": "89051e47-cc9e-4ba6-9440-7c4934f6e41b",
+      "field_basic_v3_delivery_status": "completed (installed and SHA-verified: 2,206 B, SHA 2519ed3878ae7346ee140d2c414daf6fe84d88a291a2aed04b4e719bcce238f9)",
+      "full_vm_differential": {
+        "cycles": 1146537,
+        "memory_cells_used": 8668972,
+        "memory_keccak256": "5b771e0e421e7c539b8b419188320dbeffe7a0c465bdf84731036efafa341530",
+        "opcode_counts": [
+          262098,
+          237184,
+          169439,
+          159273,
+          57477,
+          261066
+        ],
+        "status": "PASS",
+        "unconstrained_reads": []
+      },
+      "health": "completed_vm_destroyed",
+      "hint_scheduler_status": "Covers all RHint",
+      "imported_field_basic_sha256": "2519ed3878ae7346ee140d2c414daf6fe84d88a291a2aed04b4e719bcce238f9",
+      "latest_sweep": "2026-11-06 W18: Original C remains completed and its VM destroyed. Recoverable post-W11 patches are Nat.rec conversions in Model/Vm/{Interpreter,Scheduled}.lean, Spec/Xmss/Encoding.lean, Spec/Vm/Basic.lean and Proofs/Vm/GPow.lean, plus Encoding and AxiomAudit edits. Sequences 1396-1428 and 1547-1556, including the claimed package_final.py deletion at 1551, are absent from local event archives.",
+      "lease_extension_action_id": "94fabe33-78af-4bc6-9b42-01ef6e61b4e5",
+      "lease_extension_status": "completed (+90m to 14:06:56Z, then retained; current expiry 16:06:56Z)",
+      "machine_expires_at": "2026-11-06T16:06:56Z",
+      "machine_id": "mmhjuuwuhn",
+      "machine_name": "large-i",
+      "mission_id": "b944b95a-d997-4f46-af19-382cf954f096",
+      "owned_paths": [
+        "LeanVmXmss/{Spec,Model,Proofs,Tests}/{Xmss,Vm}/**"
+      ],
+      "previous_sweep_1007z": "10:07Z PARTIAL: worker reports lean-native matches Rust on all 1400 signatures, 10,594,241-byte hint stream, statement_digest, and 524,288 bytecode instructions; strict axiom audit currently hits run._unsafe_rec Classical.choice and full 1,146,537-cycle VM execution + runtime hint scheduler remain open. Steered via 4932ada5-0331-4865-972f-3c238b3f65a4 to use total Nat-fuel structural recursion.",
+      "strict_axiom_audit": "Strict gate held. verify.py exits 1 solely at LeanVmXmss.Spec.Field.parity._unsafe_rec under the by-name rejection. Local axioms are clean: gpow_multiplicative, pack_cell_bytes, cell_bytes_pack, sub_byte_bound, and takeString contain no Classical.choice. No final archive is authorized until the Field names are actually eliminated.",
+      "v2_replay": {
+        "acceptance_status": "NOT_ACCEPTED",
+        "field_inherited_from_b_sha256": "2d23ba3a6cbf3a2633dd9ae9f57a5051a9144ef891fc87758837b90aa9438a1b",
+        "field_reinstall": false,
+        "fork_action_id": "4fe9da4a-9be1-478a-8d93-29ed339271a4",
+        "forked_from": "mmeg5xe3bp",
+        "health": "active_healthy",
+        "machine_expires_at": "2026-11-06T18:42:41.099427246Z",
+        "machine_id": "mmdesghjv8",
+        "machine_name": "large-a",
+        "mission_id": "77353847-f125-4dd8-9390-8d2cfab3b612",
+        "node_id": "managed-mmdesghjv8",
+        "resume_rejected_action_id": "3c7dca20-6615-4332-ae5c-11b3cd3118ba",
+        "resume_rejection": "REMOTE_JOB_STILL_RUNNING ca77dbc9-9d93-40c1-93dd-a170abc25acd",
+        "run_id": "39aa95ba-3fc9-444b-ae74-1aad4464ad0c",
+        "start_action_id": "979364b5-50bb-4c99-a8ab-d126d508777e",
+        "w11_archive_bytes": 14704,
+        "w11_archive_sha256": "7c4a8225f8e3c72b738f7f94e0c5c4c9f6646bd895177ffa4f3c79f3b370077c",
+        "w11_base64_chars": 19608,
+        "w11_base64_sha256": "1654a4d316aabab905cb4118df1f46fe07dcf824f6bde60506450a6d8a710b04",
+        "w11_delivery_action_ids": [
+          "5c5d02b3-1b4a-438c-b475-d391561e21d4",
+          "48f8aa80-a001-42e7-b7a1-0fd75e014c96",
+          "f4e30df8-1386-4399-ad6c-4c65811906af",
+          "d3c8ae7e-230a-41ee-a422-7322f135b727",
+          "fd6f162c-c8ea-4356-90f8-2edb63d17d7a",
+          "7d6f8746-ec35-42b3-89f4-6bf0bba4e14b",
+          "e2acc5db-5eab-4dea-b5c2-379ff88ec659",
+          "024a7673-d1f8-4a86-bf04-6cc84c6a1fe1",
+          "fc2ae451-7c6d-4cfb-b76d-c0a0f5fc2a5a",
+          "4e66573c-ca18-412e-9b38-57982998ac9d",
+          "6e515a52-a254-45df-bd83-8fdcf3788613",
+          "d2e6f9c8-5480-45c3-aff4-cd08d289e9ed"
+        ],
+        "w11_delivery_status": "all 12 messages accepted; erratum delivered immediately and P1..P11 queued",
+        "w19": {
+          "acceptance_status": "NOT_ACCEPTED",
+          "heartbeat_at": "2026-11-06T16:05:42Z",
+          "instruction": "verify all 18 member SHA values, install only {Xmss,Vm} sources, replay Nat.rec patches, remove Classical.choice and ._unsafe_rec, replace --standalone with imported-module LNIR of at least 5 lowered declarations, pass mirrored MCP and verify.py, and match 1146537 differential cycles",
+          "member_count": 18,
+          "member_manifest_action_id": "c13427a1-739b-456e-b9b1-2fc777e71f92",
+          "member_manifest_message_id": "7cf193fe-09ad-5022-b7cb-0dabd37ea428",
+          "member_manifest_status": "accepted and queued steer_between_tools",
+          "reap_at": null,
+          "remote_job_id": "6454945c-2be2-40f9-9dec-3c025ee4b1e9"
+        },
+        "w20": {
+          "acceptance_status": "NOT_ACCEPTED",
+          "added_missing_module": "Model/Vm/PowerTable.lean",
+          "classical_choice_rejections": 29,
+          "heartbeat_at": "2026-11-06T16:15:12.493943588Z",
+          "hint_action_id": "e2b5d8bb-b41f-465d-a782-6929271c2351",
+          "hint_message_id": "b237334a-65f6-5c26-9acc-69b7105a8415",
+          "isolated_rebuild_modules": 22,
+          "reap_at": null,
+          "remote_job_id": "be17ddb3-a204-41c2-bb3f-cf01b5b9efbc",
+          "run_id": "77590098-59da-49bd-86da-c312dc808ef1",
+          "strict_audit_constants": 1329,
+          "unsafe_rec_rejections": 0,
+          "w11_member_verification": "18/18 SHA verified; 14 {Xmss,Vm} source files installed; 4 stale evidence/* ignored; Field untouched"
+        },
+        "w21": {
+          "acceptance_status": "NOT_ACCEPTED",
+          "classical_choice_rejections": 0,
+          "current_work": "5 exported scalar kernels in Model/Vm/Kernel.lean + Proofs/Vm/Kernel.lean, native-pkg /ir/*.c.o.export non-standalone build of xmss-differential and vm-full, copied-project MCP, verify.py and 1146537-cycle differential",
+          "heartbeat_at": "2026-11-06T16:28:49.957401562Z",
+          "lnir_ir_layout_steering_action_id": "5b99d81c-e116-4fea-ace8-1a8709977593",
+          "lnir_ir_layout_steering_message_id": "091b6129-390a-59b8-bfaf-2d1c63e61b6d",
+          "reap_at": null,
+          "remote_job_id": "942ebab2-19d0-49c7-9487-84723e64cf14",
+          "run_id": "10a81df7-7070-4a20-90b3-48003968046c",
+          "strict_audit_constants": 1334,
+          "strict_audit_rejections": 0,
+          "unsafe_rec_rejections": 0
+        }
+      },
+      "w10_steering_action_id": "4dfd439e-49d4-4763-a241-d7560cb3b84f",
+      "w10_steering_status": "completed (queued: false)",
+      "w13_audit_exception_action_id": "a1b58f72-1970-477f-802e-47de3e64b2cb",
+      "w13_audit_exception_status": "RETRACTED by ed28a0b0-0eb3-4389-8b5c-8db3efac42e0; strict gate restored",
+      "w14_hold_action_id": "a7fe9528-0ca6-4557-8680-20136138184c",
+      "w14_hold_status": "completed (queued: true)",
+      "w15_terminal_inventory": {
+        "final_targeted_json": "PASS for the 6-symbol targeted check only",
+        "highest_seq": 1557,
+        "integrated_lcnf_symbols": [
+          "shard_c_e_product0",
+          "shard_c_e_product1",
+          "shard_c_e_product2",
+          "shard_c_keccak_theta",
+          "shard_c_keccak_chi",
+          "shard_c_step_arithmetic"
+        ],
+        "package_final_py": "deleted at seq 1551; no post-W11 archive emitted",
+        "replay_required": "Fork a fresh hub-v2 VM and replay post-W11 Xmss/Vm patches only after installing Field bundle 2d23ba3a...",
+        "verify_py": "BLOCKED_PARTIAL at LeanVmXmss.Spec.Field.parity._unsafe_rec"
+      }
+    }
+  },
+  "p1_closure": {
+    "closed_at": "2026-11-07T02:15:00Z",
+    "shard_a": {
+      "archive_sha256": "a937c1113744540b373abd41dc7b8cd7d80ebde591ed9d147001cb51107a5542",
+      "manifest": "preserved/p1-shards/shard-a/v4c-local-replay-20261107T0026Z/shard-a-manifest.json",
+      "status": "COMPLETE",
+      "theorem_count": 252
+    },
+    "shard_b": {
+      "archive_sha256": "b9061bff39735e46ca4186f65788e713320dbdb3f024c48aa687ced79756aba5",
+      "lowered_declarations": 29,
+      "manifest": "preserved/p1-shards/shard-b/local-replay-20261107/shard-b-manifest.json",
+      "status": "COMPLETE"
+    },
+    "shard_c": {
+      "archive_sha256": "3237141d8f9cb58111896c07dbdeee1edcdb88ff04ae81e26a513b621a20c671",
+      "commands_passed": 65,
+      "cycles": 1146537,
+      "manifest": "preserved/p1-shards/shard-c/local-replay-20261107/shard-c-manifest.json",
+      "memory_cells_used": 8668972,
+      "memory_keccak256": "5b771e0e421e7c539b8b419188320dbeffe7a0c465bdf84731036efafa341530",
+      "status": "COMPLETE"
+    },
+    "spec_file_count": 15,
+    "spec_manifest": "preserved/p1-shards/p1-frozen-spec-manifest.json"
+  },
+  "pending_sidecar_actions": [
+    {
+      "action_id": "0ad965e9-738c-4626-8329-e8e30e30cf04",
+      "purpose": "Strict clarification to Shard B v3: no Field exception permitted for axiom audit",
+      "status": "queued_unconfirmed",
+      "target_mission_id": "98902a45-a4fe-45d9-953d-1ad0f6d1365b"
+    }
+  ],
+  "performance_accepted": false,
+  "phase": "WAVE1: W2 sources replayed locally after VM death. 6/6 SPLICE_OK certified in events 4910/4916. Proofs still rfl (stale). W2-v2 not yet launched. Do not resume 0070e9f1 or mmydsgqkfc.",
+  "recovery_baseline_reported_metrics": {
+    "cache_root": "/var/lib/orb-node/work/caches/xmss-p0-59c2984-recovery",
+    "compact_envelope_bytes": 359217,
+    "cpu_model": "AMD EPYC 9455 48-Core Processor (16 exposed vCPUs, Zen 5, AVX-512/GFNI/VPCLMULQDQ)",
+    "cycles": 1146537,
+    "ethereum_proof_wire_bytes": 448833,
+    "independent_audit_pending": false,
+    "independent_audit_verdict": "PASS (ee7d4f75-098c-400e-8dd8-b993199ee36f; VM mm4dsct9vs destroyed)",
+    "note": "Boat xlarge allocates heterogeneously (EPYC 9455 at ~0.912s vs Ryzen 9950X at ~1.624s). Same-host paired Rust vs Lean benchmarking in P5 remains mandatory, and Lean must beat both 1.15s and same-host Rust.",
+    "peak_rss_bytes": 6314987520,
+    "proving_passes_s": [
+      0.9,
+      0.935,
+      0.9
+    ],
+    "reported_mean_s": 0.912,
+    "snapshot": "orb-snap-default-xmss-p0-59c2984-recovere-95at",
+    "snapshot_bytes": 8112992256,
+    "snapshot_status": "ready",
+    "tracing_breakdown_ms": {
+      "build_witness": 20.5,
+      "commit_ntt_merkle": 98.0,
+      "execute_program": 189.0,
+      "keccak_reduction": 237.0,
+      "pcs_open": 114.0,
+      "prove_bus": 156.0,
+      "prove_constraints": 21.3,
+      "prove_total": 836.0
+    },
+    "tracing_mean_s": 0.875,
+    "tracing_passes_s": [
+      0.915,
+      0.855,
+      0.854
+    ],
+    "verifying_mean_ms": 10.809,
+    "vm_proof_bytes": 358656
+  },
+  "reference_commits": {
+    "leanVM": "59c2984df79cc9ff1914e547c5d5d390fffc8f3e",
+    "turbo-lean": "29d85f7da2d963750f77d76d5323408a73386f14"
+  },
+  "review_replacements": {
+    "baseline_snapshot_audit_astra": "ee7d4f75-098c-400e-8dd8-b993199ee36f (COMPLETED PASS; VM mm4dsct9vs destroyed)",
+    "field_astra": "9c7b6ee3-0005-4f2b-952c-bbc43c360a72 (COMPLETED PASS for S1/S2 multiplication/squaring/encoding; PARTIAL for full P1 pending inverse/associativity/24B LE codec)",
+    "field_gemini": "58c71d04-a236-420f-a437-d531f90084b1 (COMPLETED PASS; verified 1366/1366 hashes, 75 theorems, strict {propext, Quot.sound} axiom inventory, 4 mutants, 245 vectors)",
+    "field_quorum_followups_required": [
+      "Tighten Tests/Field/AxiomAudit.lean to disallow Classical.choice on theorems/witnesses (currently allowlisted due to derived BEq on E)",
+      "Add K.inv (Itoh-Tsujii), E.inv (norm + Frobenius), frobenius, pow, masked, sum, powers, Scaled (6-bit windowed table)",
+      "Prove multiplicative associativity, multiplicative units, and non-zero invertibility (x != 0 -> mul x (inv x) = 1)",
+      "Add Lean ByteArray 8-byte / 24-byte little-endian codec with roundtrip and canonical length checks"
+    ],
+    "field_source_export_mission": "497b2c3b-293e-4b0b-8c15-6b01d48933c8 (exporting base64 tar.gz of LeanVmXmss sources from zvue for local durability before unified hub snapshot)",
+    "opus_failure": "Provider usage limit until Nov11; cancellation requested, VM mmg36ymcyn destroyed, ledger closed cost0.00794USD",
+    "shard_b_v1_astra": "26835166-00cc-4e92-8cc3-4ffa63c06f9b (COMPLETED FAIL; independent rejection preserved at preserved/p1-shards/shard-b/maxwell-astra-review.json; VM mmn7mmz8bf destroyed owner_completed confirmed via action 64c30c34-d481-4476-898d-e3ef73172f96)",
+    "shard_b_v1_gemini": "e18f9659 (COMPLETED FAIL; independent rejection preserved at preserved/p1-shards/shard-b/maxwell-gemini-review.json)",
+    "shard_b_v1_rejection_blockers": [
+      "Definitional collapse",
+      "Missing Merkle completeness/contracts/pruned transport",
+      "Private audit omissions",
+      "Native zero lowering"
+    ]
+  },
+  "snapshot_changes": true,
+  "snapshots": [
+    {
+      "label": "xmss-p0-29d85f7-probes",
+      "name": "orb-snap-default-xmss-p0-29d85f7-probes-qu9k",
+      "size_bytes": 8243077120,
+      "source_machine_id": "mmy987xvnq",
+      "status": "ready"
+    },
+    {
+      "label": "xmss-p1-field-59c2984-pr",
+      "name": "orb-snap-default-xmss-p1-field-59c2984-pr-txnb",
+      "size_bytes": 7555985408,
+      "source_machine_id": "mmmna7ussx",
+      "status": "ready"
+    },
+    {
+      "archives": {
+        "field-project-artifacts.tar.gz": "55e713873f36fed2dcb04642122bda299abc011d0ef88c93542afae782407ddf",
+        "reference-sources.tar.gz": "37e9718cd29e1aedd923cf0e792dd5243da4205c5ed2e6617c55d19b96cc814a"
+      },
+      "cache_root": "/var/lib/orb-node/work/caches/xmss-p1-field-59c2984/",
+      "label": "xmss-p1-field-59c2984",
+      "name": "orb-snap-default-xmss-p1-field-59c2984-zvue",
+      "size_bytes": 7557226496,
+      "source_machine_id": "mmmna7ussx",
+      "status": "ready"
+    },
+    {
+      "label": "xmss-hub-unified-v2",
+      "name": "orb-snap-default-xmss-hub-unified-v2-z2kt",
+      "note": "W10 launch action aa6cb63b-2b33-4996-8a36-4d5f78c4935a returned snapshot_not_found; historical restoration verification remains valid; third-party catalog entries 2zvy/zafh unchanged.",
+      "size_bytes": 4420644,
+      "source_machine_id": "mmn4z6fyj2",
+      "status": "evicted_absent_from_catalog"
+    }
+  ],
+  "success_certified": false,
+  "w19": {
+    "shard_a": {
+      "acceptance_status": "NOT_ACCEPTED",
+      "continuation_action_id": "472935be-f690-4fab-b6c8-7a7875a92280",
+      "continuation_message_id": "fdc34cc9-2fd0-55e9-b810-3bbc6774a0c4",
+      "continuation_status": "accepted and queued",
+      "current_work": "mul/square/inv/Karatsuba, noinline pow2, mirrored MCP and verify.py",
+      "health": "active_healthy",
+      "heartbeat_at": "2026-11-06T16:07:09.599694892Z",
+      "machine_id": "mm6zs2b5gd",
+      "mission_id": "2c3e44ff-1959-42c5-b1f5-a571308efebd",
+      "node_id": "managed-mm6zs2b5gd",
+      "reap_risk_cleared": "working_owner_idle reap_at 2026-11-06T16:14:28.834235172Z superseded by active remote job",
+      "remote_job_id": "16735dbb-1499-4718-ab37-c82b1523f16c",
+      "run_id": "aef889f8-0dab-455f-8831-900fce40a43c"
+    }
+  },
+  "w20": {
+    "shard_a": {
+      "acceptance_status": "NOT_ACCEPTED",
+      "current_work": "nativeClmulHi_correct proof in Proofs/Field/NativeKernel.lean, then nativeMul_correct, square, inv, karatsubaMul, LNIR >=5, verify.py",
+      "heartbeat_at": "2026-11-06T16:15:11.373854772Z",
+      "machine_expires_at": "2026-11-06T18:08:24.722120061Z",
+      "machine_id": "mm6zs2b5gd",
+      "mcp_codecs": "PASS (encodeBytesE_decodeBytesE stage2_kernel_verified; 10 specs audited)",
+      "mcp_other_modules": "symlinked mirror hit stale imports; copied-project hint sent via 9dde27ab-6e46-468e-a127-ad85355547b0 (msg 7cbfa990-8001-59a9-914f-bbca1d7323cf)",
+      "mission_id": "2c3e44ff-1959-42c5-b1f5-a571308efebd",
+      "reap_at": null,
+      "remote_job_id": "a6a0f477-0147-4739-bbdb-965a820dfa35",
+      "run_id": "a5c046b5-5454-4d34-8acc-49eaffaec0de"
+    }
+  },
+  "w21": {
+    "shard_a": {
+      "acceptance_status": "NOT_ACCEPTED",
+      "current_work": "Run all 7 MCP files on mcp-checked-project, finish non-standalone field-native build with >=5 LCNF lowered kernels, run Tests/Field/verify.py exit 0, and emit compact archive",
+      "heartbeat_at": "2026-11-06T16:28:51.029628484Z",
+      "lease_extension_action_id": "71058e4b-da6b-4f90-8089-732af7c1598a",
+      "machine_expires_at": "2026-11-06T20:08:24.722120061Z",
+      "machine_id": "mm6zs2b5gd",
+      "mcp_checked_project_lake_build": "PASS (23/23 jobs in p1-shard-a-out/mcp-checked-project)",
+      "mission_id": "2c3e44ff-1959-42c5-b1f5-a571308efebd",
+      "reap_at": null,
+      "refinement_proofs": "CLOSED (nativeMul_correct, nativeSquare_correct, nativeKaratsuba_correct, nativeInv_correct, nativeEinv_correct)",
+      "remote_job_id": "d1f5c87f-4f33-459d-9fe9-9ec017b16ee0",
+      "run_id": "36079bb7-24e2-47bc-8b53-bdbb2747838b",
+      "steering_action_id": "4cffe5c0-7ac6-4a9e-838a-65756cf37281",
+      "steering_message_id": "4273883b-b819-5dcb-b21e-e2ec43ab81f8",
+      "strict_audit": "PASS (total=612, theorems=413, unsafe=0, extern=0, unsafe_rec=0, 0 Classical.choice)"
+    }
+  },
+  "w22": {
+    "budget_snapshot": {
+      "committed_usd": 6.940733333333333,
+      "daily_cap_usd": 50.0,
+      "spend_today_usd_total": 42.8481,
+      "spent_today_usd": 33.3244
+    },
+    "shard_a": {
+      "acceptance_status": "NOT_ACCEPTED",
+      "lease_extension_action_id": "ee2f64bd-8e3d-430b-9131-c0c8c9630386",
+      "machine_expires_at": "2026-11-06T22:08:24.722120061Z",
+      "machine_id": "mm6zs2b5gd",
+      "mission_id": "2c3e44ff-1959-42c5-b1f5-a571308efebd",
+      "node_id": "managed-mm6zs2b5gd",
+      "reap_at": "2026-11-06T16:54:17.407681218Z",
+      "resume_action_id": "331e625f-434e-427d-a4ec-e466f471f8fa",
+      "status": "interrupted_usage_limit_wait_auto_recovery_scheduled"
+    },
+    "shard_b": {
+      "acceptance_status": "NOT_ACCEPTED",
+      "disk_caveat": "Forked from A VM mm6zs2b5gd (itself forked from mmhjuuwuhn), NOT from dead mmeg5xe3bp; disk does NOT contain B v3 edits. Queued rectification ec3d3026; reconstruct B v3 patches from Core events 98902a45 + preserved B v2 archive ed97ff00...",
+      "disk_rectification_action_id": "ec3d3026-7a47-43f4-8613-4275b7b3db16",
+      "disk_rectification_message_id": "748b3949-4542-5c18-9bd2-7dc94c5b813c",
+      "failed_mission_id": "98902a45-a4fe-45d9-953d-1ad0f6d1365b",
+      "failed_node_id": "managed-mmeg5xe3bp",
+      "failure_reason": "REMOTE_RESUME_REQUIRES_REPLACEMENT at seq 1955; last unharvested checkpoint on dead VM was 41117B SHA 8c3f2ef442d9dbb770e31e01c2d49198394d17f96f0aa55f0bcd5b21bf7d9951 (audit 910/910)",
+      "fork_action_id": "88c522af-67e6-4e17-a746-6c7c71c70fb3",
+      "forked_from": "mm6zs2b5gd",
+      "machine_expires_at": "2026-11-06T19:42:55.385497287Z",
+      "machine_id": "mm3j2ada6y",
+      "machine_name": "large-a",
+      "mission_id": "a54855c3-62fb-4352-aa2c-18aa05323270",
+      "node_id": "managed-mm3j2ada6y",
+      "reap_at": "2026-11-06T16:55:15.140218263Z",
+      "start_action_id": "42b97626-3cd6-4f3e-ae74-da79e3a75647",
+      "status": "interrupted_usage_limit_wait_auto_recovery_scheduled"
+    },
+    "shard_c": {
+      "acceptance_status": "NOT_ACCEPTED",
+      "disk_caveat": "Forked from A VM mm6zs2b5gd (forked from mmhjuuwuhn); reconstruct C v2 patches from Core events 77353847 + preserved W11 delta 7c4a8225...",
+      "failed_mission_id": "77353847-f125-4dd8-9390-8d2cfab3b612",
+      "failed_node_id": "managed-mmdesghjv8",
+      "failure_reason": "REMOTE_RESUME_REQUIRES_REPLACEMENT at seq 496; LowerKernel lowered 5 decls and STRICT_AUDIT_COUNT 1338 / REJECTIONS 0 at seq 482 before VM loss",
+      "fork_action_id": "8cbe5745-2fb5-43e0-9fee-77157b149161",
+      "forked_from": "mm6zs2b5gd",
+      "machine_expires_at": "2026-11-06T19:42:55.994390462Z",
+      "machine_id": "mmfqv4fzwx",
+      "machine_name": "large-c",
+      "mission_id": "533f8bfc-5d9f-4787-a724-1e11dbbaf110",
+      "node_id": "managed-mmfqv4fzwx",
+      "reap_at": "2026-11-06T16:55:27.141687447Z",
+      "start_action_id": "92375b62-9504-41d3-97cb-0159d7ccc578",
+      "status": "interrupted_usage_limit_wait_auto_recovery_scheduled"
+    }
+  },
+  "w23": {
+    "destroyed_machines": {
+      "mm6zs2b5gd": {
+        "cost_usd": 0.23294,
+        "destroy_reason": "owner_completed",
+        "destroyed_at": "2026-11-06T16:52:33.808959284Z"
+      }
+    },
+    "local_reconstructions": {
+      "shard_a_v3": {
+        "acceptance_status": "NOT_ACCEPTED",
+        "bundle": "preserved/p1-shards/shard-a/shard-a-v3-reconstructed.tar.gz",
+        "bundle_bytes": 36474,
+        "bundle_sha256": "3739b88173ba22c8c0ea03f43bb3fd0eaae387eaabe766cfcec3b4fde61995d7",
+        "chunk_count": 7,
+        "member_count": 54,
+        "model_native_kernel_sha256": "74358d922f4a024d08bff626344ac443b6a7929ddb963d747b18f9fc50dd968e",
+        "open_gates": "MCP 7/7 on copied mcp-checked-project without pre-copied .oleans, non-standalone LNIR >=5 LCNF with olean+ir/*.c.o.export, split nativeTestInv @[noinline], Tests/Field/verify.py exit 0",
+        "proofs_native_kernel_sha256": "6178e3a2cdbdb42d18fbf5cf984b6842f11b633f9ed53c6af9fb99a2f41f7d4a",
+        "reconstructed_dir": "preserved/p1-shards/shard-a/v3-reconstructed",
+        "report_sha256": "8d1f89cff06a3f1c8db04be855d5ec0185b1dcd6bef334c6f0feca50388bea27",
+        "source_mission_id": "2c3e44ff-1959-42c5-b1f5-a571308efebd",
+        "spec_field_basic_w15_sha256": "496122551dd021bde21fb9872a035fceaf289fe2ce54f418f47141a8ae4e74a2"
+      },
+      "shard_b_v3_checkpoint": {
+        "acceptance_status": "NOT_ACCEPTED",
+        "bundle_bytes": 41117,
+        "bundle_sha256": "8c3f2ef442d9dbb770e31e01c2d49198394d17f96f0aa55f0bcd5b21bf7d9951",
+        "chunk_count": 8,
+        "deliverable_bundle": "preserved/p1-shards/shard-b/shard-b-v3-checkpoint-8c3f2ef4.tar.gz",
+        "open_gates": "remaining heap obligations, prover/verifier replay, native sponge, Tests/Transcript/verify.py exit 0",
+        "source_mission_id": "98902a45-a4fe-45d9-953d-1ad0f6d1365b",
+        "status": "incomplete_checkpoint"
+      },
+      "shard_c_v2": {
+        "acceptance_status": "NOT_ACCEPTED",
+        "bundle": "preserved/p1-shards/shard-c/shard-c-v2-reconstructed.tar.gz",
+        "bundle_bytes": 16369,
+        "bundle_sha256": "6a0f88efb9f74c6cb2475e4ec1111b82008aea7c07203e8ef3bb4ddbda6f89ce",
+        "chunk_count": 3,
+        "member_count": 24,
+        "model_vm_kernel_sha256": "3293ec6242aab5ff937b7404e310b73e9a34cbd002b291027ae074760c633d56",
+        "open_gates": "Proofs.Vm.Kernel in StrictAudit, link 5 lowered LLVM kernels into executable, Tests/Vm/verify.py exit 0, 1146537 differential cycles",
+        "proofs_vm_kernel_sha256": "d6685ca0a0fbee5b603726581eccaea454f4761988446416f55b2140166d9f81",
+        "reconstructed_dir": "preserved/p1-shards/shard-c/v2-reconstructed",
+        "report_sha256": "363f17e8471e9aaec722bcd599afdd8f9c41b11cb277f92b005d1f8778f6f5b2",
+        "source_mission_id": "77353847-f125-4dd8-9390-8d2cfab3b612"
+      }
+    },
+    "recorded_at": "2026-11-06T18:09:00Z",
+    "resume_probe_mm3j2ada6y": {
+      "action_id": "97a0584b-7421-4118-85dd-c3f810899cb8",
+      "cost_usd": 0.0206,
+      "decision": "Do not resume again; launch replacement workers on fresh or forked VMs only.",
+      "destroyed_at": "2026-11-06T18:03:09.547555227Z",
+      "error": "resume failed: node did not enroll and answer a heartbeat within 240s",
+      "machine_id": "mm3j2ada6y",
+      "resumes": 1,
+      "state": "failed_destroyed"
+    },
+    "surviving_stopped_fork_disk": {
+      "cost_usd": 0.01488,
+      "expires_at": "2026-11-06T19:42:55.994390462Z",
+      "forkable": true,
+      "forked_from": "mm6zs2b5gd",
+      "machine_id": "mmfqv4fzwx",
+      "name": "large-c",
+      "node_id": "managed-mmfqv4fzwx",
+      "note": "Sole surviving fork disk containing A v3 tree (~1 min background snapshot from mm6zs2b5gd).",
+      "state": "stopped",
+      "stopped_at": "2026-11-06T16:55:22.759210062Z"
+    }
+  },
+  "w25": {
+    "budget_snapshot": {
+      "committed_usd": 9.106724444444446,
+      "daily_cap_usd": 50.0,
+      "effective_vm_limits_active": 3,
+      "spend_today_usd_total": 47.963,
+      "spent_today_usd": 38.4421
+    },
+    "cancelled_predecessor": {
+      "cancel_action_id": "ce954c0e-9bb2-4bf4-a455-8ff4ddc48079",
+      "mission_id": "183b999c-c953-482a-aabe-6944d3bd33c1",
+      "model": "openai/gpt-6.1-sol",
+      "reason": "openai/gpt-6.1-sol inference connection failures (0 tool calls across 8 generations)"
+    },
+    "machine": {
+      "cost_usd": 0.04498,
+      "created_at": "2026-11-06T18:22:19.803499896Z",
+      "destroyed_predecessors": {
+        "mm3j2ada6y": "failed_destroyed 2026-11-06T18:03:09.547555227Z (never resume)",
+        "mmfqv4fzwx": "destroyed 2026-11-06T18:22:45.713675296Z (owner_completed)"
+      },
+      "expires_at": "2026-11-06T21:22:19.803499896Z",
+      "forkable": true,
+      "hard_cap_at": "2026-11-07T06:22:19.803499896Z",
+      "machine_id": "mmuby7hd4n",
+      "name": "large-d",
+      "node_id": "managed-mmuby7hd4n",
+      "provider": "boat",
+      "reap_at": null,
+      "size": "large",
+      "state": "online",
+      "usd_per_hour": 0.072
+    },
+    "recorded_at": "2026-11-06T19:00:30Z",
+    "shard_a_v3_fixed_bundle": {
+      "bytes": 44331,
+      "member_count": 55,
+      "part_sha16": [
+        "1301217341cd50d6",
+        "4878f1d07074f931",
+        "e08f98c5435f3960",
+        "e178c2323bdb675b",
+        "98f82c90da8fe294"
+      ],
+      "path": "preserved/p1-shards/shard-a/shard-a-v3-fixed.tar.gz",
+      "sha256": "2592bb112181f2d5a81e8c77b85458f4e822152ed7c14702df322a4e077bf507"
+    },
+    "shard_a_v4b": {
+      "acceptance_status": "NOT_ACCEPTED",
+      "archive_verified_on_vm_seq": 96,
+      "ask_thread_id": "1b1a1da6-1292-4c23-b17d-2aa733e08848",
+      "backend": "opencode",
+      "build_native_py_patch": "lib and ir under native-pkg/.lake/build",
+      "corrupted_queued_part00_action_id": "b4997c2c-574b-4eb6-9f1a-69ed4a726a97",
+      "field_extracted_seq": 100,
+      "generation": 6,
+      "interrupt_action_id": "f9a5ecd9-7029-40a4-807e-1aee7d951df1",
+      "interrupt_message_id": "ce8e3564-e04e-5df5-82ad-364cd8591a5b",
+      "launch_action_id": "a683a834-a5a8-4a86-a1f9-b7a35cd08ed5",
+      "lean_native_pid": 147426,
+      "lean_native_started": "2026-11-06T19:57:00Z",
+      "mission_id": "54001ed3-5175-44c0-972b-7fcde2f2abd1",
+      "model_override": "builtin/smart",
+      "remote_job_id": "8ada4717-0062-4b4f-ae01-9e747fdc7b2b",
+      "remote_node_id": "managed-mmuby7hd4n",
+      "resume_50min_message_id": "76426d41-82d0-5dbb-82f5-20790add5a96",
+      "resume_50min_steer_action_id": "81250faf-2401-4794-869e-f10a2a2acf15",
+      "run_id": "5cb5bac4-270d-43e4-bc57-e10f7e3a5022",
+      "status": "active_healthy_lean_native_build_exe_97pct",
+      "steer_action_id": "50f7f25c-acb6-499a-a1c9-7aa3fa3ca355",
+      "steer_message_id": "27614a15-2bdf-5428-a168-72d1513673c8",
+      "supersedes_mission_id": "183b999c-c953-482a-aabe-6944d3bd33c1",
+      "track": "shard-a-v4b",
+      "verify_log_dir": "verification-20261106T191301443112Z",
+      "verify_pass1_exit": 1,
+      "verify_pass1_failure": "final-check-proofs-field-nativehighshift missing Model.Field.NativeKernel.olean",
+      "verify_py_patches": [
+        "Proofs.Field.NativeKernel in final-build",
+        "skip StructuralAudit CompilerInventory NativeDependencies",
+        "definition_only includes Tests",
+        "NativeHighShift in local_order"
+      ]
+    }
+  },
+  "wave1_ownership_ledger": {
+    "base_snapshot": "xmss-hub-v3-warm",
+    "frozen_do_not_touch": [
+      "lakefile.toml",
+      "Spec/Field/Basic.lean",
+      "Spec/Field/Operations.lean",
+      "Spec/Field/Quotient.lean",
+      "Spec/Keccak/Basic.lean",
+      "Spec/Merkle/Basic.lean",
+      "Spec/Merkle/Pruned.lean",
+      "Spec/Transcript/Basic.lean",
+      "Spec/Transcript/Replay.lean",
+      "Spec/Vm/Basic.lean",
+      "Spec/Vm/Bytecode.lean",
+      "Spec/Vm/Equality.lean",
+      "Spec/Vm/Hints.lean",
+      "Spec/Vm/KeccakInternal.lean",
+      "Spec/Xmss/Encoding.lean",
+      "Spec/Xmss/Hints.lean",
+      "Model/Field/**",
+      "Proofs/Field/**",
+      "Tests/Field/**",
+      "Tests/Vm/**",
+      "Tests/Hub/ShardAHw.lean",
+      "Tests/Hub/ShardAHwRefinement.lean",
+      "Tests/Hub/cache_manager.py",
+      "Tests/Hub/mcp_client.py",
+      "Spec/Layout/Basic.lean",
+      "Model/Layout/Scalar.lean",
+      "Spec/Witness/Basic.lean",
+      "Spec/Bus/Basic.lean",
+      "Model/Bus/Scalar.lean",
+      "Proofs/Bus/Refinement.lean",
+      "Spec/Pcs/Ntt.lean",
+      "Spec/Pcs/Commit.lean",
+      "Model/Pcs/Ntt.lean",
+      "Model/Pcs/Commit.lean",
+      "$HUB/references/leanVM/**"
+    ],
+    "shards": {
+      "W1_keccak_gkr": {
+        "b64_sha256": "b308169d0c991e53156f72205151de5ae10f78d626a19b9456c71d7ae274f83b",
+        "gate_summary": "proveKeccakGkr_refines_spec kernel-checked; 14/14 files verified; axiom audit 347/0 rejections ({propext, Quot.sound}); spec audit 49/49 tight (0 vacuous/trivial); ALL_KECCAK_GKR_PARITY|PASS (syn_tiny, syn_jump, syn_deref, syn_keccak, xmss4, xmss16); frozen spec 15/15 OK",
+        "harvest_dir": "preserved/wave1",
+        "harvest_steer_action_id": "b49475b7-425c-4a2b-b9a2-e53801a147c2",
+        "launch_action_id": "109b742c-0c3e-4fb5-bc81-432b02f16828",
+        "machine_destroy_action_id": "daf2cead-3265-420e-82c3-321b6bbd3e8e",
+        "machine_id": "mmkdwnzban",
+        "machine_name": "large-e",
+        "machine_state": "destroyed",
+        "manifest_sha256": "93ecc00f7deb09e311b0d07b5a7213fe2bb95fba9f7ecee4f85461ac6526d384",
+        "mission_id": "fe5cd77c-4b3c-49e6-9ce5-226c12a3e3bc",
+        "model": "builtin/smart",
+        "owned_paths": [
+          "Spec/KeccakGkr/**",
+          "Model/KeccakGkr/**",
+          "Proofs/KeccakGkr/**",
+          "Tests/KeccakGkr/**"
+        ],
+        "size": "large",
+        "status": "completed_harvested_sha_verified",
+        "tar_sha256": "0a7856077ea6ae887926d0cc3c51024186f1eebfb07d9019005279797988a527",
+        "track": "xmss1400-w1-keccak-gkr"
+      },
+      "W2_pcs_whir_wire": {
+        "anti_timeout_steer3_action_id": "ab9da44b-cd80-44ca-b360-585c8007db55",
+        "anti_timeout_steer3_message_id": "218e43a4-ab1a-539a-9458-71f679bfd284",
+        "anti_timeout_steer3_status": "delivered_seq_3706_gen8_running",
+        "ask_copilot_thread_id": "60cfa58f-34a3-4736-87ea-d2b2c8dee098",
+        "cost_usd": 0.78068,
+        "ended_at": "2026-11-10T02:13:15Z",
+        "file_sha256": {
+          "Model/Pcs/Whir.lean": "eb0e8cab430da1fcefb94211cb645c4f906cacb6251ac3962a20e474cacfb4ec",
+          "Proofs/Pcs/Whir.lean": "084e89ac83bd59397ad796abf0eead585303a0e84e4ce132a0f32ce14aeb0c08",
+          "Spec/Pcs/Whir.lean": "b78b90f1a233d715c7acef1585e1afa9a14d1985944d8643542b8f6bb7628525",
+          "Tests/Pcs/Rust/src/main.rs": "9c7db75089409c7e9ad86c7059ef2596fb165270ae86e45a7a916173624383ca",
+          "Tests/Pcs/WhirCheck.lean": "577238fba717e033d6a6bedf9d75ca317ac5ce0d19456807a086b0051ad98531"
+        },
+        "first_prover_write_note": "02:45Z: 61 post-checkpoint edits replayed locally. 6/6 SPLICE_OK at seq 4910 and 4916. VM destroyed 02:15:57Z. rfl proofs stale.",
+        "gen11_died_at": "2026-11-10T01:59:14Z",
+        "gen11_terminal_reason": "remote_node_job",
+        "gen12_died_at": "2026-11-10T02:13:15Z",
+        "gen12_remote_job_id": "a8ef64af-249e-45a3-9d30-2917946b30b5",
+        "gen12_run_id": "113403ca-5adf-421e-b096-64abe0cdca02",
+        "hard_cap_at": "2026-11-10T03:25:21.289692890Z",
+        "harvest_steer_action_id": "90a95db3-fc74-41c5-a00e-097fc129281e",
+        "highest_seq_at_0008z": 4261,
+        "highest_seq_at_0019z": 4361,
+        "highest_seq_at_0030z": 4440,
+        "highest_seq_at_0045z": 4484,
+        "highest_seq_at_0059z": 4590,
+        "highest_seq_at_0111z": 4680,
+        "highest_seq_at_0122z": 4745,
+        "highest_seq_at_0137z": 4821,
+        "highest_seq_at_0149z": 4860,
+        "highest_seq_at_0205z": 4905,
+        "highest_seq_at_0213z": 4925,
+        "highest_seq_at_2210z": 3609,
+        "highest_seq_at_2223z": 3665,
+        "highest_seq_at_2241z": 3695,
+        "highest_seq_at_2256z": 3707,
+        "highest_seq_at_2259z": 3723,
+        "highest_seq_at_2311z": 3811,
+        "highest_seq_at_2323z": 3878,
+        "highest_seq_at_2340z": 3987,
+        "highest_seq_at_2345z": 4007,
+        "highest_seq_at_2356z": 4169,
+        "last_source_edit_seq": 4904,
+        "launch_action_id": "96b99c87-6155-426c-96ff-e43f8d4c8a33",
+        "lease_extension2_action_id": "4f02ff3d-83d8-4510-a0ba-4ddc79179087",
+        "lease_extension3_action_id": "1f409b21-44cc-45f8-a5ff-945cfd810407",
+        "lease_extension4_action_id": "7631c780-1dd4-4d30-a2cc-a680a636181a",
+        "lease_extension5_action_id": "50a64044-fbd7-45e2-abb4-04b9a8611308",
+        "lease_extension_action_id": "ef8dff6c-efa2-403c-8042-9295c23a1811",
+        "ledger_closed": true,
+        "machine_destroyed_at": "2026-11-10T02:15:57Z",
+        "machine_expires_at": "2026-11-10T03:25:21.289692890Z",
+        "machine_id": "mmydsgqkfc",
+        "machine_name": "large-f",
+        "machine_state": "destroyed",
+        "mission_id": "0070e9f1-a01b-40e1-9c75-b5b109885b31",
+        "model": "builtin/smart",
+        "owned_paths": [
+          "Spec/Pcs/RingSwitch.lean",
+          "Spec/Pcs/StackOpen.lean",
+          "Spec/Pcs/Whir.lean",
+          "Spec/Aggregate/**",
+          "Model/Pcs/RingSwitch.lean",
+          "Model/Pcs/StackOpen.lean",
+          "Model/Pcs/Whir.lean",
+          "Model/Aggregate/**",
+          "Proofs/Pcs/RingSwitch.lean",
+          "Proofs/Pcs/StackOpen.lean",
+          "Proofs/Pcs/Whir.lean",
+          "Proofs/Aggregate/**",
+          "Tests/Pcs/WhirCheck.lean",
+          "Tests/Pcs/WhirAxiomAudit.lean",
+          "Tests/Pcs/Rust/**",
+          "Tests/Aggregate/**"
+        ],
+        "phase": "W2-v3 f816bb6f builtin/smart on mmeh8btrpp; sol inference dead; archive delivery restarted as 4800-char slices",
+        "proof_gap": "proveWhir_refines, proveStackedOpening_refines, stackedWeight_refines, provePcsOpen_refines are rfl but Model definitions diverge from Spec. WhirAxiomAudit and audit-spec not re-run. T| probes may remain in WhirCheck.lean.",
+        "prover_steer_action_id": "757dfe27-ca7e-4ab3-889b-8fc2c2a7cda5",
+        "prover_steer_message_id": "cb43a764-9cf9-5a70-aaa1-409c98294888",
+        "reap_reason": "owner_completed",
+        "reconstructed_tar": "preserved/wave1/w2-reconstructed-4905.tar.gz",
+        "reconstructed_tar_sha256": "f87bc43e4a4548e3c27e920dc644fd58f29abae049f6402cfd0d209a0f34cbfd",
+        "replayed_edits": 61,
+        "resume_reject_content_only": "91b5712d-de0c-4509-b3d9-26fc9e68d6c8",
+        "resume_reject_continue_identity": "090f17db-f868-4a4c-8e74-8466f1d38299",
+        "size": "large",
+        "splice_ok": {
+          "syn_deref": "SPLICE_OK|syn_deref|stream=1886|merkle=3|wire_bytes=204289",
+          "syn_jump": "SPLICE_OK|syn_jump|stream=1886|merkle=3|wire_bytes=205057",
+          "syn_keccak": "SPLICE_OK|syn_keccak|stream=1886|merkle=3|wire_bytes=204553",
+          "syn_tiny": "SPLICE_OK|syn_tiny|stream=1886|merkle=3|wire_bytes=205377",
+          "xmss16": "SPLICE_OK|xmss16|stream=2086|merkle=4|wire_bytes=279705",
+          "xmss4": "SPLICE_OK|xmss4|stream=2038|merkle=4|wire_bytes=241553"
+        },
+        "status": "w2v3_harvested_sha_verified",
+        "stop_reading_steer2_action_id": "19a0d9fc-63f5-4c72-967d-943972c528fd",
+        "stop_reading_steer2_message_id": "404cc06a-63d0-50d5-b279-de5ded11de86",
+        "stop_reading_steer2_status": "delivered_seq_3694_gen6_timed_out_901s_89kb_thinking",
+        "stop_reading_steer_action_id": "5235666f-c1ec-492a-b824-13141d29c74e",
+        "stop_reading_steer_message_id": "d13b2d83-3f48-540c-b7f4-48c045f0d900",
+        "stop_reading_steer_status": "delivered_gen5",
+        "terminal_reason": "remote_node_job",
+        "track": "xmss1400-w2-pcs-whir-wire",
+        "updated_at": "2026-11-10T05:30:00Z",
+        "w2v2": {
+          "archive_delivery": "parts 0-2 accepted into transcript (queued false) but no tool calls; child never wrote files before usage_limit_wait",
+          "expires_at": "2026-11-10T06:11:48Z",
+          "hard_cap_at": "2026-11-10T15:11:48Z",
+          "mission_id": "794c289c-4855-4858-8fa0-54189894ad24",
+          "name": "large-c",
+          "node": "managed-mmeh8btrpp",
+          "part_messages": {
+            "part00": "9b0bcb72-5fff-5faa-98a6-2776339bef4c",
+            "part01": "dd0f99e1-8bc6-5bd0-a5fd-2166a24f21a8",
+            "part02": "e9b42713-d24b-5b86-ae02-eb8796d08ad6"
+          },
+          "resume_action": "6772b06e-ae34-46b7-9e23-fa7d6ad8f972",
+          "resumed_at": "2026-11-10T03:28:52Z",
+          "vm": "mmeh8btrpp"
+        },
+        "w2v3": {
+          "extract_verified": {
+            "concat": "f126b967694a8bd431e38e62436a4ac1745d3d6092c6f9d3d9fe04360c1cd7a0",
+            "files_ok": true,
+            "part-00": "7a717c7c19118cc54906b65f4e7cbf3632ac395f5f207f50553022a1c64df705",
+            "part-01": "c6fe8e1d35407e72f504d35fc655dcf84026fcfad6ac7b99af54734b850233fa",
+            "part-02": "c9664a5ccada555011b70d3557071df830ff9a3c2188a69b9b7e5bd0e184d8c3",
+            "tar": "f87bc43e4a4548e3c27e920dc644fd58f29abae049f6402cfd0d209a0f34cbfd"
+          },
+          "harvest": {
+            "audit": "WHIR_STRICT_AUDIT_COUNT 1064 REJECTIONS 0; Wire audited=18 tight=18; Whir audited=85 tight=85",
+            "b64_sha256": "77dde99b0cd8e10247c3e8f29d31fb8d1085f31af341627dce0b3039624d05a9",
+            "frozen_mismatches": 0,
+            "frozen_overlap_checked": 0,
+            "local_path": "/var/lib/sandboxed-node/23bad383-5b27-4b83-9a84-d86d34223509/preserved/wave1/w2-pcs-whir-wire.tar.gz",
+            "members": 17,
+            "note": "child goal-mode restarted and was steered to GOAL_COMPLETE; do not destroy VM until integration decision",
+            "splices": [
+              "SPLICE_OK|syn_deref|stream=1886|merkle=3|wire_bytes=204289",
+              "SPLICE_OK|syn_keccak|stream=1886|merkle=3|wire_bytes=204553",
+              "SPLICE_OK|xmss4|stream=2038|merkle=4|wire_bytes=241553",
+              "SPLICE_OK|xmss16|stream=2086|merkle=4|wire_bytes=279705",
+              "SPLICE_OK|syn_tiny|stream=1886|merkle=3|wire_bytes=205377",
+              "SPLICE_OK|syn_jump|stream=1886|merkle=3|wire_bytes=205057"
+            ],
+            "tgz_bytes": 40442,
+            "tgz_sha256": "6d883e77f9163717b157705a88fd3e5344b41c044746b121b121cdc6c5216429"
+          },
+          "mission_id": "f816bb6f-263a-4b59-9eba-396597e3ac92",
+          "model": "builtin/smart",
+          "next_gate": "close four rfl theorems, WhirAxiomAudit, audit-spec, strip T|, 6 splices, harvest",
+          "part02_slices_sent": [
+            "98ba8a10-3945-4cc1-aa47-c26b40df2cc2",
+            "d31f8c9e-06f2-4f4a-b5bb-9ba29e349af3",
+            "dca53c2b-45d3-4ac6-bb51-e8d50f11d98b",
+            "b0dd6977-0986-492b-bfd7-66d1e0bf4f79"
+          ],
+          "parts_on_vm": "none as of 04:00Z (PARTS 0, 7 identical rechecks)",
+          "parts_verified_on_vm": {
+            "part-00.b64": {
+              "sha256": "7a717c7c19118cc54906b65f4e7cbf3632ac395f5f207f50553022a1c64df705",
+              "size": 20000
+            },
+            "part-01.b64": {
+              "sha256": "c6fe8e1d35407e72f504d35fc655dcf84026fcfad6ac7b99af54734b850233fa",
+              "size": 20000
+            }
+          },
+          "proof_progress": {
+            "gates_passed": [
+              "Proofs/Aggregate/Wire.lean check",
+              "WHIR_STRICT_AUDIT_COUNT 1064",
+              "WHIR_STRICT_AUDIT_REJECTIONS 0",
+              "turbo-lean audit-spec Proofs/Aggregate/Wire.lean ok=true audited=18 tight=18"
+            ],
+            "last_action": "wrapped long lines in Tests/Pcs/WhirCheck.lean; building whircheck + rust oracle",
+            "splices_harvest": "not started"
+          },
+          "slice_00_00_action": "e21231d9-794f-4b6d-bcef-2171fd0c4080",
+          "slice_plan": "13 slices of 4800/800/2660 under w2-send/",
+          "supersedes": "794c289c-4855-4858-8fa0-54189894ad24",
+          "vm": "mmeh8btrpp",
+          "vm_id": "mmeh8btrpp"
+        },
+        "writes_since_prover_steer": 88
+      },
+      "W3_flat_witness_bus": {
+        "audit_note": "bumpCountsFlat is O(n) planar ByteArray, and xmss4/xmss16/xmss1400 Witness+Bus anchors PASS with 0 axiom rejections, but proveBusAndConstraintsFlat & FlatCheck bundleOf still delegate to boxed Scalar (0 LCNF lowered, 165.5s, 10.42 GiB RSS). Genuine unboxed SoA Witness+Bus+Execution must be delivered in Wave 2 K1/K3/K4.",
+        "b64_sha256": "ccb771cd349b74a3025860f065e6944c77f3d9b2288187f8096ebc4e1f11778d",
+        "harvest_dir": "preserved/wave1",
+        "launch_action_id": "3a4a33e1-67cf-48c3-89c1-e5889771227a",
+        "machine_destroy_action_id": "5c3df86c-7ff3-478e-b862-77096f08c633",
+        "machine_id": "mmnwhj7twx",
+        "machine_name": "xlarge-a",
+        "machine_state": "destroyed",
+        "manifest_sha256": "84af4fbce360da45d6b237fe9cbf98c6f99f215c3f1068aede24bfdf653badb9",
+        "mission_id": "65907ca6-3d33-45a4-a80a-08de10cc90f9",
+        "model": "builtin/smart",
+        "owned_paths": [
+          "Model/Witness/Flat.lean",
+          "Model/Bus/Flat.lean",
+          "Model/Bus/Native.lean",
+          "Proofs/Witness/FlatRefinement.lean",
+          "Proofs/Bus/FlatRefinement.lean",
+          "Tests/Witness/FlatCheck.lean",
+          "Tests/Witness/FlatAxiomAudit.lean",
+          "Tests/Bus/FlatCheck.lean",
+          "Tests/Bus/FlatAxiomAudit.lean"
+        ],
+        "size": "xlarge",
+        "status": "completed_harvested_parity_pass_delegates_to_scalar",
+        "tar_sha256": "f37761b30cbc38200cc8ec265a1e2b22d8a277cde6c98ab3b9f5da904ace3af0",
+        "track": "xmss1400-w3-flat-witness-bus",
+        "xmss1400_scalar_baseline": {
+          "bundle_ms": 97349,
+          "bus_ms": 52045,
+          "exec_ms": 14504,
+          "iv_ms": 1657,
+          "parity": "PASS",
+          "peak_rss_kib": 10923776,
+          "total_ms": 165555
+        }
+      },
+      "W4_cli_traces_tierb": {
+        "b64_sha256": "794d0a35c89014e647ed1058289d6db683107280d0f6a89f7799a205425d2ff1",
+        "gate_summary": "COMPLETE (40 commands; tampered proof rejected exit 1; CLI_STRICT_AUDIT 130/0; xmss1400 statement 666bbe77 & hints c5f04bfb byte-exact; Tier B 5 alternating pairs on xmss4/xmss16 PASS)",
+        "harvest_dir": "preserved/wave1",
+        "launch_action_id": "30f33c6c-361f-4513-a49b-4f9ae7adac9a",
+        "machine_id": "mmn553y33j",
+        "machine_name": "medium-b",
+        "machine_state": "destroyed_owner_completed",
+        "manifest_sha256": "b41fd2e5e03ee55b3537388b469f3b62e4064a1795ad5f92fdc027a661378c99",
+        "mission_id": "bcff8e91-0704-4645-b8f8-be659c232cfd",
+        "model": "ethereumfoundation/glm-5.3",
+        "on_vm_original_tar_sha256": "0591022cf997991fb4b2f964980c21dff451b956a5019f5625ab0fd28a375e68",
+        "owned_paths": [
+          "Model/Cli/**",
+          "Tests/Cli/**"
+        ],
+        "size": "default",
+        "status": "completed_reaped_reconstructed_8_of_8_sources_sha_verified",
+        "tar_sha256": "231ddb0cc6b6855050c5b3a481a7198a44945297196ca71f48b3cdebb8d8a235",
+        "track": "xmss1400-w4-cli-traces-tierb"
+      },
+      "W5_maxwell_audit_mutants": {
+        "b64_sha256": "c9223a21d06974c7240e48cc8cd2c02cdb25937322a841f32f48c00181f1af99",
+        "gate_summary": "34/34 mutants rejected across all 10 categories (29 Rust + 5 Lean); WholeRepoAxiomAudit 5217 declarations across 30 Spec/Model/Proofs modules, 0 rejections, axioms {propext, Quot.sound}",
+        "harvest_dir": "preserved/wave1",
+        "launch_action_id": "2131745f-b8f1-4b98-b723-cb964e84ba4e",
+        "machine_destroy_action_id": "6571413d-2177-44d2-861e-92b495738871",
+        "machine_id": "mmfj4eh737",
+        "machine_name": "medium-c",
+        "machine_state": "destroyed",
+        "manifest_sha256": "9c75929a5bafa9542968e8477d6065dadd57870489444d575bc03cb4c21d66aa",
+        "mission_id": "35b5870c-f8b9-436a-8d01-ea7c7c731a75",
+        "model": "ethereumfoundation/qwen3.8-27b",
+        "owned_paths": [
+          "Tests/Audit/**"
+        ],
+        "size": "default",
+        "status": "completed_harvested_sha_verified",
+        "tar_sha256": "9d260c8cef39c5ef89c795435c1286ac0eb550db1ce8ea952d00a61c986c6ac8",
+        "track": "xmss1400-w5-maxwell-audit",
+        "writer": false
+      }
+    }
+  },
+  "workers": [
+    {
+      "machine_id": "mmkwmn28jt",
+      "machine_name": "xlarge-c",
+      "mission_id": "56946665-1cc5-4424-b881-45a76a2393ce",
+      "ownership": "Historical P0 run; superseded for durable fixtures by 26673b5d-a2ef-4d4f-b891-ec0018d795ea",
+      "status": "completed_vm_reaped_before_harvest",
+      "track": "xmss1400-p0-baseline"
+    },
+    {
+      "machine_id": "mmcdd8gqsp",
+      "machine_name": "xlarge-f",
+      "mission_id": "26673b5d-a2ef-4d4f-b891-ec0018d795ea",
+      "ownership": "Regenerate P0 baseline + fixtures under /var/lib/orb-node/work/caches/xmss-p0-59c2984-recovery and snapshot before exit",
+      "status": "completed_snapshotted_vm_destroyed_audited",
+      "track": "xmss1400-p0-baseline-recovery"
+    },
+    {
+      "machine_id": "mmy987xvnq",
+      "machine_name": "large-b",
+      "mission_id": "13e62f04-065c-4271-b8de-4dbfab32e204",
+      "ownership": "Minimal uncommitted turbo-lean patch closing BuildExe runtime path, link-order shadowing, UInt64 bit-63 ABI wrapper, and end-to-end native canary",
+      "status": "completed_bundle_harvested_vm_destroyed",
+      "track": "xmss1400-p0-compiler-probe"
+    },
+    {
+      "machine_id": "mmmna7ussx",
+      "machine_name": "large-f",
+      "mission_id": "6a1826f7-3812-4b23-b4c6-77dcd80a64a0",
+      "ownership": "S1/S2 Spec/Model/Proofs/Tests Field (13 Lean files, 756 lines, 75 theorems, 4 mutants, 245 Rust/Lean vectors) preserved in orb-snap-default-xmss-p1-field-59c2984-zvue and local preserved/",
+      "status": "completed_snapshotted_vm_reaped_sources_harvested",
+      "track": "xmss1400-p1-field"
+    },
+    {
+      "machine_id": "mmg36ymcyn",
+      "machine_name": "large-v",
+      "mission_id": "b6f545f8-4c4e-45bc-b0af-a5ad8baf8c11",
+      "ownership": "Replaced by multi-family quorum 9c7b6ee3-0005-4f2b-952c-bbc43c360a72 + 58c71d04-a236-420f-a437-d531f90084b1",
+      "status": "interrupted_provider_quota_vm_destroyed",
+      "track": "consult-p1-field-review"
+    },
+    {
+      "machine_id": "mmn4z6fyj2",
+      "machine_name": "large-f",
+      "mission_id": "bc99c5d2-d1fa-48aa-b701-6338c6d59b2c",
+      "ownership": "Assemble /var/lib/orb-node/work/caches/xmss-hub-unified from P0 recovery + local preserved seed, run Field + BuildExe P0 smoke tests, emit hub-manifest.json & secret-provenance.json, sync, and snapshot orb-snap-default-xmss-hub-unified-v2-z2kt",
+      "status": "completed_snapshotted_v2_verified_vm_destroyed",
+      "track": "xmss1400-hub-unified"
+    },
+    {
+      "machine_id": "mm7qnrb8yz",
+      "machine_name": "large-b",
+      "mission_id": "6ba6e383-b749-4763-bff4-83ccace0f29b",
+      "ownership": "Read-only restoration verification of orb-snap-default-xmss-hub-unified-v2-z2kt (32/32 SHA-256 PASS, 15/15 provenance hits PASS, live smoke tests PASS)",
+      "status": "completed_verified_vm_destroyed",
+      "track": "xmss1400-hub-v2-restore-probe"
+    },
+    {
+      "machine_id": "mmwdzj45wu",
+      "machine_name": "large-b",
+      "mission_id": "d855332a-b203-407c-b322-ab76940eb754",
+      "ownership": "Exclusive owner of LeanVmXmss/{Spec,Model,Proofs,Tests}/Field/** (remove Classical.choice, K.inv/E.inv/Scaled/pow/frobenius, 8B/24B LE codecs, algebraic laws, Rust differential + lean-native canary) -> /var/lib/orb-node/work/caches/p1-shard-a-out/ (superseded by A v2 41108234-5367-4582-afcf-7924f6e240c0)",
+      "status": "completed_PARTIAL_BLOCKED_11_missing_obligations_vm_destroyed_owner_completed_sources_reconstructed",
+      "track": "xmss1400-p1-shard-a-field"
+    },
+    {
+      "machine_id": "mmj78bb29g",
+      "machine_name": "large-f",
+      "mission_id": "92cf4809-232d-43f1-a9cf-ad5325701091",
+      "ownership": "Exclusive owner of LeanVmXmss/{Spec,Model,Proofs,Tests}/{Keccak,Transcript,Merkle}/** (Keccak-f[1600], Ethereum Keccak-256, Merkle compress/hashToScalars, overwrite-duplex FiatShamirState/ProverState + pow_grinding, proofs, differential + lean-native canary) -> /var/lib/orb-node/work/caches/p1-shard-b-out/ (rejected by Astra 26835166 + Gemini e18f9659; superseded by B v2 e5ea90e8-a89b-419b-9ac3-67749a805a43)",
+      "status": "rejected_quorum_FAIL_vm_destroyed_owner_completed",
+      "track": "xmss1400-p1-shard-b-keccak-transcript"
+    },
+    {
+      "lease_extension_action_id": "94fabe33-78af-4bc6-9b42-01ef6e61b4e5",
+      "machine_expires_at": "2026-11-06T14:06:56Z",
+      "machine_id": "mmhjuuwuhn",
+      "machine_name": "large-i",
+      "mission_id": "b944b95a-d997-4f46-af19-382cf954f096",
+      "ownership": "Exclusive owner of LeanVmXmss/{Spec,Model,Proofs,Tests}/{Xmss,Vm}/** (leaves.bin parser, Coverage/statement_digest, XMSS 1400 hints, unified_guest guess=19, GPow, 6-opcode write-once VM interpreter 1,146,537 cycles, proofs, differential + lean-native canary) -> /var/lib/orb-node/work/caches/p1-shard-c-out/",
+      "status": "active_healthy_full_vm_differential_PASSED_closing_proofs_and_lnir",
+      "track": "xmss1400-p1-shard-c-xmss-vm"
+    },
+    {
+      "archive_delivery_action_id": "96e2e0fb-b3b4-4bee-a8c7-1184bfcb42b1",
+      "archive_delivery_status": "completed_accepted_queued",
+      "launch_action_id": "9ab198f9-1475-4f1f-9441-149425d52e2d",
+      "lease_extension_action_id": "ecabeece-a9ef-47cc-86c0-b10fc5005cdf",
+      "machine_expires_at": "2026-11-06T14:01:33Z",
+      "machine_id": "mmgu95ufvs",
+      "mission_id": "41108234-5367-4582-afcf-7924f6e240c0",
+      "ownership": "Shard A v2 continuation closing 11 missing Field obligations from reconstructed 24/24 v1 sources",
+      "status": "active_healthy",
+      "track": "xmss1400-p1-shard-a-v2"
+    },
+    {
+      "archive_delivery_action_id": "fbda2472-0222-4f38-a862-336909975bea",
+      "archive_delivery_status": "completed_accepted_not_queued",
+      "launch_action_id": "44b70e5e-9df6-4820-b4db-bdf97059d992",
+      "machine_id": "mmrjymm2bg",
+      "mission_id": "e5ea90e8-a89b-419b-9ac3-67749a805a43",
+      "ownership": "Shard B v2 remediation: fixed line 90 horizontal_packing warning in Proofs/Transcript/Registers.lean; harvested 32/32 archive; superseded by B v3 98902a45-a4fe-45d9-953d-1ad0f6d1365b",
+      "status": "completed_INCOMPLETE_harvested_vm_destroyed",
+      "track": "xmss1400-p1-shard-b-v2"
+    },
+    {
+      "archive_delivery_action_id": "099b328f-bb47-4088-8492-0d30dae7d65f",
+      "archive_delivery_message_id": "ac143b22-ae77-5a8b-841a-1ac4af27f371",
+      "archive_delivery_status": "completed_accepted_queued",
+      "fork_action_id": "f15ce203-0124-47ca-b32d-0bc86479a95c",
+      "forked_from_machine_id": "mmhjuuwuhn",
+      "launch_action_id": "768aac5b-83df-492e-9f39-8fbb2d972ec6",
+      "machine_expires_at": "2026-11-06T14:26:05Z",
+      "machine_id": "mmeg5xe3bp",
+      "machine_name": "large-c",
+      "mission_id": "98902a45-a4fe-45d9-953d-1ad0f6d1365b",
+      "model": "openai/gpt-6.1-sol",
+      "node_id": "managed-mmeg5xe3bp",
+      "ownership": "Shard B v3 continuation on fork of C VM without snapshot mutation; closing remaining Merkle, pruned, octopus, replay, 5-mutant diff, native permutation, and strict audit obligations",
+      "project": "default",
+      "status": "active_healthy",
+      "track": "xmss1400-p1-shard-b-v3"
+    }
+  ]
+}
