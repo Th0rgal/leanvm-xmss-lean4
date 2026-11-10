@@ -1,4 +1,5 @@
 import Model.Cli.Inputs
+import Model.Cli.E2E
 import Model.Vm.Linear
 
 /-!
@@ -45,6 +46,7 @@ structure ProofArtifact where
   cycles : Option Nat
   memoryCells : Option Nat
   memoryKeccak : ByteArray
+  wireBytes : ByteArray := ByteArray.empty
   deriving Inhabited
 
 /-- A pluggable prover entrypoint: context, freshly derived statement, fresh hints. -/
@@ -115,10 +117,25 @@ def stubProver : AggregateProverFn := fun ctx statement hints => do
     cycles := none, memoryCells := none,
     memoryKeccak := ByteArray.empty }
 
+def e2eProver (fuel : Nat := 10000000) : AggregateProverFn := fun ctx statement hints => do
+  if ctx.records.size > vmProverMaxRecords then
+    throw (IO.userError s!"e2e prover is for fixtures of at most {vmProverMaxRecords} records")
+  let encoded := encodeHints hints
+  let (wire, run) ← proveLeafEthereum ctx.program ctx.frame ctx.schedule ctx.seed
+    ctx.bytecodeValue ctx.records ctx.logInvRate statement hints fuel
+  return {
+    prover := "e2e", logInvRate := ctx.logInvRate,
+    records := ctx.records.size, signers := (signersOf ctx.records).size,
+    hintEntries := hints.size, statement,
+    hintsKeccak := Spec.Vm.KeccakInternal.hash encoded,
+    cycles := some run.cycles, memoryCells := some run.memUsed,
+    memoryKeccak := run.memoryKeccak, wireBytes := wire }
+
 def proverOf (name : String) : IO AggregateProverFn :=
   match name with
   | "vm" => pure (vmWitnessProver)
   | "stub" => pure stubProver
+  | "e2e" => pure (e2eProver)
   | other => throw (IO.userError s!"unknown prover: {other}")
 
 /-! ### One timed pass -/
@@ -173,7 +190,7 @@ def stringFlag (args : List String) (name : String) : IO String := do
   | none => throw (IO.userError s!"missing required flag {name}")
 
 /-- Usage: aggregateMain [--xmss N] --inputs DIR --out-proof PATH
-  [--log-inv-rate 1] [--repeat 3] [--cooldown-ms 2000] [--prover vm|stub] -/
+  [--log-inv-rate 1] [--repeat 3] [--cooldown-ms 2000] [--prover vm|stub|e2e] -/
 def aggregateMain (args : List String) : IO Unit := do
   let xmss ← natFlag args "--xmss" 0
   let inputs ← stringFlag args "--inputs"
@@ -192,9 +209,9 @@ def aggregateMain (args : List String) : IO Unit := do
   let out ← IO.getStdout
   out.putStrLn (s!"BENCH|impl=lean-cli|prover={proverName}|xmss={xmss}|records={records.size}" ++
     s!"|signers={(signersOf records).size}|log_inv_rate={logInvRate}|repeat={repeatCount}|cooldown_ms={cooldownMs}")
-  let (_, warmupNanos) ← runAggregatePass prover ctx
+  let (warmupArtifact, warmupNanos) ← runAggregatePass prover ctx
   out.putStrLn s!"WARMUP|nanos={warmupNanos}"
-  let mut last : ProofArtifact := default
+  let mut last : ProofArtifact := warmupArtifact
   let mut times : Array Nat := #[]
   for i in [1:repeatCount+1] do
     if cooldownMs > 0 then IO.sleep cooldownMs.toUInt32
@@ -208,8 +225,12 @@ def aggregateMain (args : List String) : IO Unit := do
     s!"{(last.memoryCells.map toString |>.getD "none")}|memory_keccak256=" ++
     (if last.memoryKeccak.isEmpty then "none" else hex last.memoryKeccak))
   out.putStrLn s!"STATS|passes={times.size}|mean_nanos={mean}"
-  let text := artifactLines last
-  IO.FS.writeFile (⟨outProof⟩ : System.FilePath) text
-  out.putStrLn s!"ARTIFACT|path={outProof}|bytes={text.toUTF8.size}"
+  if !last.wireBytes.isEmpty then
+    IO.FS.writeBinFile (⟨outProof⟩ : System.FilePath) last.wireBytes
+    out.putStrLn s!"ARTIFACT|path={outProof}|bytes={last.wireBytes.size}"
+  else
+    let text := artifactLines last
+    IO.FS.writeFile (⟨outProof⟩ : System.FilePath) text
+    out.putStrLn s!"ARTIFACT|path={outProof}|bytes={text.toUTF8.size}"
 
 end LeanVmXmss.Model.Cli

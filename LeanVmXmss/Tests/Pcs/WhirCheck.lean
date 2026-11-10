@@ -80,6 +80,31 @@ def elem (seed tag : UInt64) : E :=
 def nums (values : Array Nat) : String :=
   values.foldl (fun acc value => if acc.isEmpty then toString value else acc ++ "," ++ toString value) ""
 
+def keyBytes (seed : UInt8) : ByteArray :=
+  Model.Pcs.Ntt.foldRange 32 (fun acc index =>
+    acc.push ((seed + UInt8.ofNat index) * 17)) ByteArray.empty
+
+def messageBytes (seed : UInt8) : ByteArray :=
+  Model.Pcs.Ntt.foldRange 32 (fun acc index =>
+    acc.push ((seed + 3) * UInt8.ofNat (index + 1))) ByteArray.empty
+
+def wireClaims (count : Nat) : Spec.Aggregate.Wire.SignatureClaims :=
+  let xmss := Model.Pcs.Ntt.foldRange count (fun acc index =>
+    acc.push ⟨keyBytes (0x11 + UInt8.ofNat index), messageBytes (0x41 + UInt8.ofNat index)⟩) #[]
+  let sphincs := Model.Pcs.Ntt.foldRange (count - 1) (fun acc index =>
+    acc.push ⟨keyBytes (0x81 + UInt8.ofNat index), messageBytes (0xc1 + UInt8.ofNat index)⟩) #[]
+  ⟨xmss, sphincs⟩
+
+def wireCase (name : String) (count : Nat) (daRoot : Option ByteArray) : String :=
+  let proof : Spec.Aggregate.Wire.EthereumProof :=
+    ⟨wireClaims count, daRoot, ⟨Model.Pcs.Ntt.foldRange 23 (fun acc _ => acc.push Spec.Field.zero) #[], Spec.Field.zero⟩,
+     ⟨#[⟨7, 8, 9⟩, ⟨10, 11, 12⟩], #[⟨#[], #[]⟩]⟩⟩
+  let encoded := Spec.Aggregate.Wire.EthereumProof.toBytes proof
+  let bare := Spec.Aggregate.Wire.EthereumProof.toBytesWithoutPubkeys proof
+  "WIRE|" ++ name ++ "|" ++ hexBytes encoded ++ "|" ++ hexBytes bare ++ "|" ++
+    toString (Spec.Aggregate.Wire.EthereumProof.proofSize proof) ++ "|" ++
+    hexBytes (Model.Aggregate.Wire.daDigest daRoot)
+
 def main (args : List String) : IO Unit := do
   let mode := args.head?.getD "synthetic"
   let challenges := LeanVmXmss.Model.Pcs.Ntt.foldRange 6 (fun acc index => acc.push (elem 0x111 (UInt64.ofNat index))) #[]
@@ -119,6 +144,14 @@ def main (args : List String) : IO Unit := do
     for name in ["xmss4", "xmss16"] do
       let bytes ← IO.FS.readBinFile ("/var/lib/orb-node/work/caches/xmss-hub-v3/oracle/" ++ name ++ "/seed.bin")
       IO.println ("DA|" ++ name ++ "|" ++ hexBytes (LeanVmXmss.Model.Aggregate.Wire.daDigest (some (bytes.extract 0 32))))
+  if mode == "wire" || mode == "all" then
+    IO.println (wireCase "syn_tiny" 1 none)
+    IO.println (wireCase "syn_jump" 2 (some ((Model.Pcs.Ntt.foldRange 32 (fun acc _ => acc.push 7) ByteArray.empty))))
+    IO.println (wireCase "syn_deref" 0 none)
+    IO.println (wireCase "syn_keccak" 3 (some ((Model.Pcs.Ntt.foldRange 32 (fun acc _ => acc.push 9) ByteArray.empty))))
+    for name in ["xmss4", "xmss16"] do
+      let bytes ← IO.FS.readBinFile ("/var/lib/orb-node/work/caches/xmss-hub-v3/oracle/" ++ name ++ "/seed.bin")
+      IO.println (wireCase name 2 (some (bytes.extract 0 32)))
   IO.println ("PARITY_DONE|" ++ mode)
   if mode == "probe" then
     IO.println "PROBE|start"

@@ -1,6 +1,7 @@
 import Lean
 import Model.Cli.Inputs
 import Model.Cli.Aggregate
+import Model.Cli.E2E
 import Tests.Cli.Check
 
 /-!
