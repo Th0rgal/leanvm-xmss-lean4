@@ -1,5 +1,6 @@
 import Tests.Vm.RuntimeIO
 import Model.Witness.Scalar
+import Model.Witness.VmWitnessPar
 
 open LeanVmXmss
 open LeanVmXmss.Spec.Vm
@@ -61,58 +62,81 @@ def ivOf (program : Array Op) : ByteArray :=
   let logBytecode := Spec.Witness.log2FloorPow2 program.size
   Model.Layout.fiatShamirIvFast (Model.Layout.stackBytecodeColumnsFast logBytecode columns)
 
-def emitCase (name : String) (program : Array Op) (frame : Nat) (hints : Array (Array RHint))
-    (streams : Array Stream) (publicInput : Array E) (fuel : Nat) : IO String := do
-  let state ← Tests.Vm.liftError (Model.Vm.initial frame publicInput program.size)
+def emitFastCase (name : String) (fprog : FastProg) (frame : Nat)
+    (fastStreams : FastStreams) (publicInput : Array E) (fuel : Nat) : IO String := do
+  let tb0 ← IO.monoMsNow
+  let streamWords := estimateStreamWords fastStreams
+  let estMem := max (max frame 2) (max 131072 (fprog.size + frame + 5 * streamWords))
+  let seed := max (fprog.size + 2) (min Spec.Vm.maxCells (max estMem 262144))
+  let gInit ← IO.lazyPure (fun () => buildFastGPow seed)
   let t0 ← IO.monoMsNow
-  let iv ← IO.lazyPure (fun () => ivOf program)
+  let iv ← IO.lazyPure (fun () => ivOfParWith gInit fprog)
   let tIv ← IO.monoMsNow
-  let traceRes ← IO.lazyPure (fun () => executeTrace fuel program hints ⟨state, streams⟩)
-  let trace ← Tests.Vm.liftError traceRes
+  let execRes ← IO.lazyPure (fun () => executeFastWith fuel fprog gInit frame publicInput fastStreams)
+  let exec ← Tests.Vm.liftError execRes
   let tExec ← IO.monoMsNow
-  let initInput := #[Spec.Witness.cellWord state.memory 0, Spec.Witness.cellWord state.memory 1]
-  let bundle ← IO.lazyPure (fun () => bundleOf program iv initInput trace)
+  let fw ← IO.lazyPure (fun () => buildWitnessPar fprog exec)
+  let tWit ← IO.monoMsNow
+  let root ← IO.lazyPure (fun () => l0RootFromLanesPar fw.lanesBytes fw.layout.shape)
+  let tRoot ← IO.monoMsNow
+  let announce ← IO.lazyPure (fun () => announceDigestFast fw.logMem fw.rows)
+  let (challenge, official) ← IO.lazyPure (fun () =>
+    challengePairFast iv publicInput fw.logMem fw.rows root)
   let t1 ← IO.monoMsNow
-  let sized := bundle.sized
-  let roots := Spec.Merkle.hashToScalars bundle.root
+  let roots := Spec.Merkle.hashToScalars root
   let lines :=
     "CASE|" ++ name ++ "\n" ++
-    "EXEC|" ++ toString sized.trace.cycles ++ "|" ++ toString sized.trace.memUsed ++ "|" ++
-      toString sized.logMem ++ "|" ++ counts sized.rows ++ "|" ++ toString sized.trace.unconstrained ++ "\n" ++
-    "ANNOUNCE|" ++ hexBytes bundle.announce ++ "\n" ++
+    "EXEC|" ++ toString exec.cycles ++ "|" ++ toString exec.memUsed ++ "|" ++
+      toString fw.logMem ++ "|" ++ counts fw.rows ++ "|" ++ toString exec.unconstrained ++ "\n" ++
+    "ANNOUNCE|" ++ hexBytes announce ++ "\n" ++
     "ROOT|" ++ limbs roots.1 ++ "|" ++ limbs roots.2 ++ "\n" ++
-    "CHAL|" ++ limbs bundle.challenge ++ "|" ++ limbs bundle.official ++ "\n"
-  IO.eprintln s!"TIMING_MS|{name}|total={t1 - t0}|iv={tIv - t0}|exec={tExec - tIv}|bundle={t1 - tExec}"
+    "CHAL|" ++ limbs challenge ++ "|" ++ limbs official ++ "\n"
+  IO.eprintln s!"TIMING_MS|{name}|gpow={t0 - tb0}|total={t1 - t0}|phase1={tWit - tIv}|iv={tIv - t0}|exec={tExec - tIv}|witness={tWit - tExec}|root={tRoot - tWit}|chal={t1 - tRoot}"
   IO.print lines
   return lines
 
-def decodeAscii (bytes : ByteArray) : Except String String := do
-  let list := bytes.data.toList
-  if list.any (fun b => b.toNat >= 128) then throw "non-ASCII hint name"
-  return String.ofList (list.map fun b =>
-    if h : b.toNat.isValidChar then Char.ofNatAux b.toNat h else '?')
+def emitCase (name : String) (program : Array Op) (frame : Nat) (hints : Array (Array RHint))
+    (streams : Array Stream) (publicInput : Array E) (fuel : Nat) : IO String := do
+  let fprog ← IO.lazyPure (fun () => compileFastProg program hints)
+  let fastStreams ← IO.lazyPure (fun () => buildFastStreamsFromStreams fprog.streamNames streams)
+  emitFastCase name fprog frame fastStreams publicInput fuel
 
-def readHints (bytes : ByteArray) : Except String (Array Spec.Xmss.HintEntry) := do
+def decodeAsciiFast (bytes : @& ByteArray) (offset len : Nat) : Except String String := Id.run do
+  let mut chars : Array Char := Array.emptyWithCapacity len
+  for i in [:len] do
+    let b := (bytes[offset + i]?.getD 0).toNat
+    if b >= 128 then return .error "non-ASCII hint name"
+    chars := chars.push (if h : b.isValidChar then Char.ofNatAux b h else '?')
+  return .ok (String.ofList chars.toList)
+
+def readFastStreamsBin (names : @& Array String) (bytes : @& ByteArray) :
+    Except String FastStreams := Id.run do
   let mut offset := 0
-  let mut hints : Array Spec.Xmss.HintEntry := #[]
+  let mut entries : Array (Array (Array E)) := Array.replicate names.size #[]
   while offset < bytes.size do
-    if offset + 4 > bytes.size then throw "truncated hint name"
-    let nameLen := (Spec.Xmss.readLE bytes offset 4).toNat
+    if offset + 4 > bytes.size then return .error "truncated hint name"
+    let nameLen := (getU32Fast bytes (offset >>> 2).toUSize).toNat
+    let nameLen := if (offset &&& 3) == 0 then nameLen else (Spec.Xmss.readLE bytes offset 4).toNat
     offset := offset + 4
-    if offset + nameLen + 4 > bytes.size then throw "truncated hint"
-    let name ← decodeAscii (bytes.extract offset (offset + nameLen))
+    if offset + nameLen + 4 > bytes.size then return .error "truncated hint"
+    let name ← match decodeAsciiFast bytes offset nameLen with
+      | .ok s => s
+      | .error e => return .error e
     offset := offset + nameLen
     let count := (Spec.Xmss.readLE bytes offset 4).toNat
     offset := offset + 4
-    let mut values : Array E := #[]
-    for _ in [:count] do
-      if offset + 24 > bytes.size then throw "truncated hint word"
-      values := values.push ⟨Spec.Xmss.readLE bytes offset 8,
-        Spec.Xmss.readLE bytes (offset + 8) 8,
-        Spec.Xmss.readLE bytes (offset + 16) 8⟩
-      offset := offset + 24
-    hints := hints.push ⟨name, values⟩
-  return hints
+    if offset + 24 * count > bytes.size then return .error "truncated hint word"
+    if let some sid := names.findIdx? (· == name) then
+      let mut values : Array E := Array.emptyWithCapacity count
+      for _ in [:count] do
+        values := values.push ⟨Spec.Xmss.readLE bytes offset 8,
+          Spec.Xmss.readLE bytes (offset + 8) 8,
+          Spec.Xmss.readLE bytes (offset + 16) 8⟩
+        offset := offset + 24
+      entries := entries.modify sid (fun es => es.push values)
+    else
+      offset := offset + 24 * count
+  return .ok ⟨entries, Array.replicate names.size 0⟩
 
 def main (arguments : List String) : IO Unit := do
   let mode := arguments.head?.getD "synthetic"
@@ -133,18 +157,23 @@ def main (arguments : List String) : IO Unit := do
       (load (← IO.FS.readBinFile (directory ++ "/bytecode.bin")))
     let schedule ← Tests.Vm.liftError
       (Tests.Vm.readSchedule (← IO.FS.readBinFile (directory ++ "/schedule.bin")) program.size)
-    let hints ← Tests.Vm.liftError
-      (readHints (← IO.FS.readBinFile (directory ++ "/hints.bin")))
-    let streams ← IO.lazyPure (fun () => Tests.Vm.streamsOf hints)
+    let fprog ← IO.lazyPure (fun () => compileFastProg program schedule.2)
+    let hintsBin ← IO.FS.readBinFile (directory ++ "/hints.bin")
+    let fastStreams ← Tests.Vm.liftError (readFastStreamsBin fprog.streamNames hintsBin)
     let statement ← IO.FS.readBinFile (directory ++ "/statement.bin")
     let publicInput : Array E :=
       #[⟨Spec.Xmss.readLE statement 0 8, Spec.Xmss.readLE statement 8 8, 0⟩,
         ⟨Spec.Xmss.readLE statement 16 8, Spec.Xmss.readLE statement 24 8, 0⟩]
-    let out ← emitCase "xmss1400" program schedule.1 schedule.2 streams
+    let caseName :=
+      if directory.endsWith "xmss4" || directory.endsWith "xmss4/" then "xmss4"
+      else if directory.endsWith "xmss16" || directory.endsWith "xmss16/" then "xmss16"
+      else "xmss1400"
+    let out ← emitFastCase caseName fprog schedule.1 fastStreams
       publicInput 2000000
-    let expected ← IO.FS.readFile "Tests/Witness/evidence/oracle/xmss1400.txt"
-    if out != expected then
-      throw (IO.userError "xmss1400 oracle mismatch")
-    IO.eprintln "XMSS1400_PARITY|PASS"
+    if directory.endsWith "xmss1400" || directory.endsWith "xmss1400/" then
+      let expected ← IO.FS.readFile "Tests/Witness/evidence/oracle/xmss1400.txt"
+      if out != expected then
+        throw (IO.userError "xmss1400 oracle mismatch")
+      IO.eprintln "XMSS1400_PARITY|PASS"
   if !(mode == "synthetic" || mode == "xmss" || mode == "all") then
     throw (IO.userError "usage: Check synthetic|xmss|all [oracle-dir]")

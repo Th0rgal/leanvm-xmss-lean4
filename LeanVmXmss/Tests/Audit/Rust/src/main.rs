@@ -711,9 +711,110 @@ fn json_escape(s: &str) -> String {
         .collect()
 }
 
+const MUT34_META: [(u32, &str, &str); 34] = [
+    (1, "public_input_statement", "m01_claim_message_digest_bit"),
+    (2, "public_input_statement", "m02_claim_pubkey_root_bit"),
+    (3, "public_input_statement", "m03_unsorted_signer_claims"),
+    (4, "public_input_statement", "m04_da_commitment_root_some"),
+    (5, "public_input_statement", "m05_deferred_bytecode_point_coord"),
+    (6, "transcript_pow_wire", "m06_fiat_shamir_scalar_swap"),
+    (7, "transcript_pow_wire", "m07_fiat_shamir_stream_rotate"),
+    (8, "transcript_pow_wire", "m08_whir_pow_grinding_nonce"),
+    (9, "transcript_pow_wire", "m09_wire_truncated_bytes"),
+    (10, "transcript_pow_wire", "m10_wire_trailing_byte_injection"),
+    (11, "pcs_merkle_rounds", "m11_l0_commitment_root_bit"),
+    (12, "pcs_merkle_rounds", "m12_l0_commitment_root_nonzero_c2"),
+    (13, "pcs_merkle_rounds", "m13_l0_merkle_leaf_word_bit"),
+    (14, "pcs_merkle_rounds", "m14_l0_merkle_sibling_digest_bit"),
+    (15, "pcs_merkle_rounds", "m15_whir_round1_commitment_root_bit"),
+    (16, "pcs_merkle_rounds", "m16_whir_deeper_round_merkle_sibling_bit"),
+    (17, "bus_logup_gkr", "m17_bus_gkr_shared_root_claim"),
+    (18, "bus_logup_gkr", "m18_bus_gkr_zero_count_root"),
+    (19, "bus_logup_gkr", "m19_bus_gkr_round_poly_coeff"),
+    (20, "bus_logup_gkr", "m20_bus_gkr_layer_child_eval"),
+    (21, "bus_logup_gkr", "m21_bus_memory_fingerprint_eval"),
+    (22, "bus_logup_gkr", "m22_table_sumcheck_final_column_eval"),
+    (23, "keccak_f1600_gkr", "m23_keccak_committed_segment_claim"),
+    (24, "keccak_f1600_gkr", "m24_keccak_rmfe_bit_product_poly"),
+    (25, "keccak_f1600_gkr", "m25_keccak_instance_round_sumcheck"),
+    (26, "keccak_f1600_gkr", "m26_keccak_theta_rho_pi_chi_local_t"),
+    (27, "keccak_f1600_gkr", "m27_keccak_output_slot_opening_word"),
+    (28, "keccak_f1600_gkr", "m28_keccak_input_pack_slice_eval"),
+    (29, "whir_ringswitch_pcs", "m29_ringswitch_stacked_initial_quad"),
+    (30, "whir_ringswitch_pcs", "m30_whir_l0_fold_round_poly"),
+    (31, "whir_ringswitch_pcs", "m31_whir_ood_sample_eval"),
+    (32, "whir_ringswitch_pcs", "m32_whir_stir_query_intro_poly"),
+    (33, "whir_ringswitch_pcs", "m33_whir_tail_sumcheck_round_poly"),
+    (34, "whir_ringswitch_pcs", "m34_whir_final_residual_poly_coeff"),
+];
+
+fn verify_eth_wire(bytes: &[u8]) -> Result<(), String> {
+    let parsed = EthereumProof::from_bytes(bytes).map_err(|e| format!("parse: {e}"))?;
+    parsed.verify().map_err(|e| format!("verify: {e}"))
+}
+
+fn run_verify_34(dir: &Path, json_path: Option<&str>) -> i32 {
+    let t0 = std::time::Instant::now();
+    let baseline_bytes = std::fs::read(dir.join("baseline.ethwire"))
+        .expect("read baseline.ethwire");
+    let _ = unified_guest();
+
+    let mut baseline_accepted_count = 0usize;
+    let mut mutated_rejected_count = 0usize;
+    let mut rows = Vec::with_capacity(34);
+
+    for (id, group, name) in MUT34_META {
+        let base_ok = verify_eth_wire(&baseline_bytes).is_ok();
+        if base_ok {
+            baseline_accepted_count += 1;
+        }
+        let mut_path = dir.join(format!("mutant_{id:02}.ethwire"));
+        let mut_bytes = std::fs::read(&mut_path)
+            .unwrap_or_else(|e| panic!("read {}: {e}", mut_path.display()));
+        let (mut_rejected, err_msg) = match verify_eth_wire(&mut_bytes) {
+            Ok(()) => (false, String::new()),
+            Err(e) => (true, e),
+        };
+        if mut_rejected {
+            mutated_rejected_count += 1;
+        }
+        rows.push(format!(
+            "    {{\"id\":{},\"group\":\"{}\",\"name\":\"{}\",\"baseline_accepted\":{},\"mutated_rejected\":{},\"mutated_bytes\":{},\"error\":\"{}\"}}",
+            id,
+            json_escape(group),
+            json_escape(name),
+            base_ok,
+            mut_rejected,
+            mut_bytes.len(),
+            json_escape(&err_msg)
+        ));
+    }
+
+    let elapsed_ms = t0.elapsed().as_millis();
+    let all_passed = baseline_accepted_count == 34 && mutated_rejected_count == 34;
+    let json = format!(
+        "{{\n  \"verifier\": \"rust_reference_unmodified\",\n  \"mutant_total\": 34,\n  \"baseline_accepted_count\": {},\n  \"mutated_rejected_count\": {},\n  \"all_passed\": {},\n  \"elapsed_ms\": {},\n  \"baseline_wire_bytes\": {},\n  \"mutants\": [\n{}\n  ]\n}}\n",
+        baseline_accepted_count,
+        mutated_rejected_count,
+        all_passed,
+        elapsed_ms,
+        baseline_bytes.len(),
+        rows.join(",\n")
+    );
+    if let Some(p) = json_path {
+        std::fs::write(p, &json).expect("write rust 34-mutant json");
+    }
+    println!(
+        "RUST_MUTANT34_DONE baseline={}/34 rejected={}/34 elapsed_ms={}",
+        baseline_accepted_count, mutated_rejected_count, elapsed_ms
+    );
+    if all_passed { 0 } else { 1 }
+}
+
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     let mut oracle_dir = Path::new("/var/lib/orb-node/work/caches/xmss-hub-v3/oracle/xmss4").to_path_buf();
+    let mut verify_34_dir: Option<std::path::PathBuf> = None;
     let mut json_path: Option<String> = None;
     let mut i = 1;
     while i < args.len() {
@@ -721,6 +822,10 @@ fn main() {
             "--oracle-xmss4" => {
                 i += 1;
                 oracle_dir = Path::new(&args[i]).to_path_buf();
+            }
+            "--verify-34-dir" => {
+                i += 1;
+                verify_34_dir = Some(Path::new(&args[i]).to_path_buf());
             }
             "--json" => {
                 i += 1;
@@ -732,6 +837,10 @@ fn main() {
             }
         }
         i += 1;
+    }
+
+    if let Some(dir) = verify_34_dir {
+        std::process::exit(run_verify_34(&dir, json_path.as_deref()));
     }
 
     eprintln!("[w5] building syn_keccak baseline (proving)...");

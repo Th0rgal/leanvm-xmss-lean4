@@ -123,6 +123,19 @@ import Spec.Xmss.Encoding
 import Spec.Xmss.Hints
 import Tests.Audit.Mutants
 import Tests.Cli.E2ECheck
+import Model.Aggregate.Verify
+import Proofs.Aggregate.Verify
+import Spec.Aggregate.Verify
+import Model.Keccak.Fast
+import Model.Keccak.Simd8
+import Model.Pcs.CommitSlab
+import Model.Witness.VmWitnessPar
+import Native.Kernels.Bus
+import Native.Kernels.BusPar
+import Native.Kernels.Keccak8x
+import Native.Kernels.KeccakGkr
+import Native.Kernels.Ntt
+import Native.Kernels.VmWitness
 
 open Lean Elab Command
 

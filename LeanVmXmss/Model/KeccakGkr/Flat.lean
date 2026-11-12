@@ -2,29 +2,6 @@ import Model.KeccakGkr.Scalar
 
 namespace LeanVmXmss.Model.KeccakGkr
 
-/-
-Flat Keccak-GKR reduction stage (`proveKeccakGkrFlat`).
-
-Design notes:
-1. Intrinsic lowering: `LeanNative.IR.BridgeHelpers` (`canonClmul64Repr`, `canonGf2AffineRepr`)
-   only lowers exact canonical ASTs matching `LeanNative.IR.clmul64` / `gf2Affine` (which use
-   `BEq UInt64`). Because `BEq UInt64` is forbidden in `Model/**`, we provide pure structurally
-   recursive `clmul64` / `clmul64Hi` (`Nat` countdown, no `BEq UInt64`, no `unsafe`, no
-   `@[extern]`) plus unboxed branchless software `UInt64` kernels without claiming GFNI or
-   VPCLMUL hardware lowering.
-2. Bitplane & planar double-buffered round tapes:
-   - `BitplaneTape` (`cur`, `nxt`, `scratch` `ByteArray`s) packs `packSize = 64` instances per
-     `UInt64` word (`4` consecutive 16-instance RMFE packs per bitplane word) and executes all
-     24 Keccak-f[1600] `theta` / `rho` / `pi` / `chi` / `iota` rounds in place into `MaskTape`.
-   - `PlanarE` (`c0`, `c1`, `c2` `ByteArray`s with LE `UInt64` at byte offset `8 * i`) and
-     `RoundETape` / `LocalETape` double-buffer the 1600-bit layer sumcheck tables and flat
-     slot/opening weights in place across all 12 GKR layers, with zero `Array (Array E)` on the
-     hot path.
-3. Parallelism: 16-way `IO.asTask` (`prio := .dedicated`) over disjoint pack ranges, joined in
-   deterministic index order before Fiat-Shamir absorption; challenge sampling stays on the
-   main task.
--/
-
 open Spec.Field (K E zero one embed)
 open Spec.Layout
 open Spec.Bus (SlotClaim OutputClaim)

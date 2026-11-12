@@ -408,4 +408,53 @@ def unpackSliceE (s : @& SliceE) : Array E :=
     (fun acc i => acc.push (sliceEGet s i))
     (Array.emptyWithCapacity n)
 
+def clmul64 (a b : UInt64) : UInt64 :=
+  Fin.foldl 64 (fun acc i =>
+    let iu := i.val.toUInt64
+    let mask := (0 : UInt64) - ((b >>> iu) &&& 1)
+    acc ^^^ ((a <<< iu) &&& mask)) 0
+
+def clmul64Hi (a b : UInt64) : UInt64 :=
+  Fin.foldl 63 (fun acc i =>
+    let iu := (i.val + 1).toUInt64
+    let mask := (0 : UInt64) - ((b >>> iu) &&& 1)
+    acc ^^^ ((a >>> (64 - iu)) &&& mask)) 0
+
+def gf2Dot8 (row x : UInt64) : UInt64 :=
+  Fin.foldl 8 (fun s j =>
+    let ju := j.val.toUInt64
+    s ^^^ (((row >>> ju) &&& 1) &&& ((x >>> ju) &&& 1))) 0
+
+def gf2Affine64 (x m : UInt64) (imm : UInt8) : UInt64 :=
+  let immU := imm.toUInt64
+  Fin.foldl 8 (fun out b =>
+    let bu := b.val.toUInt64
+    let xb := (x >>> (bu * 8)) &&& 0xff
+    let yb := Fin.foldl 8 (fun acc i =>
+      let iu := i.val.toUInt64
+      acc ||| (gf2Dot8 ((m >>> (iu * 8)) &&& 0xff) xb <<< iu)) 0
+    out ||| ((yb ^^^ immU) <<< (bu * 8))) 0
+
+def ternaryLogic64 (a b c : UInt64) (imm : UInt8) : UInt64 :=
+  let immU := imm.toUInt64
+  Fin.foldl 64 (fun acc i =>
+    let iu := i.val.toUInt64
+    let idx := (((a >>> iu) &&& 1) <<< 2) ||| (((b >>> iu) &&& 1) <<< 1) ||| ((c >>> iu) &&& 1)
+    let bit := (immU >>> idx) &&& 1
+    acc ||| (bit <<< iu)) 0
+
+def uget64LE (b : @& ByteArray) (wordIdx : USize) : UInt64 :=
+  LeanVmXmss.Model.Prim.uget64LE b wordIdx
+
+def uset64LE (b : ByteArray) (wordIdx : USize) (val : UInt64) : ByteArray :=
+  LeanVmXmss.Model.Prim.uset64LE b wordIdx val
+
+@[inline]
+def rol64 (x : UInt64) (s : UInt64) : UInt64 :=
+  (x <<< s) ||| (x >>> (64 - s))
+
+@[inline]
+def gf64Reduce1B (lo hi : UInt64) : UInt64 :=
+  lo ^^^ clmul64 hi 0x1b ^^^ clmul64 (clmul64Hi hi 0x1b) 0x1b
+
 end LeanVmXmss.Model.Prim.Slice64

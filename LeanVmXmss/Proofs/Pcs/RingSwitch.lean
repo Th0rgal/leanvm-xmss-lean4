@@ -62,11 +62,19 @@ theorem nativeSquareN_eq_epow_shift :
   funext a n
   exact nativeSquareN_refines a n
 
+theorem nativeSquareN_eq_esquareN :
+    Model.Pcs.RingSwitch.nativeSquareN = Spec.Pcs.RingSwitch.esquareN := by
+  funext a n
+  have hsq : (fun x => Model.Field.nativeKaratsuba x x) = Spec.Field.esquare := by
+    funext x
+    exact nativeKaratsuba_refines x x
+  simp only [Model.Pcs.RingSwitch.nativeSquareN, Spec.Pcs.RingSwitch.esquareN, hsq]
+
 theorem applyComposed_refines (value : E) (challenges : Array E) :
     Model.Pcs.RingSwitch.applyComposed value challenges =
       Spec.Pcs.RingSwitch.applyComposed value challenges := by
   simp only [Model.Pcs.RingSwitch.applyComposed, Spec.Pcs.RingSwitch.applyComposed,
-    Model.Pcs.RingSwitch.compositionShifts, nativeKaratsuba_eq_emul, nativeSquareN_eq_epow_shift]
+    Model.Pcs.RingSwitch.compositionShifts, nativeKaratsuba_eq_emul, nativeSquareN_eq_esquareN]
 
 theorem applyComposed_eq_spec :
     Model.Pcs.RingSwitch.applyComposed = Spec.Pcs.RingSwitch.applyComposed := by
@@ -83,7 +91,7 @@ theorem frobeniusCoefficient_refines (challenges : Array E) (k : Nat) :
     Model.Pcs.RingSwitch.frobeniusCoefficient challenges k =
       Spec.Pcs.RingSwitch.frobeniusCoefficient challenges k := by
   simp only [Model.Pcs.RingSwitch.frobeniusCoefficient, Spec.Pcs.RingSwitch.frobeniusCoefficient,
-    Model.Pcs.RingSwitch.compositionShifts, nativeKaratsuba_eq_emul, nativeSquareN_eq_epow_shift]
+    Model.Pcs.RingSwitch.compositionShifts, nativeKaratsuba_eq_emul, nativeSquareN_eq_esquareN]
 
 theorem frobeniusCoefficient_eq_spec :
     Model.Pcs.RingSwitch.frobeniusCoefficient = Spec.Pcs.RingSwitch.frobeniusCoefficient := by

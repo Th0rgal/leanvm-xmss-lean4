@@ -231,9 +231,7 @@ def ethereumProofOf (claims : Array Spec.Aggregate.Wire.SignaturePair)
     proof := proof }
 
 def verifySignatureFast (raw : Spec.Xmss.RawSignature) : Bool :=
-  match Model.Xmss.signatureHintsFast Model.Xmss.hintGpowTable raw with
-  | .error _ => false
-  | .ok (_, root) => bytesEqFast root (raw.publicKey.extract 0 16)
+  Model.Xmss.verifySignatureFast raw
 
 def verifyAllSignatures (raw : Array Spec.Xmss.RawSignature) : IO Unit := do
   let n := raw.size

@@ -152,19 +152,22 @@ def levelRowWords (level foldCount messageLog : Nat) (placed : Nat) : Nat :=
   if level = 0 then (placed + (1 <<< messageLog) - 1) / (1 <<< messageLog)
   else levelLeafWords level foldCount
 
-def multilinearEval (table : Array K) (point : Array E) : E :=
-  if decide (table.size = 1 <<< point.size) then
+def multilinearEvalE (values : Array E) (point : Array E) : E :=
+  if decide (values.size = 1 <<< point.size) then
     (Array.range point.size).foldl (fun cur k =>
       let r := point.getD k zero
       let half := cur.size / 2
       (Array.range half).map fun i =>
         let lo := cur.getD (2 * i) zero
         eadd lo (emul r (eadd lo (cur.getD (2 * i + 1) zero))))
-      (table.map embed) |>.getD 0 zero
+      values |>.getD 0 zero
   else zero
 
-def terminal (residual : Array K) (folds : Array E) (weight : E) : E :=
-  emul weight (multilinearEval residual folds)
+def multilinearEval (table : Array K) (point : Array E) : E :=
+  multilinearEvalE (table.map embed) point
+
+def terminal (residual : Array E) (folds : Array E) (weight : E) : E :=
+  emul weight (multilinearEvalE residual folds)
 
 def shapeOk (logN logInvRate : Nat) : Bool :=
   (deriveConfig logN logInvRate).isSome
@@ -203,7 +206,7 @@ def verifyLevel (config : Config) (logN placed : Nat) (ls : LevelState) (level :
   let (quad, levelFolds, folds, s) ← (Array.range foldCount).foldlM
     (fun (quad, levelFolds, folds, s) _ => do
       let (challenge, s) := Spec.Transcript.verifierSample s
-      let (quad, s) ← Spec.Transcript.sumcheckRoundPoly s 3 (polyEval quad challenge) none
+      let (quad, s) ← Spec.Transcript.sumcheckRoundPoly s 2 (polyEval quad challenge) none
       some (quad, levelFolds.push challenge, folds.push challenge, s))
     (ls.quad, #[], ls.folds, ls.state)
   let messageLog := logN - folds.size
@@ -217,7 +220,7 @@ def verifyLevel (config : Config) (logN placed : Nat) (ls : LevelState) (level :
       let next ← Spec.Merkle.fromHalves (halves.getD 0 zero) (halves.getD 1 zero)
       let (oodPoint, s) := verifierSamples s messageLog
       let (oodValue, s) ← Spec.Transcript.nextScalar s
-      let (intro, s) ← Spec.Transcript.sumcheckRoundPoly s 3 oodValue none
+      let (intro, s) ← Spec.Transcript.sumcheckRoundPoly s 2 oodValue none
       pure (#[], next, #[(intro, ClaimWeight.ood oodPoint)], s)
   let s ← Spec.Transcript.grindCheck s queryGrindingBits
   let blockLog := messageLog + config.logInvRates.getD level 0
@@ -239,7 +242,7 @@ def verifyLevel (config : Config) (logN placed : Nat) (ls : LevelState) (level :
           baseRowDot (leaf.extract (leafWords - rowWords) leafWords) laneWeights
       else
         leaves.map fun leaf => laneDot (extRow leaf) laneWeights
-    let (intro, s) ← Spec.Transcript.sumcheckRoundPoly s 3 (dot rowValues queryWeights) none
+    let (intro, s) ← Spec.Transcript.sumcheckRoundPoly s 2 (dot rowValues queryWeights) none
     let pending := pending.push (intro, ClaimWeight.induced messageLog queries queryWeights)
     let (quad, _, glued) := pending.foldl (fun (quad, scalar, glued) item =>
       let scalar := emul scalar lam
@@ -251,7 +254,7 @@ def verifyWhir (s : VerifierState) (logN placed logInvRate : Nat) (target : E)
     (root : Spec.Merkle.Digest) (evaluateBasis : Array E → E) : Option VerifierState := do
   let config ← deriveConfig logN logInvRate
   if config.folds.isEmpty then none else
-    let (quad0, s) ← Spec.Transcript.sumcheckRoundPoly s 3 target none
+    let (quad0, s) ← Spec.Transcript.sumcheckRoundPoly s 2 target none
     let done ← (Array.range config.folds.size).foldlM (verifyLevel config logN placed)
       ⟨quad0, #[], #[], root, #[], s⟩
     let messageLog := logN - done.folds.size
@@ -260,23 +263,21 @@ def verifyWhir (s : VerifierState) (logN placed logInvRate : Nat) (target : E)
         let (challenge, s) := Spec.Transcript.verifierSample s
         let running := polyEval quad challenge
         if k + 1 < messageLog then
-          let (quad, s) ← Spec.Transcript.sumcheckRoundPoly s 3 running none
+          let (quad, s) ← Spec.Transcript.sumcheckRoundPoly s 2 running none
           some (quad, tail.push challenge, running, s)
         else
           some (quad, tail.push challenge, running, s))
       (done.quad, #[], zero, done.state)
-    if !(done.residual.all fun v => decide (v.c1 = 0 ∧ v.c2 = 0)) then none else
-      let residualK := done.residual.map (·.c0)
-      let point := done.folds ++ tail
-      let laneFolds := config.folds.getD 0 0
-      let reordered := point.extract laneFolds point.size ++ point.extract 0 laneFolds
-      let weight ← done.glued.foldlM (fun acc claim => do
-        let w ← claim.weight.eval (point.extract claim.foldStart point.size)
-        some (eadd acc (emul claim.scalar w))) (evaluateBasis reordered)
-      if decide (1 <<< tail.size = residualK.size) &&
-          Spec.Vm.wordBEq (terminal residualK tail weight) running then
-        some s
-      else none
+    let point := done.folds ++ tail
+    let laneFolds := config.folds.getD 0 0
+    let reordered := point.extract laneFolds point.size ++ point.extract 0 laneFolds
+    let weight ← done.glued.foldlM (fun acc claim => do
+      let w ← claim.weight.eval (point.extract claim.foldStart point.size)
+      some (eadd acc (emul claim.scalar w))) (evaluateBasis reordered)
+    if decide (1 <<< tail.size = done.residual.size) &&
+        Spec.Vm.wordBEq (terminal done.residual tail weight) running then
+      some s
+    else none
 
 def verifyStackedOpening (s : VerifierState) (root : Spec.Merkle.Digest)
     (stackLog placed logInvRate : Nat) (values : Array E)

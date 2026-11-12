@@ -1,0 +1,346 @@
+localImpure count=137
+DECL Fin.foldl.loop._at_.clmul64Hi.spec_0 [export=none] params=[b(_uniq.1):UInt64(b=false), a(_uniq.2):UInt64(b=false), n(_uniq.3):tobj(b=true), x(_uniq.4):UInt64(b=false), i(_uniq.5):tobj(b=false)] ret=UInt64
+DECL main._lam_0._boxed [export=none] params=[s(_uniq.1):obj(b=false)] ret=obj
+DECL zmmNttButterfly._boxed [export=none] params=[buf(_uniq.1):obj(b=false), twiddles(_uniq.2):obj(b=false), halfLen(_uniq.3):tobj(b=false)] ret=obj
+  let halfLen.boxed(_uniq.4) : USize := unbox _uniq.3
+  dec _uniq.3 1
+  let res(_uniq.5) : obj := fap zmmNttButterfly (3)
+  return _uniq.5
+DECL emul2 [export=(some p0_emul2)] params=[a0(_uniq.1):UInt64(b=false), a1(_uniq.2):UInt64(b=false), a2(_uniq.3):UInt64(b=false), b0(_uniq.4):UInt64(b=false), b1(_uniq.5):UInt64(b=false), b2(_uniq.6):UInt64(b=false)] ret=UInt64
+DECL gf2Affine64._boxed [export=none] params=[x(_uniq.1):obj(b=false), m(_uniq.2):obj(b=false), imm(_uniq.3):tagged(b=false)] ret=obj
+DECL Fin.foldl.loop._at_.zmmNttButterfly.spec_0._boxed [export=none] params=[halfLen(_uniq.1):tobj(b=false), twiddles(_uniq.2):obj(b=false), n(_uniq.3):tobj(b=false), x(_uniq.4):obj(b=false), i(_uniq.5):tobj(b=false)] ret=obj
+  let halfLen.boxed(_uniq.6) : USize := unbox _uniq.1
+  dec _uniq.1 1
+  let res(_uniq.7) : obj := fap Fin.foldl.loop._at_.zmmNttButterfly.spec_0 (5)
+  dec _uniq.3 1
+  dec _uniq.2 1
+  return _uniq.7
+DECL Fin.foldl.loop._at_.zmmGfniRmfeX8.spec_0 [export=none] params=[inp0(_uniq.1):obj(b=true), inp1(_uniq.2):obj(b=true), mat0(_uniq.3):UInt64(b=false), mat1(_uniq.4):UInt64(b=false), n(_uniq.5):tobj(b=true), x(_uniq.6):obj(b=false), i(_uniq.7):tobj(b=false)] ret=obj
+  let _x.1(_uniq.8) : UInt8 := fap Nat.decLt (2)
+  cases _uniq.8 (UInt8) : obj
+    | ctor Bool.false =>
+      dec _uniq.7 1
+      return _uniq.6
+    | ctor Bool.true =>
+      let idx(_uniq.9) : USize := fap USize.ofNat (1)
+      let x(_uniq.10) : UInt64 := fap uget64LE (2)
+      let y(_uniq.11) : UInt64 := fap uget64LE (2)
+      let _x.2(_uniq.12) : UInt8 := lit
+      let ax(_uniq.13) : UInt64 := fap gf2Affine64 (3)
+      let _x.3(_uniq.14) : UInt8 := lit
+      let ay(_uniq.15) : UInt64 := fap gf2Affine64 (3)
+      let _x.4(_uniq.16) : UInt64 := fap UInt64.xor (2)
+      let _x.5(_uniq.17) : UInt64 := fap UInt64.xor (2)
+      let _x.6(_uniq.18) : UInt8 := lit
+      let mix(_uniq.19) : UInt64 := fap gf2Affine64 (3)
+      let _x.7(_uniq.20) : UInt8 := lit
+      let res(_uniq.21) : UInt64 := fap ternaryLogic64 (4)
+      let _x.8(_uniq.22) : obj := fap uset64LE (3)
+      let _x.9(_uniq.23) : tagged := lit
+      let _x.10(_uniq.24) : tobj := fap Nat.add (2)
+      dec _uniq.7 1
+      let _x.11(_uniq.25) : obj := fap Fin.foldl.loop._at_.zmmGfniRmfeX8.spec_0 (7)
+      return _uniq.25
+DECL zmmGfniRmfeX8._boxed [export=none] params=[inp0(_uniq.1):obj(b=false), inp1(_uniq.2):obj(b=false), out(_uniq.3):obj(b=false), n(_uniq.4):tobj(b=false), mat0(_uniq.5):obj(b=false), mat1(_uniq.6):obj(b=false)] ret=obj
+  let n.boxed(_uniq.7) : USize := unbox _uniq.4
+  dec _uniq.4 1
+  let mat0.boxed(_uniq.8) : UInt64 := unbox _uniq.5
+  dec _uniq.5 1
+  let mat1.boxed(_uniq.9) : UInt64 := unbox _uniq.6
+  dec _uniq.6 1
+  let res(_uniq.10) : obj := fap zmmGfniRmfeX8 (6)
+  return _uniq.10
+DECL _private.Init.Data.Range.Basic.0.Std.Legacy.Range.forIn'.loop._at_.hashBA.spec_0._redArg [export=none] params=[ba(_uniq.1):obj(b=true), range(_uniq.2):obj(b=true), b(_uniq.3):UInt64(b=false), i(_uniq.4):tobj(b=false)] ret=UInt64
+DECL ternaryLogic64 [export=none] params=[a(_uniq.1):UInt64(b=false), b(_uniq.2):UInt64(b=false), c(_uniq.3):UInt64(b=false), imm(_uniq.4):UInt8(b=false)] ret=UInt64
+  let immU(_uniq.5) : UInt64 := fap UInt8.toUInt64 (1)
+  let _x.1(_uniq.6) : tagged := lit
+  let _x.2(_uniq.7) : UInt64 := lit
+  let _x.3(_uniq.8) : tagged := lit
+  let _x.4(_uniq.9) : UInt64 := fap Fin.foldl.loop._at_.ternaryLogic64.spec_0 (7)
+  return _uniq.9
+DECL Fin.foldl.loop._at_.gf2Dot8.spec_0 [export=none] params=[row(_uniq.1):UInt64(b=false), x(_uniq.2):UInt64(b=false), n(_uniq.3):tobj(b=true), x(_uniq.4):UInt64(b=false), i(_uniq.5):tobj(b=false)] ret=UInt64
+DECL gf2Dot8._boxed [export=none] params=[row(_uniq.1):obj(b=false), x(_uniq.2):obj(b=false)] ret=obj
+DECL _private.Init.Data.Range.Basic.0.Std.Legacy.Range.forIn'.loop._at_.hashBA.spec_0._boxed [export=none] params=[ba(_uniq.1):obj(b=false), range(_uniq.2):obj(b=false), b(_uniq.3):obj(b=false), i(_uniq.4):tobj(b=false), hs(_uniq.5):tobj(b=false), hl(_uniq.6):tobj(b=false)] ret=obj
+DECL uset64LE._boxed [export=none] params=[b(_uniq.1):obj(b=false), wordIdx(_uniq.2):tobj(b=false), val(_uniq.3):obj(b=false)] ret=obj
+DECL Fin.foldl.loop._at_.zmmF192x8.spec_0 [export=none] params=[n(_uniq.1):USize(b=false), a(_uniq.2):obj(b=true), b(_uniq.3):obj(b=true), n(_uniq.4):tobj(b=true), x(_uniq.5):obj(b=false), i(_uniq.6):tobj(b=false)] ret=obj
+DECL mkWordsBA [export=none] params=[n(_uniq.1):tobj(b=false), seed(_uniq.2):UInt64(b=false)] ret=obj
+DECL Fin.foldl.loop._at_.clmul64Hi.spec_0._boxed [export=none] params=[b(_uniq.1):obj(b=false), a(_uniq.2):obj(b=false), n(_uniq.3):tobj(b=false), x(_uniq.4):obj(b=false), i(_uniq.5):tobj(b=false)] ret=obj
+DECL main [export=none] params=[args(_uniq.1):tobj(b=false), a.1(_uniq.2):lcVoid(b=false)] ret=obj
+DECL _private.Init.Data.Range.Basic.0.Std.Legacy.Range.forIn'.loop._at_.mkWordsBA.spec_1 [export=none] params=[range(_uniq.1):obj(b=true), b(_uniq.2):obj(b=false), i(_uniq.3):tobj(b=false), hs(_uniq.4):lcErased(b=false), hl(_uniq.5):lcErased(b=false)] ret=obj
+DECL _private.Init.Data.Range.Basic.0.Std.Legacy.Range.forIn'.loop._at_.hashBA.spec_0._redArg._boxed [export=none] params=[ba(_uniq.1):obj(b=false), range(_uniq.2):obj(b=false), b(_uniq.3):obj(b=false), i(_uniq.4):tobj(b=false)] ret=obj
+DECL rol64 [export=none] params=[x(_uniq.1):UInt64(b=false), s(_uniq.2):UInt64(b=false)] ret=UInt64
+DECL Fin.foldl.loop._at_.zmmGfniRmfeX8.spec_0._boxed [export=none] params=[inp0(_uniq.1):obj(b=false), inp1(_uniq.2):obj(b=false), mat0(_uniq.3):obj(b=false), mat1(_uniq.4):obj(b=false), n(_uniq.5):tobj(b=false), x(_uniq.6):obj(b=false), i(_uniq.7):tobj(b=false)] ret=obj
+  let mat0.boxed(_uniq.8) : UInt64 := unbox _uniq.3
+  dec _uniq.3 1
+  let mat1.boxed(_uniq.9) : UInt64 := unbox _uniq.4
+  dec _uniq.4 1
+  let res(_uniq.10) : obj := fap Fin.foldl.loop._at_.zmmGfniRmfeX8.spec_0 (7)
+  dec _uniq.5 1
+  dec _uniq.2 1
+  dec _uniq.1 1
+  return _uniq.10
+DECL ternaryLogic64._boxed [export=none] params=[a(_uniq.1):obj(b=false), b(_uniq.2):obj(b=false), c(_uniq.3):obj(b=false), imm(_uniq.4):tagged(b=false)] ret=obj
+DECL Fin.foldl.loop._at_.gf2Affine64.spec_0 [export=none] params=[m(_uniq.1):UInt64(b=false), xb(_uniq.2):UInt64(b=false), n(_uniq.3):tobj(b=true), x(_uniq.4):UInt64(b=false), i(_uniq.5):tobj(b=false)] ret=UInt64
+DECL main._lam_0 [export=none] params=[s(_uniq.1):obj(b=false)] ret=UInt64
+DECL _private.Init.Data.Range.Basic.0.Std.Legacy.Range.forIn'.loop._at_.mkWordsBA.spec_0 [export=none] params=[_x.1(_uniq.1):UInt64(b=false), range(_uniq.2):obj(b=true), b(_uniq.3):obj(b=false), i(_uniq.4):tobj(b=false), hs(_uniq.5):lcErased(b=false), hl(_uniq.6):lcErased(b=false)] ret=obj
+DECL main._closed_3 [export=none] params=[] ret=obj
+DECL emul1 [export=(some p0_emul1)] params=[a0(_uniq.1):UInt64(b=false), a1(_uniq.2):UInt64(b=false), a2(_uniq.3):UInt64(b=false), b0(_uniq.4):UInt64(b=false), b1(_uniq.5):UInt64(b=false), b2(_uniq.6):UInt64(b=false)] ret=UInt64
+DECL zmmKeccakRoundX8._boxed [export=none] params=[state(_uniq.1):obj(b=false), n(_uniq.2):tobj(b=false), rc(_uniq.3):obj(b=false)] ret=obj
+DECL identity [export=(some p0_identity)] params=[x(_uniq.1):UInt64(b=false)] ret=UInt64
+DECL main._closed_5 [export=none] params=[] ret=obj
+DECL _private.Init.Data.Range.Basic.0.Std.Legacy.Range.forIn'.loop._at_.mkWordsBA.spec_1._redArg._boxed [export=none] params=[range(_uniq.1):obj(b=false), b(_uniq.2):obj(b=false), i(_uniq.3):tobj(b=false)] ret=obj
+DECL main._closed_6 [export=none] params=[] ret=obj
+DECL uget64LE._boxed [export=none] params=[b(_uniq.1):obj(b=false), wordIdx(_uniq.2):tobj(b=false)] ret=obj
+DECL kmul._boxed [export=none] params=[a(_uniq.1):obj(b=false), b(_uniq.2):obj(b=false)] ret=obj
+DECL IO.println._at_.main.spec_0 [export=none] params=[s(_uniq.1):UInt64(b=false), a.1(_uniq.2):lcVoid(b=false)] ret=obj
+DECL _private.Init.Data.Range.Basic.0.Std.Legacy.Range.forIn'.loop._at_.mkWordsBA.spec_1._redArg._closed_0 [export=none] params=[] ret=obj
+DECL identitySize._boxed [export=none] params=[x(_uniq.1):tobj(b=false)] ret=tobj
+DECL hashBA._boxed [export=none] params=[ba(_uniq.1):obj(b=false)] ret=obj
+DECL Fin.foldl.loop._at_.ternaryLogic64.spec_0 [export=none] params=[a(_uniq.1):UInt64(b=false), b(_uniq.2):UInt64(b=false), c(_uniq.3):UInt64(b=false), immU(_uniq.4):UInt64(b=false), n(_uniq.5):tobj(b=true), x(_uniq.6):UInt64(b=false), i(_uniq.7):tobj(b=false)] ret=UInt64
+DECL identity32._boxed [export=none] params=[x(_uniq.1):tobj(b=false)] ret=tobj
+DECL Fin.foldl.loop._at_.zmmF192x8.spec_0._boxed [export=none] params=[n(_uniq.1):tobj(b=false), a(_uniq.2):obj(b=false), b(_uniq.3):obj(b=false), n(_uniq.4):tobj(b=false), x(_uniq.5):obj(b=false), i(_uniq.6):tobj(b=false)] ret=obj
+DECL gf2Affine64 [export=none] params=[x(_uniq.1):UInt64(b=false), m(_uniq.2):UInt64(b=false), imm(_uniq.3):UInt8(b=false)] ret=UInt64
+  let immU(_uniq.4) : UInt64 := fap UInt8.toUInt64 (1)
+  let _x.1(_uniq.5) : tagged := lit
+  let _x.2(_uniq.6) : UInt64 := lit
+  let _x.3(_uniq.7) : tagged := lit
+  let _x.4(_uniq.8) : UInt64 := fap Fin.foldl.loop._at_.gf2Affine64.spec_1 (6)
+  return _uniq.8
+DECL mkWordsBA._boxed [export=none] params=[n(_uniq.1):tobj(b=false), seed(_uniq.2):obj(b=false)] ret=obj
+DECL Fin.foldl.loop._at_.zmmNttButterfly.spec_0 [export=none] params=[halfLen(_uniq.1):USize(b=false), twiddles(_uniq.2):obj(b=true), n(_uniq.3):tobj(b=true), x(_uniq.4):obj(b=false), i(_uniq.5):tobj(b=false)] ret=obj
+  let _x.1(_uniq.6) : UInt8 := fap Nat.decLt (2)
+  cases _uniq.6 (UInt8) : obj
+    | ctor Bool.false =>
+      dec _uniq.5 1
+      return _uniq.4
+    | ctor Bool.true =>
+      let idx(_uniq.7) : USize := fap USize.ofNat (1)
+      let idxHi(_uniq.8) : USize := fap USize.add (2)
+      let u(_uniq.9) : UInt64 := fap uget64LE (2)
+      let v(_uniq.10) : UInt64 := fap uget64LE (2)
+      let w(_uniq.11) : UInt64 := fap uget64LE (2)
+      let vwLo(_uniq.12) : UInt64 := fap clmul64 (2)
+      let vwHi(_uniq.13) : UInt64 := fap clmul64Hi (2)
+      let _x.2(_uniq.14) : UInt64 := lit
+      let _x.3(_uniq.15) : UInt64 := fap clmul64 (2)
+      let _x.4(_uniq.16) : UInt64 := fap UInt64.xor (2)
+      let _x.5(_uniq.17) : UInt64 := fap clmul64Hi (2)
+      let _x.6(_uniq.18) : UInt64 := fap clmul64 (2)
+      let t(_uniq.19) : UInt64 := fap UInt64.xor (2)
+      let u'(_uniq.20) : UInt64 := fap UInt64.xor (2)
+      let v'(_uniq.21) : UInt64 := fap UInt64.xor (2)
+      let acc(_uniq.22) : obj := fap uset64LE (3)
+      let _x.7(_uniq.23) : obj := fap uset64LE (3)
+      let _x.8(_uniq.24) : tagged := lit
+      let _x.9(_uniq.25) : tobj := fap Nat.add (2)
+      dec _uniq.5 1
+      let _x.10(_uniq.26) : obj := fap Fin.foldl.loop._at_.zmmNttButterfly.spec_0 (5)
+      return _uniq.26
+DECL _private.Init.Data.Range.Basic.0.Std.Legacy.Range.forIn'.loop._at_.mkWordsBA.spec_1._redArg [export=none] params=[range(_uniq.1):obj(b=true), b(_uniq.2):obj(b=false), i(_uniq.3):tobj(b=false)] ret=obj
+DECL emul2._boxed [export=none] params=[a0(_uniq.1):obj(b=false), a1(_uniq.2):obj(b=false), a2(_uniq.3):obj(b=false), b0(_uniq.4):obj(b=false), b1(_uniq.5):obj(b=false), b2(_uniq.6):obj(b=false)] ret=obj
+DECL zmmKeccakRoundX8 [export=(some p0_zmm_keccak_round_x8)] params=[state(_uniq.1):obj(b=false), n(_uniq.2):USize(b=false), rc(_uniq.3):UInt64(b=false)] ret=obj
+DECL emul1._boxed [export=none] params=[a0(_uniq.1):obj(b=false), a1(_uniq.2):obj(b=false), a2(_uniq.3):obj(b=false), b0(_uniq.4):obj(b=false), b1(_uniq.5):obj(b=false), b2(_uniq.6):obj(b=false)] ret=obj
+DECL clmul64Hi [export=none] params=[a(_uniq.1):UInt64(b=false), b(_uniq.2):UInt64(b=false)] ret=UInt64
+DECL _private.Init.Data.Range.Basic.0.Std.Legacy.Range.forIn'.loop._at_.mkWordsBA.spec_0._boxed [export=none] params=[_x.1(_uniq.1):obj(b=false), range(_uniq.2):obj(b=false), b(_uniq.3):obj(b=false), i(_uniq.4):tobj(b=false), hs(_uniq.5):tobj(b=false), hl(_uniq.6):tobj(b=false)] ret=obj
+DECL IO.println._at_.main.spec_0._boxed [export=none] params=[s(_uniq.1):obj(b=false), a.1(_uniq.2):tagged(b=false)] ret=obj
+DECL zmmF192x8 [export=(some p0_zmm_f192x8)] params=[a(_uniq.1):obj(b=false), b(_uniq.2):obj(b=false), out(_uniq.3):obj(b=false), n(_uniq.4):USize(b=false)] ret=obj
+DECL main._closed_2 [export=none] params=[] ret=obj
+DECL Fin.foldl.loop._at_.zmmKeccakRoundX8.spec_0 [export=none] params=[n(_uniq.1):USize(b=false), rc(_uniq.2):UInt64(b=false), n(_uniq.3):tobj(b=true), x(_uniq.4):obj(b=false), i(_uniq.5):tobj(b=false)] ret=obj
+DECL Fin.foldl.loop._at_.gf2Affine64.spec_0._boxed [export=none] params=[m(_uniq.1):obj(b=false), xb(_uniq.2):obj(b=false), n(_uniq.3):tobj(b=false), x(_uniq.4):obj(b=false), i(_uniq.5):tobj(b=false)] ret=obj
+DECL _private.Init.Data.Range.Basic.0.Std.Legacy.Range.forIn'.loop._at_.mkWordsBA.spec_0._redArg [export=none] params=[_x.1(_uniq.1):UInt64(b=false), range(_uniq.2):obj(b=true), b(_uniq.3):obj(b=false), i(_uniq.4):tobj(b=false)] ret=obj
+DECL emul0 [export=(some p0_emul0)] params=[a0(_uniq.1):UInt64(b=false), a1(_uniq.2):UInt64(b=false), a2(_uniq.3):UInt64(b=false), b0(_uniq.4):UInt64(b=false), b1(_uniq.5):UInt64(b=false), b2(_uniq.6):UInt64(b=false)] ret=UInt64
+DECL emul0._boxed [export=none] params=[a0(_uniq.1):obj(b=false), a1(_uniq.2):obj(b=false), a2(_uniq.3):obj(b=false), b0(_uniq.4):obj(b=false), b1(_uniq.5):obj(b=false), b2(_uniq.6):obj(b=false)] ret=obj
+DECL Fin.foldl.loop._at_.zmmKeccakRoundX8.spec_0._boxed [export=none] params=[n(_uniq.1):tobj(b=false), rc(_uniq.2):obj(b=false), n(_uniq.3):tobj(b=false), x(_uniq.4):obj(b=false), i(_uniq.5):tobj(b=false)] ret=obj
+DECL zmmF192x8._boxed [export=none] params=[a(_uniq.1):obj(b=false), b(_uniq.2):obj(b=false), out(_uniq.3):obj(b=false), n(_uniq.4):tobj(b=false)] ret=obj
+DECL _private.Init.Data.Range.Basic.0.Std.Legacy.Range.forIn'.loop._at_.mkWordsBA.spec_0._redArg._boxed [export=none] params=[_x.1(_uniq.1):obj(b=false), range(_uniq.2):obj(b=false), b(_uniq.3):obj(b=false), i(_uniq.4):tobj(b=false)] ret=obj
+DECL zmmNttButterfly [export=(some p0_zmm_ntt_butterfly)] params=[buf(_uniq.1):obj(b=false), twiddles(_uniq.2):obj(b=false), halfLen(_uniq.3):USize(b=false)] ret=obj
+  let _x.1(_uniq.4) : tobj := fap USize.toNat (1)
+  let _x.2(_uniq.5) : tagged := lit
+  let _x.3(_uniq.6) : obj := fap Fin.foldl.loop._at_.zmmNttButterfly.spec_0 (5)
+  dec _uniq.4 1
+  dec _uniq.2 1
+  return _uniq.6
+DECL main._closed_1 [export=none] params=[] ret=tobj
+DECL main._closed_4 [export=none] params=[] ret=obj
+DECL Fin.foldl.loop._at_.ternaryLogic64.spec_0._boxed [export=none] params=[a(_uniq.1):obj(b=false), b(_uniq.2):obj(b=false), c(_uniq.3):obj(b=false), immU(_uniq.4):obj(b=false), n(_uniq.5):tobj(b=false), x(_uniq.6):obj(b=false), i(_uniq.7):tobj(b=false)] ret=obj
+DECL clmul64Hi._boxed [export=none] params=[a(_uniq.1):obj(b=false), b(_uniq.2):obj(b=false)] ret=obj
+DECL identitySize [export=(some p0_identitySize)] params=[x(_uniq.1):USize(b=false)] ret=USize
+DECL hashBA [export=none] params=[ba(_uniq.1):obj(b=true)] ret=UInt64
+DECL Fin.foldl.loop._at_.gf2Affine64.spec_1 [export=none] params=[x(_uniq.1):UInt64(b=false), m(_uniq.2):UInt64(b=false), immU(_uniq.3):UInt64(b=false), n(_uniq.4):tobj(b=true), x(_uniq.5):UInt64(b=false), i(_uniq.6):tobj(b=false)] ret=UInt64
+DECL Fin.foldl.loop._at_.clmul64.spec_0 [export=none] params=[b(_uniq.1):UInt64(b=false), a(_uniq.2):UInt64(b=false), n(_uniq.3):tobj(b=true), x(_uniq.4):UInt64(b=false), i(_uniq.5):tobj(b=false)] ret=UInt64
+DECL clmul64._boxed [export=none] params=[a(_uniq.1):obj(b=false), b(_uniq.2):obj(b=false)] ret=obj
+DECL Fin.foldl.loop._at_.clmul64.spec_0._boxed [export=none] params=[b(_uniq.1):obj(b=false), a(_uniq.2):obj(b=false), n(_uniq.3):tobj(b=false), x(_uniq.4):obj(b=false), i(_uniq.5):tobj(b=false)] ret=obj
+DECL _private.Init.Data.Range.Basic.0.Std.Legacy.Range.forIn'.loop._at_.hashBA.spec_0 [export=none] params=[ba(_uniq.1):obj(b=true), range(_uniq.2):obj(b=true), b(_uniq.3):UInt64(b=false), i(_uniq.4):tobj(b=false), hs(_uniq.5):lcErased(b=false), hl(_uniq.6):lcErased(b=false)] ret=UInt64
+DECL Fin.foldl.loop._at_.gf2Affine64.spec_1._boxed [export=none] params=[x(_uniq.1):obj(b=false), m(_uniq.2):obj(b=false), immU(_uniq.3):obj(b=false), n(_uniq.4):tobj(b=false), x(_uniq.5):obj(b=false), i(_uniq.6):tobj(b=false)] ret=obj
+DECL uset64LE [export=none] params=[b(_uniq.1):obj(b=false), wordIdx(_uniq.2):USize(b=false), val(_uniq.3):UInt64(b=false)] ret=obj
+  let _x.1(_uniq.4) : USize := lit
+  let _x.2(_uniq.5) : USize := lit
+  let base(_uniq.6) : USize := fap USize.shiftLeft (2)
+  let _x.3(_uniq.7) : USize := fap USize.add (2)
+  let _x.4(_uniq.8) : USize := fap ByteArray.usize (1)
+  let _x.5(_uniq.9) : UInt8 := fap USize.decLe (2)
+  cases _uniq.9 (UInt8) : obj
+    | ctor Bool.false =>
+      return _uniq.1
+    | ctor Bool.true =>
+      let _x.6(_uniq.10) : UInt8 := fap USize.decLe (2)
+      cases _uniq.10 (UInt8) : obj
+        | ctor Bool.false =>
+          return _uniq.1
+        | ctor Bool.true =>
+          let i(_uniq.11) : tobj := fap USize.toNat (1)
+          let _x.7(_uniq.12) : UInt8 := fap UInt64.toUInt8 (1)
+          let b(_uniq.13) : obj := fap ByteArray.set! (3)
+          let _x.8(_uniq.14) : tagged := lit
+          let _x.9(_uniq.15) : tobj := fap Nat.add (2)
+          let _x.10(_uniq.16) : UInt64 := lit
+          let _x.11(_uniq.17) : UInt64 := fap UInt64.shiftRight (2)
+          let _x.12(_uniq.18) : UInt8 := fap UInt64.toUInt8 (1)
+          let b(_uniq.19) : obj := fap ByteArray.set! (3)
+          dec _uniq.15 1
+          let _x.13(_uniq.20) : tagged := lit
+          let _x.14(_uniq.21) : tobj := fap Nat.add (2)
+          let _x.15(_uniq.22) : UInt64 := lit
+          let _x.16(_uniq.23) : UInt64 := fap UInt64.shiftRight (2)
+          let _x.17(_uniq.24) : UInt8 := fap UInt64.toUInt8 (1)
+          let b(_uniq.25) : obj := fap ByteArray.set! (3)
+          dec _uniq.21 1
+          let _x.18(_uniq.26) : tagged := lit
+          let _x.19(_uniq.27) : tobj := fap Nat.add (2)
+          let _x.20(_uniq.28) : UInt64 := lit
+          let _x.21(_uniq.29) : UInt64 := fap UInt64.shiftRight (2)
+          let _x.22(_uniq.30) : UInt8 := fap UInt64.toUInt8 (1)
+          let b(_uniq.31) : obj := fap ByteArray.set! (3)
+          dec _uniq.27 1
+          let _x.23(_uniq.32) : tagged := lit
+          let _x.24(_uniq.33) : tobj := fap Nat.add (2)
+          let _x.25(_uniq.34) : UInt64 := lit
+          let _x.26(_uniq.35) : UInt64 := fap UInt64.shiftRight (2)
+          let _x.27(_uniq.36) : UInt8 := fap UInt64.toUInt8 (1)
+          let b(_uniq.37) : obj := fap ByteArray.set! (3)
+          dec _uniq.33 1
+          let _x.28(_uniq.38) : tagged := lit
+          let _x.29(_uniq.39) : tobj := fap Nat.add (2)
+          let _x.30(_uniq.40) : UInt64 := lit
+          let _x.31(_uniq.41) : UInt64 := fap UInt64.shiftRight (2)
+          let _x.32(_uniq.42) : UInt8 := fap UInt64.toUInt8 (1)
+          let b(_uniq.43) : obj := fap ByteArray.set! (3)
+          dec _uniq.39 1
+          let _x.33(_uniq.44) : tagged := lit
+          let _x.34(_uniq.45) : tobj := fap Nat.add (2)
+          let _x.35(_uniq.46) : UInt64 := lit
+          let _x.36(_uniq.47) : UInt64 := fap UInt64.shiftRight (2)
+          let _x.37(_uniq.48) : UInt8 := fap UInt64.toUInt8 (1)
+          let b(_uniq.49) : obj := fap ByteArray.set! (3)
+          dec _uniq.45 1
+          let _x.38(_uniq.50) : tagged := lit
+          let _x.39(_uniq.51) : tobj := fap Nat.add (2)
+          dec _uniq.11 1
+          let _x.40(_uniq.52) : UInt64 := lit
+          let _x.41(_uniq.53) : UInt64 := fap UInt64.shiftRight (2)
+          let _x.42(_uniq.54) : UInt8 := fap UInt64.toUInt8 (1)
+          let _x.43(_uniq.55) : obj := fap ByteArray.set! (3)
+          dec _uniq.51 1
+          return _uniq.55
+DECL identity32 [export=(some p0_identity32)] params=[x(_uniq.1):UInt32(b=false)] ret=UInt32
+DECL Fin.foldl.loop._at_.gf2Dot8.spec_0._boxed [export=none] params=[row(_uniq.1):obj(b=false), x(_uniq.2):obj(b=false), n(_uniq.3):tobj(b=false), x(_uniq.4):obj(b=false), i(_uniq.5):tobj(b=false)] ret=obj
+DECL zmmGfniRmfeX8 [export=(some p0_zmm_gfni_rmfe_x8)] params=[inp0(_uniq.1):obj(b=false), inp1(_uniq.2):obj(b=false), out(_uniq.3):obj(b=false), n(_uniq.4):USize(b=false), mat0(_uniq.5):UInt64(b=false), mat1(_uniq.6):UInt64(b=false)] ret=obj
+  let _x.1(_uniq.7) : tobj := fap USize.toNat (1)
+  let _x.2(_uniq.8) : tagged := lit
+  let _x.3(_uniq.9) : obj := fap Fin.foldl.loop._at_.zmmGfniRmfeX8.spec_0 (7)
+  dec _uniq.7 1
+  dec _uniq.2 1
+  dec _uniq.1 1
+  return _uniq.9
+DECL _private.Init.Data.Range.Basic.0.Std.Legacy.Range.forIn'.loop._at_.mkWordsBA.spec_1._boxed [export=none] params=[range(_uniq.1):obj(b=false), b(_uniq.2):obj(b=false), i(_uniq.3):tobj(b=false), hs(_uniq.4):tobj(b=false), hl(_uniq.5):tobj(b=false)] ret=obj
+DECL main._boxed [export=none] params=[args(_uniq.1):tobj(b=false), a.1(_uniq.2):tagged(b=false)] ret=obj
+DECL uget64LE [export=none] params=[b(_uniq.1):obj(b=true), wordIdx(_uniq.2):USize(b=false)] ret=UInt64
+  let _x.1(_uniq.3) : USize := lit
+  let _x.2(_uniq.4) : USize := lit
+  let base(_uniq.5) : USize := fap USize.shiftLeft (2)
+  let _x.3(_uniq.6) : USize := fap USize.add (2)
+  let _x.4(_uniq.7) : USize := fap ByteArray.usize (1)
+  let _x.5(_uniq.8) : UInt8 := fap USize.decLe (2)
+  cases _uniq.8 (UInt8) : UInt64
+    | ctor Bool.false =>
+      let _x.6(_uniq.9) : UInt64 := lit
+      return _uniq.9
+    | ctor Bool.true =>
+      let _x.7(_uniq.10) : UInt8 := fap USize.decLe (2)
+      cases _uniq.10 (UInt8) : UInt64
+        | ctor Bool.false =>
+          let _x.8(_uniq.11) : UInt64 := lit
+          return _uniq.11
+        | ctor Bool.true =>
+          let _x.9(_uniq.12) : tobj := fap USize.toNat (1)
+          let _x.10(_uniq.13) : UInt8 := fap ByteArray.get! (2)
+          let _x.11(_uniq.14) : UInt64 := fap UInt8.toUInt64 (1)
+          let _x.12(_uniq.15) : tagged := lit
+          let _x.13(_uniq.16) : tobj := fap Nat.add (2)
+          let _x.14(_uniq.17) : UInt8 := fap ByteArray.get! (2)
+          dec _uniq.16 1
+          let _x.15(_uniq.18) : UInt64 := fap UInt8.toUInt64 (1)
+          let _x.16(_uniq.19) : UInt64 := lit
+          let _x.17(_uniq.20) : UInt64 := fap UInt64.shiftLeft (2)
+          let _x.18(_uniq.21) : UInt64 := fap UInt64.lor (2)
+          let _x.19(_uniq.22) : tagged := lit
+          let _x.20(_uniq.23) : tobj := fap Nat.add (2)
+          let _x.21(_uniq.24) : UInt8 := fap ByteArray.get! (2)
+          dec _uniq.23 1
+          let _x.22(_uniq.25) : UInt64 := fap UInt8.toUInt64 (1)
+          let _x.23(_uniq.26) : UInt64 := lit
+          let _x.24(_uniq.27) : UInt64 := fap UInt64.shiftLeft (2)
+          let _x.25(_uniq.28) : UInt64 := fap UInt64.lor (2)
+          let _x.26(_uniq.29) : tagged := lit
+          let _x.27(_uniq.30) : tobj := fap Nat.add (2)
+          let _x.28(_uniq.31) : UInt8 := fap ByteArray.get! (2)
+          dec _uniq.30 1
+          let _x.29(_uniq.32) : UInt64 := fap UInt8.toUInt64 (1)
+          let _x.30(_uniq.33) : UInt64 := lit
+          let _x.31(_uniq.34) : UInt64 := fap UInt64.shiftLeft (2)
+          let _x.32(_uniq.35) : UInt64 := fap UInt64.lor (2)
+          let _x.33(_uniq.36) : tagged := lit
+          let _x.34(_uniq.37) : tobj := fap Nat.add (2)
+          let _x.35(_uniq.38) : UInt8 := fap ByteArray.get! (2)
+          dec _uniq.37 1
+          let _x.36(_uniq.39) : UInt64 := fap UInt8.toUInt64 (1)
+          let _x.37(_uniq.40) : UInt64 := lit
+          let _x.38(_uniq.41) : UInt64 := fap UInt64.shiftLeft (2)
+          let _x.39(_uniq.42) : UInt64 := fap UInt64.lor (2)
+          let _x.40(_uniq.43) : tagged := lit
+          let _x.41(_uniq.44) : tobj := fap Nat.add (2)
+          let _x.42(_uniq.45) : UInt8 := fap ByteArray.get! (2)
+          dec _uniq.44 1
+          let _x.43(_uniq.46) : UInt64 := fap UInt8.toUInt64 (1)
+          let _x.44(_uniq.47) : UInt64 := lit
+          let _x.45(_uniq.48) : UInt64 := fap UInt64.shiftLeft (2)
+          let _x.46(_uniq.49) : UInt64 := fap UInt64.lor (2)
+          let _x.47(_uniq.50) : tagged := lit
+          let _x.48(_uniq.51) : tobj := fap Nat.add (2)
+          let _x.49(_uniq.52) : UInt8 := fap ByteArray.get! (2)
+          dec _uniq.51 1
+          let _x.50(_uniq.53) : UInt64 := fap UInt8.toUInt64 (1)
+          let _x.51(_uniq.54) : UInt64 := lit
+          let _x.52(_uniq.55) : UInt64 := fap UInt64.shiftLeft (2)
+          let _x.53(_uniq.56) : UInt64 := fap UInt64.lor (2)
+          let _x.54(_uniq.57) : tagged := lit
+          let _x.55(_uniq.58) : tobj := fap Nat.add (2)
+          dec _uniq.12 1
+          let _x.56(_uniq.59) : UInt8 := fap ByteArray.get! (2)
+          dec _uniq.58 1
+          let _x.57(_uniq.60) : UInt64 := fap UInt8.toUInt64 (1)
+          let _x.58(_uniq.61) : UInt64 := lit
+          let _x.59(_uniq.62) : UInt64 := fap UInt64.shiftLeft (2)
+          let _x.60(_uniq.63) : UInt64 := fap UInt64.lor (2)
+          return _uniq.63
+DECL kmul [export=(some p0_kmul)] params=[a(_uniq.1):UInt64(b=false), b(_uniq.2):UInt64(b=false)] ret=UInt64
+DECL identity._boxed [export=none] params=[x(_uniq.1):obj(b=false)] ret=obj
+DECL main._closed_0 [export=none] params=[] ret=obj
+DECL clmul64 [export=none] params=[a(_uniq.1):UInt64(b=false), b(_uniq.2):UInt64(b=false)] ret=UInt64
+  let _x.1(_uniq.3) : tagged := lit
+  let _x.2(_uniq.4) : UInt64 := lit
+  let _x.3(_uniq.5) : tagged := lit
+  let _x.4(_uniq.6) : UInt64 := fap Fin.foldl.loop._at_.clmul64.spec_0 (5)
+  return _uniq.6
+DECL gf2Dot8 [export=none] params=[row(_uniq.1):UInt64(b=false), x(_uniq.2):UInt64(b=false)] ret=UInt64
+DECL rol64._boxed [export=none] params=[x(_uniq.1):obj(b=false), s(_uniq.2):obj(b=false)] ret=obj

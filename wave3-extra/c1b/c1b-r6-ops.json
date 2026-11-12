@@ -1,0 +1,454 @@
+[
+  {
+    "seq": 16,
+    "tool": "bash",
+    "ok": true,
+    "command": "source /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean\" && git diff --stat && ls lean/LeanNative/Transform lean/LeanNative/Proofs lean/LeanNative/Backend"
+  },
+  {
+    "seq": 264,
+    "tool": "bash",
+    "ok": true,
+    "command": "source /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean/lean\" && sed -i 's/^import LeanNative.Transform$/import LeanNative.Driver.BuildExe\\nimport LeanNative.Transform.LoopVectorizeOpt\\nimport LeanNative.Transform.HoistExclusivity\\nimport LeanNative.Transform.AlgebraicOpt\\nimport LeanNative.Transform.UnboxTupleSROA/' /tmp/opencode/PassProbe.lean && /usr/bin/time -f \"%es\" timeout 240 lean --run /tmp/opencode/PassProbe.lean /tmp/opencode/BK4.lean 2>&1 | tail -12"
+  },
+  {
+    "seq": 275,
+    "tool": "bash",
+    "ok": true,
+    "command": "cd /tmp/opencode && python3 - <<'EOF'\ns = open('PassProbe.lean').read()\ns = s.replace('def timeMs (label : String) (f : Unit \u2192 \u03b1) : IO \u03b1 := do\\n  let t0 \u2190 IO.monoMsNow\\n  let r := f ()\\n  let t1 \u2190 IO.monoMsNow\\n  IO.println s!\"{label}: {t1 - t0} ms\"\\n  return r',\n'def timeMs (label : String) (f : IO \u03b1) : IO \u03b1 := do\\n  let t0 \u2190 IO.monoMsNow\\n  let r \u2190 f\\n  let t1 \u2190 IO.monoMsNow\\n  IO.println s!\"{label}: {t1 - t0} ms\"\\n  return r')\ns = s.replace('(fun _ => (algebraicOptPass.runDecl d).1)', '(pure ((algebraicOptPass.runDecl d).1))')\ns = s.replace('(fun _ => (algebraicOptPass.runDecl d1).1)', '(pure ((algebraicOptPass.runDecl d1).1))')\ns = s.replace('(fun _ => (unboxTupleSROAPass.runDecl d1).1)', '(pure ((unboxTupleSROAPass.runDecl d1).1))')\ns = s.replace('(fun _ => (hoistExclusivityPass.runDecl d1).1)', '(pure ((hoistExclusivityPass.runDecl d1).1))')\ns = s.replace('(fun _ => (loopVectorizeOptPass.runDecl d1).1)', '(pure ((loopVectorizeOptPass.runDecl d1).1))')\ns = s.replace('(fun _ => ingestLeanSourceFile path path .x86_64 false)', '(ingestLeanSourceFile path path .x86_64 false)')\nopen('PassProbe.lean','w').write(s)\nEOF\nsource /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean/lean\" && timeout 240 lean --run /tmp/opencode/PassProbe.lean /tmp/opencode/BK4.lean 2>&1 | tail -12"
+  },
+  {
+    "seq": 278,
+    "tool": "bash",
+    "ok": true,
+    "command": "cd /tmp/opencode && python3 - <<'EOF'\ns = open('PassProbe.lean').read()\ns = s.replace('def main (args : List String) : IO Unit := do\\n  let some path := args.head?',\n'unsafe def main (args : List String) : IO Unit := do\\n  Lean.enableInitializersExecution\\n  let some path := args.head?')\nopen('PassProbe.lean','w').write(s)\nEOF\nsource /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean/lean\" && timeout 240 lean --run /tmp/opencode/PassProbe.lean /tmp/opencode/BK4.lean 2>&1 | tail -12"
+  },
+  {
+    "seq": 282,
+    "tool": "bash",
+    "ok": true,
+    "command": "cd /tmp/opencode && sed -i 's/let _ := timeMs/let _ \u2190 timeMs/g' PassProbe.lean && source /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean/lean\" && timeout 280 lean --run /tmp/opencode/PassProbe.lean /tmp/opencode/BK4.lean 2>&1 | grep -E \"^(ingest|decl|algebraic|unbox|hoist|loop|done)\""
+  },
+  {
+    "seq": 297,
+    "tool": "bash",
+    "ok": true,
+    "command": "cd /tmp/opencode && sed -i 's/IO.println s!\"{label}: {t1 - t0} ms\"/IO.eprintln s!\"{label}: {t1 - t0} ms\"/; s/IO.println s!\"decl/IO.eprintln s!\"decl/; s/IO.println s!\"candBody/IO.eprintln s!\"candBody/; s/IO.println s!\"kernelBody/IO.eprintln s!\"kernelBody/; s/  IO.println \"done\"/  IO.eprintln \"done\"/' PassProbe2.lean && source /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean/lean\" && timeout 280 lean --run /tmp/opencode/PassProbe2.lean /tmp/opencode/BK4.lean > /tmp/opencode/probe2.log 2>&1; echo \"rc=$?\"; grep -E \"ms|nodeSize|same|done\" /tmp/opencode/probe2.log"
+  },
+  {
+    "seq": 306,
+    "tool": "bash",
+    "ok": true,
+    "command": "cd /tmp/opencode && python3 - <<'EOF'\ns = open('PassProbe2.lean').read()\ns = s.replace('''  if kernelBody != candBody then\n    let candDecl : LNIRDecl := { d with body := candBody }\n    let _ \u2190 timeMs \"validateTranslationDecl\" (pure (validateTranslationDecl d candDecl 64))''',\n'''  if kernelBody != candBody then\n    let candDecl : LNIRDecl := { d with body := candBody }\n    let _ \u2190 timeMs \"checkDeclConcreteRefinement\" (pure (checkDeclConcreteRefinement d candDecl 64 128))\n    let sharedSynBase := Nat.max (declSynVarBase d) (declSynVarBase candDecl)\n    let _ \u2190 timeMs \"symExecDecl-src\" (pure (symExecDecl 4 d (some sharedSynBase)))\n    let _ \u2190 timeMs \"symExecDecl-tgt\" (pure (symExecDecl 4 candDecl (some sharedSynBase)))''')\nopen('PassProbe2.lean','w').write(s)\nEOF\nsource /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean/lean\" && timeout 280 lean --run /tmp/opencode/PassProbe2.lean /tmp/opencode/BK4.lean > /tmp/opencode/probe2.log 2>&1; echo \"rc=$?\"; grep -E \"ms|nodeSize|same|done\" /tmp/opencode/probe2.log"
+  },
+  {
+    "seq": 322,
+    "tool": "bash",
+    "ok": true,
+    "command": "cd /tmp/opencode && python3 - <<'EOF'\ns = open('PassProbe2.lean').read()\ns = s.replace('''    let sharedSynBase := Nat.max (declSynVarBase d) (declSynVarBase candDecl)\n    let _ \u2190 timeMs \"symExecDecl-src\" (pure (symExecDecl 4 d (some sharedSynBase)))\n    let _ \u2190 timeMs \"symExecDecl-tgt\" (pure (symExecDecl 4 candDecl (some sharedSynBase)))''',\n'''    let sharedSynBase := Nat.max (declSynVarBase d) (declSynVarBase candDecl)\n    let synBase := sharedSynBase\n    let initTupleBase : VarId := synBase + 256\n    let paramState := (d.params.foldl (fun (acc, curSubId) p =>\n      ((acc.bindVar p.id { expr := .symVar p.id, nonPoison := true, noUB := true }).markU64Var p.id, curSubId)\n    ) ({ synVarBase := synBase + 4096 } : LeanNative.Proofs.SymExecState), initTupleBase)\n    let initState := { paramState.1 with synVarBase := Nat.max (synBase + 4096) paramState.2 }\n    let _ \u2190 timeMs \"symExecCode\" (pure (LeanNative.Proofs.symExecCode 256 4 initState d.body true))''')\nopen('PassProbe2.lean','w').write(s)\nEOF\nsource /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean/lean\" && timeout 200 lean --run /tmp/opencode/PassProbe2.lean /tmp/opencode/BK4.lean > /tmp/opencode/probe2.log 2>&1; echo \"rc=$?\"; grep -E \"ms|nodeSize|same|done\" /tmp/opencode/probe2.log"
+  },
+  {
+    "seq": 326,
+    "tool": "bash",
+    "ok": true,
+    "command": "cd /tmp/opencode && python3 - <<'EOF'\ns = open('PassProbe2.lean').read()\ns = s.replace('''    let paramState := (d.params.foldl (fun (acc, curSubId) p =>\n      ((acc.bindVar p.id { expr := .symVar p.id, nonPoison := true, noUB := true }).markU64Var p.id, curSubId)\n    ) ({ synVarBase := synBase + 4096 } : LeanNative.Proofs.SymExecState, initTupleBase)\n    let initState := { paramState.1 with synVarBase := Nat.max (synBase + 4096) paramState.2 }''',\n'''    let paramState : LeanNative.Proofs.SymExecState \u00d7 VarId := d.params.foldl (fun (acc, curSubId) p =>\n      ((acc.bindVar p.id { expr := .symVar p.id, nonPoison := true, noUB := true }).markU64Var p.id, curSubId)\n    ) ({ synVarBase := synBase + 4096 }, initTupleBase)\n    let initState := { paramState.1 with synVarBase := Nat.max (synBase + 4096) paramState.2 }''')\nopen('PassProbe2.lean','w').write(s)\nEOF\nsource /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean/lean\" && timeout 200 lean --run /tmp/opencode/PassProbe2.lean /tmp/opencode/BK4.lean > /tmp/opencode/probe2.log 2>&1; echo \"rc=$?\"; grep -E \"ms|nodeSize|same|done\" /tmp/opencode/probe2.log"
+  },
+  {
+    "seq": 331,
+    "tool": "bash",
+    "ok": true,
+    "command": "cd /tmp/opencode && python3 - <<'EOF'\ns = open('PassProbe2.lean').read()\ns = s.replace('''    let paramState : LeanNative.Proofs.SymExecState \u00d7 VarId := d.params.foldl (fun (acc, curSubId) p =>\n      ((acc.bindVar p.id { expr := .symVar p.id, nonPoison := true, noUB := true }).markU64Var p.id, curSubId)\n    ) ({ synVarBase := synBase + 4096 }, initTupleBase)\n    let initState := { paramState.1 with synVarBase := Nat.max (synBase + 4096) paramState.2 }''',\n'''    let bindU64 (acc : LeanNative.Proofs.SymExecState) (p : LeanNative.IR.Param) : LeanNative.Proofs.SymExecState :=\n      (acc.bindVar p.id { expr := .symVar p.id, nonPoison := true, noUB := true }).markU64Var p.id\n    let paramState : LeanNative.Proofs.SymExecState \u00d7 VarId :=\n      d.params.foldl (fun (acc, curSubId) p => (bindU64 acc p, curSubId))\n        ({ synVarBase := synBase + 4096 } : LeanNative.Proofs.SymExecState, initTupleBase)\n    let initState : LeanNative.Proofs.SymExecState :=\n      { paramState.1 with synVarBase := Nat.max (synBase + 4096) paramState.2 }''')\nopen('PassProbe2.lean','w').write(s)\nEOF\nsource /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean/lean\" && timeout 200 lean --run /tmp/opencode/PassProbe2.lean /tmp/opencode/BK4.lean > /tmp/opencode/probe2.log 2>&1; echo \"rc=$?\"; grep -E \"ms|nodeSize|same|done\" /tmp/opencode/probe2.log"
+  },
+  {
+    "seq": 346,
+    "tool": "bash",
+    "ok": true,
+    "command": "cd /tmp/opencode && python3 - <<'EOF'\ns = open('PassProbe2.lean').read()\ns = s.replace('        ({ synVarBase := synBase + 4096 } : SymExecState, initTupleBase)',\n'        ({ synVarBase := synBase + 4096, u64Vars := [] } : SymExecState, initTupleBase)')\nopen('PassProbe2.lean','w').write(s)\nEOF\nsource /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean/lean\" && timeout 200 lean --run /tmp/opencode/PassProbe2.lean /tmp/opencode/BK4.lean > /tmp/opencode/probe2.log 2>&1; echo \"rc=$?\"; grep -E \"ms|nodeSize|same|done\" /tmp/opencode/probe2.log; grep -m1 -A3 \"error\" /tmp/opencode/probe2.log"
+  },
+  {
+    "seq": 349,
+    "tool": "bash",
+    "ok": true,
+    "command": "cd /tmp/opencode && python3 - <<'EOF'\ns = open('PassProbe2.lean').read()\ns = s.replace('        ({ synVarBase := synBase + 4096, u64Vars := [] } : SymExecState, initTupleBase)',\n'        (({ synVarBase := synBase + 4096 } : SymExecState), initTupleBase)')\nopen('PassProbe2.lean','w').write(s)\nEOF\nsource /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean/lean\" && timeout 200 lean --run /tmp/opencode/PassProbe2.lean /tmp/opencode/BK4.lean > /tmp/opencode/probe2.log 2>&1; echo \"rc=$?\"; grep -E \"ms|nodeSize|same|done\" /tmp/opencode/probe2.log; grep -m1 -A3 \"error\" /tmp/opencode/probe2.log"
+  },
+  {
+    "seq": 351,
+    "tool": "bash",
+    "ok": true,
+    "command": "cd /tmp/opencode && sed -i 's/(p : Param)/(p : LeanNative.IR.Param)/' PassProbe2.lean && source /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean/lean\" && timeout 200 lean --run /tmp/opencode/PassProbe2.lean /tmp/opencode/BK4.lean > /tmp/opencode/probe2.log 2>&1; echo \"rc=$?\"; grep -E \"ms|nodeSize|same|done\" /tmp/opencode/probe2.log; grep -m1 -A3 \"error\" /tmp/opencode/probe2.log"
+  },
+  {
+    "seq": 355,
+    "tool": "bash",
+    "ok": true,
+    "command": "cd /tmp/opencode && sed -i 's/(p : LeanNative.IR.Param)/(p : LeanNative.IR.LNIRParam)/' PassProbe2.lean && source /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean/lean\" && timeout 200 lean --run /tmp/opencode/PassProbe2.lean /tmp/opencode/BK4.lean > /tmp/opencode/probe2.log 2>&1; echo \"rc=$?\"; grep -E \"ms|nodeSize|same|done\" /tmp/opencode/probe2.log; grep -m1 -A3 \"error\" /tmp/opencode/probe2.log"
+  },
+  {
+    "seq": 524,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Transform/Pass.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Transform/Pass.lean",
+      "newString": "/-- Run a single pass over all declarations in an `LNIRModule`. -/\ndef runModule (pass : TransformPass) (m : LNIRModule) : LNIRModule \u00d7 List PassStepCert :=\n  let results := m.decls.map pass.runDecl\n  let decls' := results.map Prod.fst\n  let certs := results.map Prod.snd\n  ({ m with decls := decls' }, certs)\n\nend TransformPass\n\n/-! ## Symbolic TV expression-size budget (W3-C1b)\n\n`LeanNative.Proofs.symExecDecl` expands symbolic expressions without sharing: every `.var`\nreference inlines the referenced value's full tree, so a long pure-scalar `let` chain (crypto\nkernels with 100+ dependent `binOp`s) grows tree sizes geometrically, and the per-node scalar\nsorts and normalizers then make translation validation superlinear (measured: a 188-node body\nnever finishes, while the identical `--baseline` compile takes 0.43s).\n\nThe estimator below computes a conservative *peak estimated symbolic-expression tree size* in\none linear pass over the code (`estCodeNodesWalk`), mirroring the symbolic executor's\n`loopUnrollBound = 4` feedback for `seqFor` accumulators. When the estimate exceeds\n`symTvMaxExprNodes`, the SymbolicTV gates (`ofHybridVerifiedContract`, `ofCodeTransform`,\n`EqSat.gateDeclWithSymbolicTV`, `LoopVectorizeOpt.loopVectorizeOptPass`) skip validation and\nfall back to their kernel-proven / identity branch. This is fail-closed: every consumer treats\na *passed* TV result as sufficient for a `.translationValidated` branch, never as necessary, so\nskipping the gate can only lose an optimization, never soundness. Calibrated on\n`Keccak`-lane kernels: estPeak 427 / 10,685 (validation completes in ms) vs 426,247 / 16M\n(validation stalls); the 65,536-node threshold keeps every existing fast case validated. -/\n\n/-- Saturating cap for estimates (far above `symTvMaxExprNodes`; keeps the walk O(1) per node). -/\nprivate def symTvSizeCap : Nat := 1 <<< 24\n\n/-- Peak estimated symbolic-expression tree size accepted by the SymbolicTV gates. -/\ndef symTvMaxExprNodes : Nat := 65536\n\n/-- Walk-fuel budget for `estCodeNodesWalk`: total `seqFor` step-body walks across nesting. -/\nprivate def symTvWalkFuel : Nat := 64\n\nprivate def symTvSatAdd (a b : Nat) : Nat := Nat.min symTvSizeCap (a + b)\n\nprivate def symTvSzAt (sizes : Array Nat) (v : VarId) : Nat :=\n  if h : v < sizes.size then sizes[v] else 1\n\n/-- Bind `v \u21a6 sz` in `sizes`, growing the backing array lazily on first sight of `v`. -/\nprivate def symTvSetSz (sizes : Array Nat) (v : VarId) (sz : Nat) : Array Nat :=\n  if v < sizes.size then sizes.setIfInBounds v sz\n  else sizes ++ (Array.replicate (v - sizes.size) 1) |>.push sz\n\n/-- Estimated symbolic tree size of a scalar expression (`.var` refs inline the referenced tree,\n    matching the executor's unshared expansion; saturating at `symTvSizeCap`). -/\nprivate def estScalarExprNodes (sizes : Array Nat) : ScalarExpr \u2192 Nat\n  | .constU64 _ | .constBool _ => 1\n  | .var v => symTvSzAt sizes v\n  | .binOp _ l r => symTvSatAdd 1 (symTvSatAdd (estScalarExprNodes sizes l) (estScalarExprNodes sizes r))\n  | .unaryOp _ a => symTvSatAdd 1 (estScalarExprNodes sizes a)\n  | .select c t e =>\n    symTvSatAdd 1 (symTvSatAdd (estScalarExprNodes sizes c)\n      (symTvSatAdd (estScalarExprNodes sizes t) (estScalarExprNodes sizes e)))\n  | .fma a b c =>\n    symTvSatAdd 1 (symTvSatAdd (estScalarExprNodes sizes a)\n      (symTvSatAdd (estScalarExprNodes sizes b) (estScalarExprNodes sizes c)))\n\n/-- Estimated symbolic tree size of an `LNIRExpr` right-hand side (fresh leaves count `1`;\n    tuples carry their field trees). -/\nprivate def estExprNodes (sizes : Array Nat) : LNIRExpr \u2192 Nat\n  | .scalar e => estScalarExprNodes sizes e\n  | .mkTuple fs => fs.foldl (fun acc v => symTvSatAdd acc (symTvSzAt sizes v)) 1\n  | .projTuple tv _ => symTvSzAt sizes tv\n  | _ => 1\n\n/-- Walk `code` tracking the peak estimated tree size, returning\n    `(peak, sizes, estimated size of the returned var)`. `seqFor` step bodies are walked\n    `loopUnrollBound = 4` times, feeding the returned accumulator size back in, mirroring\n    `LeanNative.Proofs.symExecDecl 4`; `fuel` bounds total step-body walks so deeply nested\n    loops cannot make the estimator itself superlinear (exhaustion reports the cap, i.e.\n    fail-closed to \"budget exceeded\"). -/\nprivate partial def estCodeNodesWalk (sizes : Array Nat) (peak : Nat) : LNIRCode \u2192 Nat \u00d7 Array Nat \u00d7 Nat\n  | .letBind dst _ty val k =>\n    let sz := estExprNodes sizes val\n    estCodeNodesWalk (symTvSetSz sizes dst sz) (Nat.max peak sz) k\n  | .rawStore _ _ _ _ k => estCodeNodesWalk sizes peak k\n  | .incRef _ _ k => estCodeNodesWalk sizes peak k\n  | .decRef _ _ k => estCodeNodesWalk sizes peak k\n  | .ite _ t e =>\n    let (pt, _, _) := estCodeNodesWalk sizes peak t\n    let (pe, _, _) := estCodeNodesWalk sizes peak e\n    (Nat.max pt pe, sizes, 0)\n  | .seqFor iv _ _ accVar accInit _ty stepBody k =>\n    let accSz := symTvSzAt sizes accInit\n    let sizesIn := symTvSetSz (symTvSetSz sizes iv 1) accVar accSz\n    let rec unroll (fuel : Nat) (cur : Array Nat) (p : Nat) (iters : Nat) : Nat \u00d7 Array Nat :=\n      match iters with\n      | 0 => (p, cur)\n      | _ =>\n        if fuel == 0 then (symTvSizeCap, cur)\n        else\n          let (p1, s1, r) := estCodeNodesWalk cur p stepBody\n          unroll (fuel - 1) (symTvSetSz s1 accVar r) p1 (iters - 1)\n    let (pLoop, sLoop) := unroll symTvWalkFuel sizesIn peak 4\n    estCodeNodesWalk (symTvSetSz sizes accVar (symTvSzAt sLoop accVar)) pLoop k\n  | .parFor out _ _ _ kernel k =>\n    let kSz :=\n      match kernel with\n      | .customScalar _ _ body => estScalarExprNodes sizes body\n      | _ => 1\n    estCodeNodesWalk (symTvSetSz sizes out kSz) peak k\n  | .ret v => (peak, sizes, symTvSzAt sizes v)\n  | .unreachable => (peak, sizes, 0)\n\n/-- Peak estimated symbolic-expression tree size for a code block (parameters count `1`). -/\ndef codeSymTvEstPeak (c : LNIRCode) : Nat :=\n  let (peak, _, _) := estCodeNodesWalk #[] 0 c\n  peak\n\n/-- True when the SymbolicTV gate should be skipped for this code block\n    (estimated symbolic-expression blowup above `symTvMaxExprNodes`). -/\ndef codeSymTvBudgetExceeded (c : LNIRCode) : Bool :=\n  codeSymTvEstPeak c > symTvMaxExprNodes\n\n/-- Declaration-level wrapper around `codeSymTvBudgetExceeded`. -/\ndef declSymTvBudgetExceeded (d : LNIRDecl) : Bool :=\n  codeSymTvBudgetExceeded d.body",
+      "oldString": "/-- Run a single pass over all declarations in an `LNIRModule`. -/\ndef runModule (pass : TransformPass) (m : LNIRModule) : LNIRModule \u00d7 List PassStepCert :=\n  let results := m.decls.map pass.runDecl\n  let decls' := results.map Prod.fst\n  let certs := results.map Prod.snd\n  ({ m with decls := decls' }, certs)\n\nend TransformPass"
+    }
+  },
+  {
+    "seq": 528,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Transform/Pass.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Transform/Pass.lean",
+      "newString": "/-- Run a single pass over all declarations in an `LNIRModule`. -/\ndef runModule (pass : TransformPass) (m : LNIRModule) : LNIRModule \u00d7 List PassStepCert :=\n  let results := m.decls.map pass.runDecl\n  let decls' := results.map Prod.fst\n  let certs := results.map Prod.snd\n  ({ m with decls := decls' }, certs)\n\nend TransformPass",
+      "oldString": "/-- Run a single pass over all declarations in an `LNIRModule`. -/\ndef runModule (pass : TransformPass) (m : LNIRModule) : LNIRModule \u00d7 List PassStepCert :=\n  let results := m.decls.map pass.runDecl\n  let decls' := results.map Prod.fst\n  let certs := results.map Prod.snd\n  ({ m with decls := decls' }, certs)\n\nend TransformPass\n\n/-! ## Symbolic TV expression-size budget (W3-C1b)\n\n`LeanNative.Proofs.symExecDecl` expands symbolic expressions without sharing: every `.var`\nreference inlines the referenced value's full tree, so a long pure-scalar `let` chain (crypto\nkernels with 100+ dependent `binOp`s) grows tree sizes geometrically, and the per-node scalar\nsorts and normalizers then make translation validation superlinear (measured: a 188-node body\nnever finishes, while the identical `--baseline` compile takes 0.43s).\n\nThe estimator below computes a conservative *peak estimated symbolic-expression tree size* in\none linear pass over the code (`estCodeNodesWalk`), mirroring the symbolic executor's\n`loopUnrollBound = 4` feedback for `seqFor` accumulators. When the estimate exceeds\n`symTvMaxExprNodes`, the SymbolicTV gates (`ofHybridVerifiedContract`, `ofCodeTransform`,\n`EqSat.gateDeclWithSymbolicTV`, `LoopVectorizeOpt.loopVectorizeOptPass`) skip validation and\nfall back to their kernel-proven / identity branch. This is fail-closed: every consumer treats\na *passed* TV result as sufficient for a `.translationValidated` branch, never as necessary, so\nskipping the gate can only lose an optimization, never soundness. Calibrated on\n`Keccak`-lane kernels: estPeak 427 / 10,685 (validation completes in ms) vs 426,247 / 16M\n(validation stalls); the 65,536-node threshold keeps every existing fast case validated. -/\n\n/-- Saturating cap for estimates (far above `symTvMaxExprNodes`; keeps the walk O(1) per node). -/\nprivate def symTvSizeCap : Nat := 1 <<< 24\n\n/-- Peak estimated symbolic-expression tree size accepted by the SymbolicTV gates. -/\ndef symTvMaxExprNodes : Nat := 65536\n\n/-- Walk-fuel budget for `estCodeNodesWalk`: total `seqFor` step-body walks across nesting. -/\nprivate def symTvWalkFuel : Nat := 64\n\nprivate def symTvSatAdd (a b : Nat) : Nat := Nat.min symTvSizeCap (a + b)\n\nprivate def symTvSzAt (sizes : Array Nat) (v : VarId) : Nat :=\n  if h : v < sizes.size then sizes[v] else 1\n\n/-- Bind `v \u21a6 sz` in `sizes`, growing the backing array lazily on first sight of `v`. -/\nprivate def symTvSetSz (sizes : Array Nat) (v : VarId) (sz : Nat) : Array Nat :=\n  if v < sizes.size then sizes.setIfInBounds v sz\n  else sizes ++ (Array.replicate (v - sizes.size) 1) |>.push sz\n\n/-- Estimated symbolic tree size of a scalar expression (`.var` refs inline the referenced tree,\n    matching the executor's unshared expansion; saturating at `symTvSizeCap`). -/\nprivate def estScalarExprNodes (sizes : Array Nat) : ScalarExpr \u2192 Nat\n  | .constU64 _ | .constBool _ => 1\n  | .var v => symTvSzAt sizes v\n  | .binOp _ l r => symTvSatAdd 1 (symTvSatAdd (estScalarExprNodes sizes l) (estScalarExprNodes sizes r))\n  | .unaryOp _ a => symTvSatAdd 1 (estScalarExprNodes sizes a)\n  | .select c t e =>\n    symTvSatAdd 1 (symTvSatAdd (estScalarExprNodes sizes c)\n      (symTvSatAdd (estScalarExprNodes sizes t) (estScalarExprNodes sizes e)))\n  | .fma a b c =>\n    symTvSatAdd 1 (symTvSatAdd (estScalarExprNodes sizes a)\n      (symTvSatAdd (estScalarExprNodes sizes b) (estScalarExprNodes sizes c)))\n\n/-- Estimated symbolic tree size of an `LNIRExpr` right-hand side (fresh leaves count `1`;\n    tuples carry their field trees). -/\nprivate def estExprNodes (sizes : Array Nat) : LNIRExpr \u2192 Nat\n  | .scalar e => estScalarExprNodes sizes e\n  | .mkTuple fs => fs.foldl (fun acc v => symTvSatAdd acc (symTvSzAt sizes v)) 1\n  | .projTuple tv _ => symTvSzAt sizes tv\n  | _ => 1\n\n/-- Walk `code` tracking the peak estimated tree size, returning\n    `(peak, sizes, estimated size of the returned var)`. `seqFor` step bodies are walked\n    `loopUnrollBound = 4` times, feeding the returned accumulator size back in, mirroring\n    `LeanNative.Proofs.symExecDecl 4`; `fuel` bounds total step-body walks so deeply nested\n    loops cannot make the estimator itself superlinear (exhaustion reports the cap, i.e.\n    fail-closed to \"budget exceeded\"). -/\nprivate partial def estCodeNodesWalk (sizes : Array Nat) (peak : Nat) : LNIRCode \u2192 Nat \u00d7 Array Nat \u00d7 Nat\n  | .letBind dst _ty val k =>\n    let sz := estExprNodes sizes val\n    estCodeNodesWalk (symTvSetSz sizes dst sz) (Nat.max peak sz) k\n  | .rawStore _ _ _ _ k => estCodeNodesWalk sizes peak k\n  | .incRef _ _ k => estCodeNodesWalk sizes peak k\n  | .decRef _ _ k => estCodeNodesWalk sizes peak k\n  | .ite _ t e =>\n    let (pt, _, _) := estCodeNodesWalk sizes peak t\n    let (pe, _, _) := estCodeNodesWalk sizes peak e\n    (Nat.max pt pe, sizes, 0)\n  | .seqFor iv _ _ accVar accInit _ty stepBody k =>\n    let accSz := symTvSzAt sizes accInit\n    let sizesIn := symTvSetSz (symTvSetSz sizes iv 1) accVar accSz\n    let rec unroll (fuel : Nat) (cur : Array Nat) (p : Nat) (iters : Nat) : Nat \u00d7 Array Nat :=\n      match iters with\n      | 0 => (p, cur)\n      | _ =>\n        if fuel == 0 then (symTvSizeCap, cur)\n        else\n          let (p1, s1, r) := estCodeNodesWalk cur p stepBody\n          unroll (fuel - 1) (symTvSetSz s1 accVar r) p1 (iters - 1)\n    let (pLoop, sLoop) := unroll symTvWalkFuel sizesIn peak 4\n    estCodeNodesWalk (symTvSetSz sizes accVar (symTvSzAt sLoop accVar)) pLoop k\n  | .parFor out _ _ _ kernel k =>\n    let kSz :=\n      match kernel with\n      | .customScalar _ _ body => estScalarExprNodes sizes body\n      | _ => 1\n    estCodeNodesWalk (symTvSetSz sizes out kSz) peak k\n  | .ret v => (peak, sizes, symTvSzAt sizes v)\n  | .unreachable => (peak, sizes, 0)\n\n/-- Peak estimated symbolic-expression tree size for a code block (parameters count `1`). -/\ndef codeSymTvEstPeak (c : LNIRCode) : Nat :=\n  let (peak, _, _) := estCodeNodesWalk #[] 0 c\n  peak\n\n/-- True when the SymbolicTV gate should be skipped for this code block\n    (estimated symbolic-expression blowup above `symTvMaxExprNodes`). -/\ndef codeSymTvBudgetExceeded (c : LNIRCode) : Bool :=\n  codeSymTvEstPeak c > symTvMaxExprNodes\n\n/-- Declaration-level wrapper around `codeSymTvBudgetExceeded`. -/\ndef declSymTvBudgetExceeded (d : LNIRDecl) : Bool :=\n  codeSymTvBudgetExceeded d.body"
+    }
+  },
+  {
+    "seq": 531,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Transform/Pass.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Transform/Pass.lean",
+      "newString": "/-- Per-declaration transformation step certificate emitted by an optimization pass. -/\nstructure PassStepCert where\n  passName   : String\n  declName   : String\n  inputHash  : String\n  outputHash : String\n  changed    : Bool\n  assurance  : AssuranceLevel\n  theoremRef : String\n  notes      : String\n  deriving Repr, DecidableEq, Inhabited, BEq\n\n/-! ## Symbolic TV expression-size budget (W3-C1b)\n\n`LeanNative.Proofs.symExecDecl` expands symbolic expressions without sharing: every `.var`\nreference inlines the referenced value's full tree, so a long pure-scalar `let` chain (crypto\nkernels with 100+ dependent `binOp`s) grows tree sizes geometrically, and the per-node scalar\nsorts and normalizers then make translation validation superlinear (measured: a 188-node body\nnever finishes, while the identical `--baseline` compile takes 0.43s).\n\nThe estimator below computes a conservative *peak estimated symbolic-expression tree size* in\none linear pass over the code (`estCodeNodesWalk`), mirroring the symbolic executor's\n`loopUnrollBound = 4` feedback for `seqFor` accumulators. When the estimate exceeds\n`symTvMaxExprNodes`, the SymbolicTV gates (`ofHybridVerifiedContract`, `ofCodeTransform`,\n`EqSat.gateDeclWithSymbolicTV`, `LoopVectorizeOpt.loopVectorizeOptPass`) skip validation and\nfall back to their kernel-proven / identity branch. This is fail-closed: every consumer treats\na *passed* TV result as sufficient for a `.translationValidated` branch, never as necessary, so\nskipping the gate can only lose an optimization, never soundness. Calibrated on\n`Keccak`-lane kernels: estPeak 427 / 10,685 (validation completes in ms) vs 426,247 / 16M\n(validation stalls); the 65,536-node threshold keeps every existing fast case validated. -/\n\n/-- Saturating cap for estimates (far above `symTvMaxExprNodes`; keeps the walk O(1) per node). -/\nprivate def symTvSizeCap : Nat := 1 <<< 24\n\n/-- Peak estimated symbolic-expression tree size accepted by the SymbolicTV gates. -/\ndef symTvMaxExprNodes : Nat := 65536\n\n/-- Walk-fuel budget for `estCodeNodesWalk`: total `seqFor` step-body walks across nesting. -/\nprivate def symTvWalkFuel : Nat := 64\n\nprivate def symTvSatAdd (a b : Nat) : Nat := Nat.min symTvSizeCap (a + b)\n\nprivate def symTvSzAt (sizes : Array Nat) (v : VarId) : Nat :=\n  if h : v < sizes.size then sizes[v] else 1\n\n/-- Bind `v \u21a6 sz` in `sizes`, growing the backing array lazily on first sight of `v`. -/\nprivate def symTvSetSz (sizes : Array Nat) (v : VarId) (sz : Nat) : Array Nat :=\n  if v < sizes.size then sizes.setIfInBounds v sz\n  else sizes ++ (Array.replicate (v - sizes.size) 1) |>.push sz\n\n/-- Estimated symbolic tree size of a scalar expression (`.var` refs inline the referenced tree,\n    matching the executor's unshared expansion; saturating at `symTvSizeCap`). -/\nprivate def estScalarExprNodes (sizes : Array Nat) : ScalarExpr \u2192 Nat\n  | .constU64 _ | .constBool _ => 1\n  | .var v => symTvSzAt sizes v\n  | .binOp _ l r => symTvSatAdd 1 (symTvSatAdd (estScalarExprNodes sizes l) (estScalarExprNodes sizes r))\n  | .unaryOp _ a => symTvSatAdd 1 (estScalarExprNodes sizes a)\n  | .select c t e =>\n    symTvSatAdd 1 (symTvSatAdd (estScalarExprNodes sizes c)\n      (symTvSatAdd (estScalarExprNodes sizes t) (estScalarExprNodes sizes e)))\n  | .fma a b c =>\n    symTvSatAdd 1 (symTvSatAdd (estScalarExprNodes sizes a)\n      (symTvSatAdd (estScalarExprNodes sizes b) (estScalarExprNodes sizes c)))\n\n/-- Estimated symbolic tree size of an `LNIRExpr` right-hand side (fresh leaves count `1`;\n    tuples carry their field trees). -/\nprivate def estExprNodes (sizes : Array Nat) : LNIRExpr \u2192 Nat\n  | .scalar e => estScalarExprNodes sizes e\n  | .mkTuple fs => fs.foldl (fun acc v => symTvSatAdd acc (symTvSzAt sizes v)) 1\n  | .projTuple tv _ => symTvSzAt sizes tv\n  | _ => 1\n\n/-- Walk `code` tracking the peak estimated tree size, returning\n    `(peak, sizes, estimated size of the returned var)`. `seqFor` step bodies are walked\n    `loopUnrollBound = 4` times, feeding the returned accumulator size back in, mirroring\n    `LeanNative.Proofs.symExecDecl 4`; `fuel` bounds total step-body walks so deeply nested\n    loops cannot make the estimator itself superlinear (exhaustion reports the cap, i.e.\n    fail-closed to \"budget exceeded\"). -/\nprivate partial def estCodeNodesWalk (sizes : Array Nat) (peak : Nat) : LNIRCode \u2192 Nat \u00d7 Array Nat \u00d7 Nat\n  | .letBind dst _ty val k =>\n    let sz := estExprNodes sizes val\n    estCodeNodesWalk (symTvSetSz sizes dst sz) (Nat.max peak sz) k\n  | .rawStore _ _ _ _ k => estCodeNodesWalk sizes peak k\n  | .incRef _ _ k => estCodeNodesWalk sizes peak k\n  | .decRef _ _ k => estCodeNodesWalk sizes peak k\n  | .ite _ t e =>\n    let (pt, _, _) := estCodeNodesWalk sizes peak t\n    let (pe, _, _) := estCodeNodesWalk sizes peak e\n    (Nat.max pt pe, sizes, 0)\n  | .seqFor iv _ _ accVar accInit _ty stepBody k =>\n    let accSz := symTvSzAt sizes accInit\n    let sizesIn := symTvSetSz (symTvSetSz sizes iv 1) accVar accSz\n    let rec unroll (fuel : Nat) (cur : Array Nat) (p : Nat) (iters : Nat) : Nat \u00d7 Array Nat :=\n      match iters with\n      | 0 => (p, cur)\n      | _ =>\n        if fuel == 0 then (symTvSizeCap, cur)\n        else\n          let (p1, s1, r) := estCodeNodesWalk cur p stepBody\n          unroll (fuel - 1) (symTvSetSz s1 accVar r) p1 (iters - 1)\n    let (pLoop, sLoop) := unroll symTvWalkFuel sizesIn peak 4\n    estCodeNodesWalk (symTvSetSz sizes accVar (symTvSzAt sLoop accVar)) pLoop k\n  | .parFor out _ _ _ kernel k =>\n    let kSz :=\n      match kernel with\n      | .customScalar _ _ body => estScalarExprNodes sizes body\n      | _ => 1\n    estCodeNodesWalk (symTvSetSz sizes out kSz) peak k\n  | .ret v => (peak, sizes, symTvSzAt sizes v)\n  | .unreachable => (peak, sizes, 0)\n\n/-- Peak estimated symbolic-expression tree size for a code block (parameters count `1`). -/\ndef codeSymTvEstPeak (c : LNIRCode) : Nat :=\n  let (peak, _, _) := estCodeNodesWalk #[] 0 c\n  peak\n\n/-- True when the SymbolicTV gate should be skipped for this code block\n    (estimated symbolic-expression blowup above `symTvMaxExprNodes`). -/\ndef codeSymTvBudgetExceeded (c : LNIRCode) : Bool :=\n  codeSymTvEstPeak c > symTvMaxExprNodes\n\n/-- Declaration-level wrapper around `codeSymTvBudgetExceeded`. -/\ndef declSymTvBudgetExceeded (d : LNIRDecl) : Bool :=\n  codeSymTvBudgetExceeded d.body\n\n/-- A compiler transformation pass operating on LNIR declarations and modules. -/",
+      "oldString": "/-- Per-declaration transformation step certificate emitted by an optimization pass. -/\nstructure PassStepCert where\n  passName   : String\n  declName   : String\n  inputHash  : String\n  outputHash : String\n  changed    : Bool\n  assurance  : AssuranceLevel\n  theoremRef : String\n  notes      : String\n  deriving Repr, DecidableEq, Inhabited, BEq\n\n/-- A compiler transformation pass operating on LNIR declarations and modules. -/"
+    }
+  },
+  {
+    "seq": 534,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Transform/Pass.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Transform/Pass.lean",
+      "newString": "    let (body', branchAssurance, branchTheoremRef, finalNotes) :=\n      if candBody == kernelBody then\n        (kernelBody, AssuranceLevel.verifiedKernelProof, vc.theoremRef, customNote.getD vc.notes)\n      else if codeSymTvBudgetExceeded d.body || codeSymTvBudgetExceeded candBody then\n        (kernelBody, AssuranceLevel.verifiedKernelProof, vc.theoremRef,\n         s!\"{vc.notes} (SymbolicTV skipped: estimated symbolic-expression peak above {symTvMaxExprNodes} nodes; fell back to kernel-proven {vc.theoremRef})\")\n      else",
+      "oldString": "    let (body', branchAssurance, branchTheoremRef, finalNotes) :=\n      if candBody == kernelBody then\n        (kernelBody, AssuranceLevel.verifiedKernelProof, vc.theoremRef, customNote.getD vc.notes)\n      else"
+    }
+  },
+  {
+    "seq": 537,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Transform/Pass.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Transform/Pass.lean",
+      "newString": "    let (body', stepAssurance, stepThmRef, stepNotes) :=\n      if candBody == d.body then\n        (d.body, AssuranceLevel.verifiedKernelProof, \"LeanNative.Semantics.CodeRefines.refl\", customNote.getD defaultNotes)\n      else if codeSymTvBudgetExceeded d.body || codeSymTvBudgetExceeded candBody then\n        (d.body, AssuranceLevel.verifiedKernelProof, \"LeanNative.Semantics.CodeRefines.refl\",\n         s!\"{defaultNotes} (SymbolicTV skipped: estimated symbolic-expression peak above {symTvMaxExprNodes} nodes; preserved original body via CodeRefines.refl)\")\n      else",
+      "oldString": "    let (body', stepAssurance, stepThmRef, stepNotes) :=\n      if candBody == d.body then\n        (d.body, AssuranceLevel.verifiedKernelProof, \"LeanNative.Semantics.CodeRefines.refl\", customNote.getD defaultNotes)\n      else"
+    }
+  },
+  {
+    "seq": 539,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Transform/EqSat.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Transform/EqSat.lean",
+      "newString": "private def gateDeclWithSymbolicTV (src cand : LNIRDecl) : LNIRDecl :=\n  if cand.body == src.body then src\n  else if codeSymTvBudgetExceeded src.body || codeSymTvBudgetExceeded cand.body then\n    src\n  else if (LeanNative.Proofs.validateTranslationDecl src cand 64).passed then",
+      "oldString": "private def gateDeclWithSymbolicTV (src cand : LNIRDecl) : LNIRDecl :=\n  if cand.body == src.body then src\n  else if (LeanNative.Proofs.validateTranslationDecl src cand 64).passed then"
+    }
+  },
+  {
+    "seq": 542,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Transform/LoopVectorizeOpt.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Transform/LoopVectorizeOpt.lean",
+      "newString": "      else if codeSymTvBudgetExceeded d.body || codeSymTvBudgetExceeded candDecl.body then\n        let comb := AssuranceLevel.combine d.assurance .verifiedKernelProof\n        ({ d with assurance := comb },\n         comb,\n         \"LeanNative.Semantics.CodeRefines.refl\",\n         s!\"SymbolicTV skipped: estimated symbolic-expression peak above {symTvMaxExprNodes} nodes; preserved original declaration via CodeRefines.refl\")\n      else\n        let tvRes := LeanNative.Proofs.validateTranslationDecl d candDecl 64\n        if tvRes.passed then",
+      "oldString": "      else\n        let tvRes := LeanNative.Proofs.validateTranslationDecl d candDecl 64\n        if tvRes.passed then"
+    }
+  },
+  {
+    "seq": 550,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Transform/EqSat.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Transform/EqSat.lean",
+      "newString": "  else if LeanNative.Transform.codeSymTvBudgetExceeded src.body\n        || LeanNative.Transform.codeSymTvBudgetExceeded cand.body then",
+      "oldString": "  else if codeSymTvBudgetExceeded src.body || codeSymTvBudgetExceeded cand.body then"
+    }
+  },
+  {
+    "seq": 581,
+    "tool": "bash",
+    "ok": true,
+    "command": "sed -i 's/^import Init$/import Init\\nset_option maxRecDepth 32768/' /tmp/opencode/BK48.lean && source /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean/lean\" && S=$(date +%s.%N); timeout 120 .lake/build/bin/lean-native compile-llvm /tmp/opencode/BK48.lean -o /tmp/opencode/BK48.ll >/dev/null 2>/tmp/opencode/BK48.err; RC=$?; E=$(date +%s.%N); echo \"BK48: rc=$RC time=$(echo \"$E - $S\" | bc)s\"; grep -o \"SymbolicTV skipped[^\\\"]*\" /tmp/opencode/BK48.err | head -1; wc -l /tmp/opencode/BK48.ll 2>/dev/null"
+  },
+  {
+    "seq": 688,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+      "newString": "  let vecModeMeta :=\n    if target.isAArch64 then\n      if isa.sve2 then \"!8 = !{!\\\"llvm.loop.vectorize.scalable.enable\\\", i1 true}\"\n      else \"!8 = !{!\\\"llvm.loop.vectorize.scalable.enable\\\", i1 false}\"\n    else\n      -- W3-C1b: AVX-512 targets (znver4/znver5 with 512-bit vectors) vectorize verified\n      -- `seqFor` bodies 8 lanes wide (`vmovdqu64 %zmm`, `vpclmulqdq %zmm`, `vpternlogq %zmm`).\n      \"!8 = !{!\\\"llvm.loop.vectorize.width\\\", i32 8}\"",
+      "oldString": "  let vecModeMeta :=\n    if target.isAArch64 then\n      if isa.sve2 then \"!8 = !{!\\\"llvm.loop.vectorize.scalable.enable\\\", i1 true}\"\n      else \"!8 = !{!\\\"llvm.loop.vectorize.scalable.enable\\\", i1 false}\"\n    else \"!8 = !{!\\\"llvm.loop.vectorize.width\\\", i32 4}\""
+    }
+  },
+  {
+    "seq": 713,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+      "newString": "private def emitTypedArrayLoadValue (pfx basePtr idxVal : String) (elemTy : LNIRType)\n    (defaultAlign : Nat := 8) (valPfx? : Option String := none) (md : String := \"\") : EmitM String := do\n  let elemPtr \u2190 freshTmp (pfx ++ \"_gep\")\n  let vPfx := valPfx?.getD (pfx ++ \"_val\")\n  match elemTy with\n  | .i1 | .i8 =>\n    let rawVal \u2190 freshTmp (pfx ++ \"_i8\")\n    let elemVal \u2190 freshTmp vPfx\n    emitLine s!\"  {elemPtr} = getelementptr inbounds i8, ptr {basePtr}, i64 {idxVal}\"\n    emitLine s!\"  {rawVal} = load i8, ptr {elemPtr}, align 1{md}\"\n    emitLine s!\"  {elemVal} = zext i8 {rawVal} to i64\"\n    return elemVal\n  | .i16 =>\n    let rawVal \u2190 freshTmp (pfx ++ \"_i16\")\n    let elemVal \u2190 freshTmp vPfx\n    emitLine s!\"  {elemPtr} = getelementptr inbounds i16, ptr {basePtr}, i64 {idxVal}\"\n    emitLine s!\"  {rawVal} = load i16, ptr {elemPtr}, align 2{md}\"\n    emitLine s!\"  {elemVal} = zext i16 {rawVal} to i64\"\n    return elemVal\n  | .i32 | .f32 =>\n    let rawVal \u2190 freshTmp (pfx ++ \"_i32\")\n    let elemVal \u2190 freshTmp vPfx\n    emitLine s!\"  {elemPtr} = getelementptr inbounds i32, ptr {basePtr}, i64 {idxVal}\"\n    emitLine s!\"  {rawVal} = load i32, ptr {elemPtr}, align 4{md}\"\n    emitLine s!\"  {elemVal} = zext i32 {rawVal} to i64\"\n    return elemVal\n  | _ =>\n    let elemVal \u2190 freshTmp vPfx\n    emitLine s!\"  {elemPtr} = getelementptr inbounds i64, ptr {basePtr}, i64 {idxVal}\"\n    emitLine s!\"  {elemVal} = load i64, ptr {elemPtr}, align {defaultAlign}{md}\"\n    return elemVal\n\nprivate def emitTypedArrayLoad (dst : VarId) (pfx basePtr idxVal : String) (elemTy : LNIRType)\n    (defaultAlign : Nat := 8) (md : String := \"\") : EmitM Unit := do\n  let elemVal \u2190 emitTypedArrayLoadValue pfx basePtr idxVal elemTy defaultAlign none md\n  storeI64ToVar dst elemVal\n\n/-- Emit an element-width `getelementptr inbounds` + `store` (truncated from `i64`) at `idxVal` into `basePtr`. -/\nprivate def emitTypedArrayStore (pfx basePtr idxVal valI64 : String) (elemTy : LNIRType) (md : String := \"\") : EmitM Unit := do\n  let elemPtr \u2190 freshTmp (pfx ++ \"_gep\")\n  match elemTy with\n  | .i1 | .i8 =>\n    let tr \u2190 freshTmp (pfx ++ \"_tr8\")\n    emitLine s!\"  {elemPtr} = getelementptr inbounds i8, ptr {basePtr}, i64 {idxVal}\"\n    emitLine s!\"  {tr} = trunc i64 {valI64} to i8\"\n    emitLine s!\"  store i8 {tr}, ptr {elemPtr}, align 1{md}\"\n  | .i16 =>\n    let tr \u2190 freshTmp (pfx ++ \"_tr16\")\n    emitLine s!\"  {elemPtr} = getelementptr inbounds i16, ptr {basePtr}, i64 {idxVal}\"\n    emitLine s!\"  {tr} = trunc i64 {valI64} to i16\"\n    emitLine s!\"  store i16 {tr}, ptr {elemPtr}, align 2{md}\"\n  | .i32 | .f32 =>\n    let tr \u2190 freshTmp (pfx ++ \"_tr32\")\n    emitLine s!\"  {elemPtr} = getelementptr inbounds i32, ptr {basePtr}, i64 {idxVal}\"\n    emitLine s!\"  {tr} = trunc i64 {valI64} to i32\"\n    emitLine s!\"  store i32 {tr}, ptr {elemPtr}, align 4{md}\"\n  | _ =>\n    emitLine s!\"  {elemPtr} = getelementptr inbounds i64, ptr {basePtr}, i64 {idxVal}\"\n    emitLine s!\"  store i64 {valI64}, ptr {elemPtr}, align 8{md}\"",
+      "oldString": "private def emitTypedArrayLoadValue (pfx basePtr idxVal : String) (elemTy : LNIRType)\n    (defaultAlign : Nat := 8) (valPfx? : Option String := none) : EmitM String := do\n  let elemPtr \u2190 freshTmp (pfx ++ \"_gep\")\n  let vPfx := valPfx?.getD (pfx ++ \"_val\")\n  match elemTy with\n  | .i1 | .i8 =>\n    let rawVal \u2190 freshTmp (pfx ++ \"_i8\")\n    let elemVal \u2190 freshTmp vPfx\n    emitLine s!\"  {elemPtr} = getelementptr inbounds i8, ptr {basePtr}, i64 {idxVal}\"\n    emitLine s!\"  {rawVal} = load i8, ptr {elemPtr}, align 1\"\n    emitLine s!\"  {elemVal} = zext i8 {rawVal} to i64\"\n    return elemVal\n  | .i16 =>\n    let rawVal \u2190 freshTmp (pfx ++ \"_i16\")\n    let elemVal \u2190 freshTmp vPfx\n    emitLine s!\"  {elemPtr} = getelementptr inbounds i16, ptr {basePtr}, i64 {idxVal}\"\n    emitLine s!\"  {rawVal} = load i16, ptr {elemPtr}, align 2\"\n    emitLine s!\"  {elemVal} = zext i16 {rawVal} to i64\"\n    return elemVal\n  | .i32 | .f32 =>\n    let rawVal \u2190 freshTmp (pfx ++ \"_i32\")\n    let elemVal \u2190 freshTmp vPfx\n    emitLine s!\"  {elemPtr} = getelementptr inbounds i32, ptr {basePtr}, i64 {idxVal}\"\n    emitLine s!\"  {rawVal} = load i32, ptr {elemPtr}, align 4\"\n    emitLine s!\"  {elemVal} = zext i32 {rawVal} to i64\"\n    return elemVal\n  | _ =>\n    let elemVal \u2190 freshTmp vPfx\n    emitLine s!\"  {elemPtr} = getelementptr inbounds i64, ptr {basePtr}, i64 {idxVal}\"\n    emitLine s!\"  {elemVal} = load i64, ptr {elemPtr}, align {defaultAlign}\"\n    return elemVal\n\nprivate def emitTypedArrayLoad (dst : VarId) (pfx basePtr idxVal : String) (elemTy : LNIRType)\n    (defaultAlign : Nat := 8) : EmitM Unit := do\n  let elemVal \u2190 emitTypedArrayLoadValue pfx basePtr idxVal elemTy defaultAlign\n  storeI64ToVar dst elemVal\n\n/-- Emit an element-width `getelementptr inbounds` + `store` (truncated from `i64`) at `idxVal` into `basePtr`. -/\nprivate def emitTypedArrayStore (pfx basePtr idxVal valI64 : String) (elemTy : LNIRType) : EmitM Unit := do\n  let elemPtr \u2190 freshTmp (pfx ++ \"_gep\")\n  match elemTy with\n  | .i1 | .i8 =>\n    let tr \u2190 freshTmp (pfx ++ \"_tr8\")\n    emitLine s!\"  {elemPtr} = getelementptr inbounds i8, ptr {basePtr}, i64 {idxVal}\"\n    emitLine s!\"  {tr} = trunc i64 {valI64} to i8\"\n    emitLine s!\"  store i8 {tr}, ptr {elemPtr}, align 1\"\n  | .i16 =>\n    let tr \u2190 freshTmp (pfx ++ \"_tr16\")\n    emitLine s!\"  {elemPtr} = getelementptr inbounds i16, ptr {basePtr}, i64 {idxVal}\"\n    emitLine s!\"  {tr} = trunc i64 {valI64} to i16\"\n    emitLine s!\"  store i16 {tr}, ptr {elemPtr}, align 2\"\n  | .i32 | .f32 =>\n    let tr \u2190 freshTmp (pfx ++ \"_tr32\")\n    emitLine s!\"  {elemPtr} = getelementptr inbounds i32, ptr {basePtr}, i64 {idxVal}\"\n    emitLine s!\"  {tr} = trunc i64 {valI64} to i32\"\n    emitLine s!\"  store i32 {tr}, ptr {elemPtr}, align 4\"\n  | _ =>\n    emitLine s!\"  {elemPtr} = getelementptr inbounds i64, ptr {basePtr}, i64 {idxVal}\"\n    emitLine s!\"  store i64 {valI64}, ptr {elemPtr}, align 8\""
+    }
+  },
+  {
+    "seq": 717,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+      "newString": "  scalarBindings : List (VarId \u00d7 String) := []\n  ptrBindings    : List (VarId \u00d7 String) := []\n  -- W3-C1b: per-loop alias-scope metadata for vectorizable `seqFor` bodies.\n  -- `aliasScopes` maps a raw-memory base pointer var to a ready-made\n  -- `, !alias.scope !N, !noalias !M` suffix (empty when no disjointness facts apply).\n  aliasScopes : List (VarId \u00d7 String) := []\n  aliasNextId : Nat := 16\n  aliasLines : List String := []\n  lines     : List String := []\n  deriving Inhabited",
+      "oldString": "  scalarBindings : List (VarId \u00d7 String) := []\n  ptrBindings    : List (VarId \u00d7 String) := []\n  lines     : List String := []\n  deriving Inhabited"
+    }
+  },
+  {
+    "seq": 729,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+      "newString": "    | none => pure ()\n    emitLine s!\"  {outArr} = call noalias ptr @malloc(i64 {bytesVal})\"\n\n/-- W3-C1b: do the loop-entry retained facts prove two raw-pointer vars point to disjoint\n    slices (either fact direction)? This is the only sound basis for `!noalias` claims\n    between distinct base pointers inside a vectorized loop body. -/\nprivate def factsProvePtrDisjoint (facts : FactEnv) (p q : VarId) : Bool :=\n  facts.any fun\n    | .disjointSlices a b _ _ => (a == p && b == q) || (a == q && b == p)\n    | _ => false\n\n/-- W3-C1b: collect every raw-memory base pointer var accessed by `rawLoad`/`rawStore`\n    inside a loop step body (duplicates kept; caller dedups). -/\nprivate partial def collectRawMemPtrs : LNIRCode \u2192 List VarId\n  | .letBind _ _ (.rawLoad p _ _) k => p :: collectRawMemPtrs k\n  | .rawStore p _ _ _ k => p :: collectRawMemPtrs k\n  | .letBind _ _ _ k => collectRawMemPtrs k\n  | .incRef _ _ k | .decRef _ _ k => collectRawMemPtrs k\n  | .ite _ t e => collectRawMemPtrs t ++ collectRawMemPtrs e\n  | .seqFor _ _ _ _ _ _ b k => collectRawMemPtrs b ++ collectRawMemPtrs k\n  | .parFor _ _ _ _ _ k => collectRawMemPtrs k\n  | .ret _ | .unreachable => []\n\n/-- W3-C1b: allocate a fresh alias-metadata node id (static footer occupies `!0`-`!10`). -/\nprivate def freshAliasId : EmitM Nat := do\n  let id := (\u2190 get).aliasNextId\n  if id < 16 then return 16\n  modify fun s => { s with aliasNextId := s.aliasNextId + 1 }\n  return id\n\n/-- W3-C1b: assign `!alias.scope`/`!noalias` metadata for the raw-memory base pointers of a\n    vectorizable loop step body. Soundness: a noalias pair `(p, q)` is claimed only when the\n    loop-entry `RetainedFact.disjointSlices` environment proves the two raw pointers disjoint;\n    accesses through pointers without a proven disjoint partner get no metadata at all\n    (conservative, LLVM defaults to may-alias). Metadata node definitions are collected in\n    `aliasLines` and appended at module top level after the declaration body. -/\nprivate def setupLoopAliasScopes (facts : FactEnv) (ptrs : List VarId) : EmitM Unit := do\n  let partners : List (VarId \u00d7 List VarId) := ptrs.map fun p =>\n    (p, ptrs.filter fun q => q != p && factsProvePtrDisjoint facts p q)\n  let relevant := partners.filter fun (_, qs) => !qs.isEmpty\n  if relevant.isEmpty then\n    pure ()\n  else\n    let domainId \u2190 freshAliasId\n    modify fun s => { s with aliasLines := s!\"!{domainId} = distinct !{{!{domainId}}}\" :: s.aliasLines }\n    -- One scope node per relevant pointer, all sharing one alias-analysis domain.\n    let scopeIds : List (VarId \u00d7 Nat) \u2190 relevant.foldlM (fun acc (p, _) => do\n      if (acc.map (\u00b7.1)).contains p then return acc\n      let sid \u2190 freshAliasId\n      modify fun s => { s with aliasLines := s!\"!{sid} = distinct !{{!{sid}, !{domainId}}}\" :: s.aliasLines }\n      return acc ++ [(p, sid)]) []\n    -- Per-pointer scope list (`!alias.scope` operand) and disjoint-scope list (`!noalias` operand).\n    let suffixes : List (VarId \u00d7 String) \u2190 relevant.foldlM (fun acc (p, qs) => do\n      match scopeIds.lookup p with\n      | none => return acc\n      | some ownS =>\n        let noaliasIds := qs.filterMap scopeIds.lookup\n        if noaliasIds.isEmpty then return acc\n        let scopeListId \u2190 freshAliasId\n        modify fun s => { s with aliasLines := s!\"!{scopeListId} = !{{!{ownS}}}\" :: s.aliasLines }\n        let noaliasListId \u2190 freshAliasId\n        let elems := String.intercalate \", \" (noaliasIds.map fun i => s!\"!{i}\")\n        modify fun s => { s with aliasLines := s!\"!{noaliasListId} = !{{{elems}}}\" :: s.aliasLines }\n        return acc ++ [(p, s!\", !alias.scope !{scopeListId}, !noalias !{noaliasListId})\"]) []\n    modify fun s => { s with aliasScopes := suffixes }\n\n/-- Emit an element-width `getelementptr inbounds` + `load` (zero-extended to `i64`) at `idxVal` from `basePtr`. -/",
+      "oldString": "    | none => pure ()\n    emitLine s!\"  {outArr} = call noalias ptr @malloc(i64 {bytesVal})\"\n\n/-- Emit an element-width `getelementptr inbounds` + `load` (zero-extended to `i64`) at `idxVal` from `basePtr`. -/"
+    }
+  },
+  {
+    "seq": 738,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+      "newString": "    let savedPtrs := (\u2190 get).ptrBindings\n    let savedFacts := (\u2190 get).retainedFacts\n    let savedScopes := (\u2190 get).aliasScopes\n    let isVecLoop := loopBodyHasArrayMem stepBody\n    -- W3-C1b: assign fact-gated `!alias.scope`/`!noalias` metadata to raw-memory base\n    -- pointers of vectorizable loop bodies before emitting them.\n    if opt && isVecLoop then\n      setupLoopAliasScopes savedFacts (collectRawMemPtrs stepBody).eraseDups\n    modify fun s => { s with retainedFacts := [] }\n    emitLine s!\"{bodyLbl}:\"\n    emitCode stepBody retTy (some (accVar, latchLbl))\n    modify fun s => {\n      s with\n      aliasScopes := savedScopes\n      ptrBindings := savedPtrs.filter (\u00b7.1 != accVar)",
+      "oldString": "    let savedPtrs := (\u2190 get).ptrBindings\n    let savedFacts := (\u2190 get).retainedFacts\n    modify fun s => { s with retainedFacts := [] }\n    emitLine s!\"{bodyLbl}:\"\n    emitCode stepBody retTy (some (accVar, latchLbl))\n    modify fun s => {\n      s with\n      ptrBindings := savedPtrs.filter (\u00b7.1 != accVar)"
+    }
+  },
+  {
+    "seq": 741,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+      "newString": "    emitLine s!\"  {idxNext} = {addOp} {curIdx}, 1\"\n    let loopMd :=",
+      "oldString": "    emitLine s!\"  {idxNext} = {addOp} {curIdx}, 1\"\n    let isVecLoop := loopBodyHasArrayMem stepBody\n    let loopMd :="
+    }
+  },
+  {
+    "seq": 748,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+      "newString": "  | .rawLoad ptrVar idxVar elemTy =>\n    let rawPtr \u2190 loadVarAsPtr ptrVar\n    let idxVal \u2190 loadVarAsI64 idxVar\n    let curFacts := (\u2190 get).retainedFacts\n    let al := if idxVal == \"0\" then retainedAlignForPtr curFacts ptrVar 8 else 8\n    let md := ((\u2190 get).aliasScopes.lookup ptrVar).getD \"\"\n    emitTypedArrayLoad dst \"rld\" rawPtr idxVal elemTy al md",
+      "oldString": "  | .rawLoad ptrVar idxVar elemTy =>\n    let rawPtr \u2190 loadVarAsPtr ptrVar\n    let idxVal \u2190 loadVarAsI64 idxVar\n    let curFacts := (\u2190 get).retainedFacts\n    let al := if idxVal == \"0\" then retainedAlignForPtr curFacts ptrVar 8 else 8\n    emitTypedArrayLoad dst \"rld\" rawPtr idxVal elemTy al"
+    }
+  },
+  {
+    "seq": 752,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+      "newString": "  | .rawStore ptrVar idxVar valVar elemTy k =>\n    let rawPtr \u2190 loadVarAsPtr ptrVar\n    let idxVal \u2190 loadVarAsI64 idxVar\n    let valI64 \u2190 loadVarAsI64 valVar\n    let md := ((\u2190 get).aliasScopes.lookup ptrVar).getD \"\"\n    emitTypedArrayStore \"rst\" rawPtr idxVal valI64 elemTy md\n    emitCode k retTy loopAccTarget",
+      "oldString": "  | .rawStore ptrVar idxVar valVar elemTy k =>\n    let rawPtr \u2190 loadVarAsPtr ptrVar\n    let idxVal \u2190 loadVarAsI64 idxVar\n    let valI64 \u2190 loadVarAsI64 valVar\n    emitTypedArrayStore \"rst\" rawPtr idxVal valI64 elemTy\n    emitCode k retTy loopAccTarget"
+    }
+  },
+  {
+    "seq": 754,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+      "newString": "  String.intercalate \"\\n\" ([ \n    s!\"; LNIRDecl: {d.name} (assurance={d.assurance}, isGpuCand={d.isGpuCand}, rcMode={repr rcMode}, isaMask={declIsa.hwcapMask})\",\n    s!\"define dso_local {retTypeStr} @{fnSym}({paramSigStr}) {fnAttr} \\{\\nentry:\"\n  ] ++ allocaLines ++ evmScratchLines ++ storeArgLines ++ finalState.lines ++ [\"}\"]\n    ++ finalState.aliasLines.reverse)",
+      "oldString": "  String.intercalate \"\\n\" ([\n    s!\"; LNIRDecl: {d.name} (assurance={d.assurance}, isGpuCand={d.isGpuCand}, rcMode={repr rcMode}, isaMask={declIsa.hwcapMask})\",\n    s!\"define dso_local {retTypeStr} @{fnSym}({paramSigStr}) {fnAttr} \\{\\nentry:\"\n  ] ++ allocaLines ++ evmScratchLines ++ storeArgLines ++ finalState.lines ++ [\"}\"])"
+    }
+  },
+  {
+    "seq": 778,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+      "newString": "        return acc ++ [(p, s!\", !alias.scope !{scopeListId}, !noalias !{noaliasListId}\")]) []",
+      "oldString": "        return acc ++ [(p, s!\", !alias.scope !{scopeListId}, !noalias !{noaliasListId})\"]) []"
+    }
+  },
+  {
+    "seq": 789,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+      "newString": "    let domainId \u2190 freshAliasId\n    modify fun s => { s with aliasLines := s!\"!{domainId} = distinct !\\{!!{domainId}}\" :: s.aliasLines }\n    -- One scope node per relevant pointer, all sharing one alias-analysis domain.\n    let scopeIds : List (VarId \u00d7 Nat) \u2190 relevant.foldlM (fun acc (p, _) => do\n      if (acc.map (\u00b7.1)).contains p then return acc\n      let sid \u2190 freshAliasId\n      modify fun s => { s with aliasLines := s!\"!{sid} = distinct !\\{!!{sid}, !{domainId}}\" :: s.aliasLines }\n      return acc ++ [(p, sid)]) []",
+      "oldString": "    let domainId \u2190 freshAliasId\n    modify fun s => { s with aliasLines := s!\"!{domainId} = distinct !{{!{domainId}}}\" :: s.aliasLines }\n    -- One scope node per relevant pointer, all sharing one alias-analysis domain.\n    let scopeIds : List (VarId \u00d7 Nat) \u2190 relevant.foldlM (fun acc (p, _) => do\n      if (acc.map (\u00b7.1)).contains p then return acc\n      let sid \u2190 freshAliasId\n      modify fun s => { s with aliasLines := s!\"!{sid} = distinct !{{!{sid}, !{domainId}}}\" :: s.aliasLines }\n      return acc ++ [(p, sid)]) []"
+    }
+  },
+  {
+    "seq": 792,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+      "newString": "        let scopeListId \u2190 freshAliasId\n        modify fun s => { s with aliasLines := s!\"!{scopeListId} = !\\{!!{ownS}}\" :: s.aliasLines }\n        let noaliasListId \u2190 freshAliasId\n        let elems := String.intercalate \", \" (noaliasIds.map fun i => s!\"!{i}\")\n        modify fun s => { s with aliasLines := s!\"!{noaliasListId} = !\\{{elems}}\" :: s.aliasLines }",
+      "oldString": "        let scopeListId \u2190 freshAliasId\n        modify fun s => { s with aliasLines := s!\"!{scopeListId} = !{{!{ownS}}}\" :: s.aliasLines }\n        let noaliasListId \u2190 freshAliasId\n        let elems := String.intercalate \", \" (noaliasIds.map fun i => s!\"!{i}\")\n        modify fun s => { s with aliasLines := s!\"!{noaliasListId} = !{{{elems}}}\" :: s.aliasLines }"
+    }
+  },
+  {
+    "seq": 807,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+      "newString": "        let noaliasIds := qs.filterMap fun q => scopeIds.lookup q",
+      "oldString": "        let noaliasIds := qs.filterMap scopeIds.lookup"
+    }
+  },
+  {
+    "seq": 912,
+    "tool": "write",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/scripts/fixtures/BuildExeVec8.lean",
+    "ok": true,
+    "input": {
+      "content": "import LeanNative.IR.Types\nopen LeanNative.IR\n\n/-!\n# W3-C1b: 8-lane pure-Lean `ByteArray` vectorization benchmark\n\nStraight-line read-only kernel over one 64-byte `ByteArray` (8 little-endian `UInt64`\nlanes). Each lane assembles its word from 8 `ByteArray.uget` reads and mixes it with\n`clmul64`/`clmul64Hi` (carry-less multiply, `vpclmulqdq`), 64-bit rotates, and a\nKeccak-chi-style three-input boolean fold (`vpternlogq`). Compiled with\n`lean-native build-exe` + Clang 23 `-O3 -march=znver5 -mprefer-vector-width=512`,\nclang's SLP vectorizer emits `%zmm` code with zero `lean_apply_*`/`lean_alloc_*`\nin the kernel bodies.\n-/\n\n/-- One lane: little-endian `UInt64` read at byte offset `off` + GF(2^64) / boolean mix. -/\n@[noinline, export w3c1b_lane]\ndef lane (ba : ByteArray) (off : UInt64) (h : off.toNat + 8 \u2264 ba.size) : UInt64 :=\n  let i := off.toUSize\n  let b0 := ba.uget i       (by omega)\n  let b1 := ba.uget (i + 1) (by omega)\n  let b2 := ba.uget (i + 2) (by omega)\n  let b3 := ba.uget (i + 3) (by omega)\n  let b4 := ba.uget (i + 4) (by omega)\n  let b5 := ba.uget (i + 5) (by omega)\n  let b6 := ba.uget (i + 6) (by omega)\n  let b7 := ba.uget (i + 7) (by omega)\n  let w := b0.toUInt64 ||| (b1.toUInt64 <<< 8) ||| (b2.toUInt64 <<< 16) ||| (b3.toUInt64 <<< 24)\n        ||| (b4.toUInt64 <<< 32) ||| (b5.toUInt64 <<< 40) ||| (b6.toUInt64 <<< 48) ||| (b7.toUInt64 <<< 56)\n  let m := clmul64 w 0x87c37b911184f4c5\n  let n := clmul64Hi w 0x9ae16a3b2f90404f\n  let t := w ^^^ ((w <<< 31) ||| (w >>> 33)) ^^^ ((w <<< 17) ||| (w >>> 47))\n  (m ^^^ n ^^^ t) ^^^ ((~~~(m ^^^ t)) &&& n)\n\n/-- 8-lane straight-line kernel: xor-fold of eight independently mixed lanes. -/\n@[noinline, export w3c1b_mix8]\ndef mix8 (ba : ByteArray) (h : 64 \u2264 ba.size) : UInt64 :=\n  let x0 := lane ba  0 (by omega)\n  let x1 := lane ba  8 (by omega)\n  let x2 := lane ba 16 (by omega)\n  let x3 := lane ba 24 (by omega)\n  let x4 := lane ba 32 (by omega)\n  let x5 := lane ba 40 (by omega)\n  let x6 := lane ba 48 (by omega)\n  let x7 := lane ba 56 (by omega)\n  x0 ^^^ x1 ^^^ x2 ^^^ x3 ^^^ x4 ^^^ x5 ^^^ x6 ^^^ x7\n\ndef benchBytes0 : ByteArray := ByteArray.mk #[\n  0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,\n  0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,\n  0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,\n  0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f,\n  0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27,\n  0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f,\n  0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,\n  0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f]\n\ndef benchBytes1 : ByteArray := ByteArray.mk #[\n  0x58, 0x51, 0xe2, 0x8f, 0x0a, 0x76, 0x33, 0x24,\n  0x9c, 0xd1, 0x44, 0x07, 0xba, 0xed, 0x60, 0x83,\n  0xd5, 0x36, 0xf1, 0x92, 0x14, 0xc7, 0x78, 0x2b,\n  0xae, 0x4d, 0x0c, 0x69, 0xfa, 0x3b, 0x98, 0x51,\n  0x66, 0x95, 0x24, 0xd7, 0x30, 0x03, 0xc2, 0xb9,\n  0x08, 0x7f, 0x1e, 0xdd, 0x4b, 0xb0, 0x63, 0x8a,\n  0xf9, 0x2c, 0xab, 0x40, 0x17, 0xe6, 0x55, 0x94,\n  0x31, 0xc8, 0x0f, 0x76, 0x23, 0xda, 0x81, 0x18]\n\ndef main : IO Unit := do\n  let h0 : 64 \u2264 benchBytes0.size := by decide\n  let h1 : 64 \u2264 benchBytes1.size := by decide\n  IO.println (mix8 benchBytes0 h0)\n  IO.println (mix8 benchBytes1 h1)\n",
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/scripts/fixtures/BuildExeVec8.lean"
+    }
+  },
+  {
+    "seq": 924,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/scripts/fixtures/BuildExeVec8.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/scripts/fixtures/BuildExeVec8.lean",
+      "newString": "/-- One lane: little-endian `UInt64` read at byte offset `off` + GF(2^64) / boolean mix. -/\n@[noinline, export w3c1b_lane]\ndef lane (ba : ByteArray) (off : UInt64) (h : off.toNat + 8 \u2264 ba.size) : UInt64 :=\n  let b0 := ba.uget (off + 0).toUSize (by omega)\n  let b1 := ba.uget (off + 1).toUSize (by omega)\n  let b2 := ba.uget (off + 2).toUSize (by omega)\n  let b3 := ba.uget (off + 3).toUSize (by omega)\n  let b4 := ba.uget (off + 4).toUSize (by omega)\n  let b5 := ba.uget (off + 5).toUSize (by omega)\n  let b6 := ba.uget (off + 6).toUSize (by omega)\n  let b7 := ba.uget (off + 7).toUSize (by omega)",
+      "oldString": "/-- One lane: little-endian `UInt64` read at byte offset `off` + GF(2^64) / boolean mix. -/\n@[noinline, export w3c1b_lane]\ndef lane (ba : ByteArray) (off : UInt64) (h : off.toNat + 8 \u2264 ba.size) : UInt64 :=\n  let i := off.toUSize\n  let b0 := ba.uget i       (by omega)\n  let b1 := ba.uget (i + 1) (by omega)\n  let b2 := ba.uget (i + 2) (by omega)\n  let b3 := ba.uget (i + 3) (by omega)\n  let b4 := ba.uget (i + 4) (by omega)\n  let b5 := ba.uget (i + 5) (by omega)\n  let b6 := ba.uget (i + 6) (by omega)\n  let b7 := ba.uget (i + 7) (by omega)"
+    }
+  },
+  {
+    "seq": 942,
+    "tool": "write",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/scripts/fixtures/BuildExeVec8.lean",
+    "ok": true,
+    "input": {
+      "content": "import LeanNative.IR.Types\nopen LeanNative.IR\n\n/-!\n# W3-C1b: 8-lane pure-Lean `ByteArray` vectorization benchmark\n\nStraight-line read-only kernel over one 64-byte `ByteArray` (8 little-endian `UInt64`\nlanes). Each lane assembles its word from 8 `ByteArray.uget` reads and mixes it with\n`clmul64`/`clmul64Hi` (carry-less multiply, `vpclmulqdq`), 64-bit rotates, and a\nKeccak-chi-style three-input boolean fold (`vpternlogq`). Compiled with\n`lean-native build-exe` + Clang 23 `-O3 -march=znver5 -mprefer-vector-width=512`,\nclang's SLP vectorizer emits `%zmm` code with zero `lean_apply_*`/`lean_alloc_*`\nin the kernel body.\n-/\n\n@[noinline, export w3c1b_lane]\ndef lane (ba : ByteArray) (h : 64 \u2264 ba.size) (base : Nat) (hbase : base + 8 \u2264 64)\n    : UInt64 :=\n  let b0 := ba.uget (base + 0).toUSize (by omega)\n  let b1 := ba.uget (base + 1).toUSize (by omega)\n  let b2 := ba.uget (base + 2).toUSize (by omega)\n  let b3 := ba.uget (base + 3).toUSize (by omega)\n  let b4 := ba.uget (base + 4).toUSize (by omega)\n  let b5 := ba.uget (base + 5).toUSize (by omega)\n  let b6 := ba.uget (base + 6).toUSize (by omega)\n  let b7 := ba.uget (base + 7).toUSize (by omega)\n  let w := b0.toUInt64 ||| (b1.toUInt64 <<< 8) ||| (b2.toUInt64 <<< 16) ||| (b3.toUInt64 <<< 24)\n        ||| (b4.toUInt64 <<< 32) ||| (b5.toUInt64 <<< 40) ||| (b6.toUInt64 <<< 48) ||| (b7.toUInt64 <<< 56)\n  let m := clmul64 w 0x87c37b911184f4c5\n  let n := clmul64Hi w 0x9ae16a3b2f90404f\n  let t := w ^^^ ((w <<< 31) ||| (w >>> 33)) ^^^ ((w <<< 17) ||| (w >>> 47))\n  (m ^^^ n ^^^ t) ^^^ ((~~~(m ^^^ t)) &&& n)\n\n/-- 8-lane straight-line kernel: xor-fold of eight independently mixed lanes. -/\n@[noinline, export w3c1b_mix8]\ndef mix8 (ba : ByteArray) (h : 64 \u2264 ba.size) : UInt64 :=\n  let x0 := lane ba h  0 (by omega)\n  let x1 := lane ba h  8 (by omega)\n  let x2 := lane ba h 16 (by omega)\n  let x3 := lane ba h 24 (by omega)\n  let x4 := lane ba h 32 (by omega)\n  let x5 := lane ba h 40 (by omega)\n  let x6 := lane ba h 48 (by omega)\n  let x7 := lane ba h 56 (by omega)\n  x0 ^^^ x1 ^^^ x2 ^^^ x3 ^^^ x4 ^^^ x5 ^^^ x6 ^^^ x7\n\ndef benchBytes0 : ByteArray := ByteArray.mk #[\n  0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,\n  0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,\n  0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,\n  0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f,\n  0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27,\n  0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f,\n  0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,\n  0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f]\n\ndef benchBytes1 : ByteArray := ByteArray.mk #[\n  0x58, 0x51, 0xe2, 0x8f, 0x0a, 0x76, 0x33, 0x24,\n  0x9c, 0xd1, 0x44, 0x07, 0xba, 0xed, 0x60, 0x83,\n  0xd5, 0x36, 0xf1, 0x92, 0x14, 0xc7, 0x78, 0x2b,\n  0xae, 0x4d, 0x0c, 0x69, 0xfa, 0x3b, 0x98, 0x51,\n  0x66, 0x95, 0x24, 0xd7, 0x30, 0x03, 0xc2, 0xb9,\n  0x08, 0x7f, 0x1e, 0xdd, 0x4b, 0xb0, 0x63, 0x8a,\n  0xf9, 0x2c, 0xab, 0x40, 0x17, 0xe6, 0x55, 0x94,\n  0x31, 0xc8, 0x0f, 0x76, 0x23, 0xda, 0x81, 0x18]\n\ndef main : IO Unit := do\n  let h0 : 64 \u2264 benchBytes0.size := by decide\n  let h1 : 64 \u2264 benchBytes1.size := by decide\n  IO.println (mix8 benchBytes0 h0)\n  IO.println (mix8 benchBytes1 h1)\n",
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/scripts/fixtures/BuildExeVec8.lean"
+    }
+  },
+  {
+    "seq": 949,
+    "tool": "bash",
+    "ok": true,
+    "command": "source /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && python3 - <<'PYEOF'\nlanes = []\nfor L in range(8):\n    base = L * 8\n    bs = \"\\n\".join(\n        f\"  let b{L}_{k} := ba.uget {base + k} (by omega)\" for k in range(8)\n    )\n    ors = \" ||| \".join(\n        [f\"b{L}_0.toUInt64\"] + [f\"(b{L}_{k}.toUInt64 <<< {8 * k})\" for k in range(1, 8)]\n    )\n    lanes.append(f\"\"\"{bs}\n  let w{L} := {ors}\n  let m{L} := clmul64 w{L} 0x87c37b911184f4c5\n  let n{L} := clmul64Hi w{L} 0x9ae16a3b2f90404f\n  let t{L} := w{L} ^^^ ((w{L} <<< 31) ||| (w{L} >>> 33)) ^^^ ((w{L} <<< 17) ||| (w{L} >>> 47))\n  let x{L} := (m{L} ^^^ n{L} ^^^ t{L}) ^^^ ((~~~(m{L} ^^^ t{L})) &&& n{L})\"\"\")\n\nbody = \"\\n\\n\".join(lanes)\nfold = \" ^^^ \".join(f\"x{L}\" for L in range(8))\n\nsrc = f'''import LeanNative.IR.Types\nopen LeanNative.IR\n\n/-!\n# W3-C1b: 8-lane pure-Lean `ByteArray` vectorization benchmark\n\nStraight-line read-only kernel over one 64-byte `ByteArray` (8 little-endian `UInt64`\nlanes). Each lane assembles its word from 8 `ByteArray.uget` reads and mixes it with\n`clmul64`/`clmul64Hi` (carry-less multiply, `vpclmulqdq`), 64-bit rotates, and a\nKeccak-chi-style three-input boolean fold (`vpternlogq`). Compiled with\n`lean-native build-exe` + Clang 23 `-O3 -march=znver5 -mprefer-vector-width=512`,\nclang's SLP vectorizer emits `%zmm` code with zero `lean_apply_*`/`lean_alloc_*`\nin the kernel body.\n-/\n\n/-- 8-lane straight-line kernel: xor-fold of eight independently mixed lanes. -/\n@[noinline, export w3c1b_mix8]\ndef mix8 (ba : ByteArray) (h : 64 \u2264 ba.size) : UInt64 :=\n{body}\n  {fold}\n\ndef benchBytes0 : ByteArray := ByteArray.mk #[\n  0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,\n  0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,\n  0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,\n  0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f,\n  0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27,\n  0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f,\n  0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,\n  0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f]\n\ndef benchBytes1 : ByteArray := ByteArray.mk #[\n  0x58, 0x51, 0xe2, 0x8f, 0x0a, 0x76, 0x33, 0x24,\n  0x9c, 0xd1, 0x44, 0x07, 0xba, 0xed, 0x60, 0x83,\n  0xd5, 0x36, 0xf1, 0x92, 0x14, 0xc7, 0x78, 0x2b,\n  0xae, 0x4d, 0x0c, 0x69, 0xfa, 0x3b, 0x98, 0x51,\n  0x66, 0x95, 0x24, 0xd7, 0x30, 0x03, 0xc2, 0xb9,\n  0x08, 0x7f, 0x1e, 0xdd, 0x4b, 0xb0, 0x63, 0x8a,\n  0xf9, 0x2c, 0xab, 0x40, 0x17, 0xe6, 0x55, 0x94,\n  0x31, 0xc8, 0x0f, 0x76, 0x23, 0xda, 0x81, 0x18]\n\ndef main : IO Unit := do\n  let h0 : 64 \u2264 benchBytes0.size := by decide\n  let h1 : 64 \u2264 benchBytes1.size := by decide\n  IO.println (mix8 benchBytes0 h0)\n  IO.println (mix8 benchBytes1 h1)\n'''\nopen(\"/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/scripts/fixtures/BuildExeVec8.lean\", \"w\").write(src)\nprint(\"written\", len(src), \"bytes\")\nPYEOF"
+  },
+  {
+    "seq": 963,
+    "tool": "bash",
+    "ok": true,
+    "command": "source /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && python3 - <<'PYEOF'\np = \"/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/scripts/fixtures/BuildExeVec8.lean\"\ns = open(p).read()\ns = s.replace(\"(by omega)\", \"(by simp; omega)\")\nopen(p, \"w\").write(s)\nprint(s.count(\"by simp; omega\"), \"proofs\")\nPYEOF"
+  },
+  {
+    "seq": 987,
+    "tool": "bash",
+    "ok": true,
+    "command": "source /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && python3 - <<'PYEOF'\np = \"/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/scripts/fixtures/BuildExeVec8.lean\"\ns = open(p).read()\ns = s.replace(\"@[noinline, export w3c1b_mix8]\\ndef mix8\", \"@[noinline]\\ndef mix8\")\nopen(p, \"w\").write(s)\nPYEOF\ncd \"$HUB/toolchain/turbo-lean/lean\" && .lake/build/bin/lean-native build-exe --input ../scripts/fixtures/BuildExeVec8.lean -o /tmp/opencode/vec8 --standalone 2>&1 | head -12"
+  },
+  {
+    "seq": 1013,
+    "tool": "bash",
+    "ok": true,
+    "command": "source /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && python3 - <<'PYEOF'\np = \"/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/scripts/fixtures/BuildExeVec8.lean\"\ns = open(p).read()\n# keep header + mix8 only; drop everything from \"def benchBytes0\" onward\ncut = s.index(\"def benchBytes0\")\nopen(p, \"w\").write(s[:cut].rstrip() + \"\\n\")\nPYEOF\nmv \"$HUB/toolchain/turbo-lean/scripts/fixtures/BuildExeVec8.lean\" \"$HUB/toolchain/turbo-lean/scripts/fixtures/Vec8Kernels.lean\" && cd \"$HUB/toolchain/turbo-lean/lean\" && .lake/build/bin/lean-native compile-llvm --input ../scripts/fixtures/Vec8Kernels.lean -o /tmp/opencode/vec8.ll 2>&1 | head -5 && grep -n \"define\\|mix8\" /tmp/opencode/vec8.ll | head -8"
+  },
+  {
+    "seq": 1094,
+    "tool": "bash",
+    "ok": true,
+    "command": "source /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cp /tmp/opencode/NoaliasProbe.lean \"$HUB/toolchain/turbo-lean/scripts/fixtures/NoaliasProbe.lean\" && cd \"$HUB/toolchain/turbo-lean\" && git status --short | head -12"
+  },
+  {
+    "seq": 1099,
+    "tool": "bash",
+    "ok": true,
+    "command": "source /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean\" && rm scripts/fixtures/NoaliasProbe.lean && mkdir -p \"$HUB/wave3/c1b\" && git diff HEAD > \"$HUB/wave3/c1b/compiler-fix-w3-c1b.patch\" && wc -l \"$HUB/wave3/c1b/compiler-fix-w3-c1b.patch\" && git diff HEAD --stat | tail -8"
+  },
+  {
+    "seq": 1101,
+    "tool": "bash",
+    "ok": true,
+    "command": "source /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean\" && cp lean/.lake/build/bin/lean-native \"$HUB/bin/lean-native\" && cp /tmp/opencode/mix8_body.s \"$HUB/wave3/c1b/vec8-mix8-objdump-znver5.txt\" && cp /tmp/opencode/vec8.ll \"$HUB/wave3/c1b/vec8-kernel-opt.ll\" && cp /tmp/opencode/raw_copy_opt.ll \"$HUB/wave3/c1b/noalias-seqfor-probe.ll\" && ls -la \"$HUB/wave3/c1b/\" && sync && echo SYNCED"
+  },
+  {
+    "seq": 1247,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+      "newString": "        emitLine s!\"  {va} = insertelement <2 x i64> zeroinitializer, i64 {mT}, i64 0\\n  {vb} = insertelement <2 x i64> zeroinitializer, i64 {xs}, i64 0\\n  {va8} = bitcast <2 x i64> {va} to <16 x i8>\\n  {vb8} = bitcast <2 x i64> {vb} to <16 x i8>\\n  {r8} = call <16 x i8> @llvm.x86.vgf2p8affineqb.128(<16 x i8> {va8}, <16 x i8> {vb8}, i8 0)\\n  {r2} = bitcast <16 x i8> {r8} to <2 x i64>\\n  {res} = extractelement <2 x i64> {r2}, i64 0\"",
+      "oldString": "        emitLine s!\"  {va} = insertelement <2 x i64> zeroinitializer, i64 {xs}, i64 0\\n  {vb} = insertelement <2 x i64> zeroinitializer, i64 {mT}, i64 0\\n  {va8} = bitcast <2 x i64> {va} to <16 x i8>\\n  {vb8} = bitcast <2 x i64> {vb} to <16 x i8>\\n  {r8} = call <16 x i8> @llvm.x86.vgf2p8affineqb.128(<16 x i8> {va8}, <16 x i8> {vb8}, i8 0)\\n  {r2} = bitcast <16 x i8> {r8} to <2 x i64>\\n  {res} = extractelement <2 x i64> {r2}, i64 0\""
+    }
+  },
+  {
+    "seq": 1281,
+    "tool": "edit",
+    "file": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+    "ok": true,
+    "input": {
+      "filePath": "/var/lib/orb-node/work/caches/xmss-hub-v3/toolchain/turbo-lean/lean/LeanNative/Backend/LLVM.lean",
+      "newString": "    | .gf2Affine =>\n      let st \u2190 get\n      -- W3-C1b: on optimized x86-64, lower the GF(2^8) affine map directly to\n      -- `vgf2p8affineqb` (GFNI) instead of the scalar shift/xor expansion.\n      -- Semantics mapping (reverse-engineered from the instruction and\n      -- differential-fuzzed on 2M random inputs against the scalar reference):\n      -- `gf2Affine x m` computes, per result bit `i`,\n      -- `XOR_j (m.byte i).bit j AND (x AND 255).bit j`, which equals GFNI\n      -- affine (imm 0) with data byte `x AND 255` in operand 1 and the\n      -- byte-reversed `m` in operand 2; the result is byte 0 of the qword.\n      if st.optimized && (st.target == .x86_64 || st.target == .hybridCpuGpu) then\n        -- Byte-reverse `m` (three swap rounds: 8, 16, 32).\n        let sh1 \u2190 freshTmp \"gf_sh1\"; let an1 \u2190 freshTmp \"gf_an1\"; let sr1 \u2190 freshTmp \"gf_sr1\"\n        let an1b \u2190 freshTmp \"gf_an1b\"; let m1 \u2190 freshTmp \"gf_m1\"\n        emitLine s!\"  {sh1} = shl i64 {rVal}, 8\\n  {an1} = and i64 {sh1}, 18374966859414961920\\n  {sr1} = lshr i64 {rVal}, 8\\n  {an1b} = and i64 {sr1}, 71777214294589695\\n  {m1} = or i64 {an1}, {an1b}\"\n        let sh2 \u2190 freshTmp \"gf_sh2\"; let an2 \u2190 freshTmp \"gf_an2\"; let sr2 \u2190 freshTmp \"gf_sr2\"\n        let an2b \u2190 freshTmp \"gf_an2b\"; let m2 \u2190 freshTmp \"gf_m2\"\n        emitLine s!\"  {sh2} = shl i64 {m1}, 16\\n  {an2} = and i64 {sh2}, 18446462603027742720\\n  {sr2} = lshr i64 {m1}, 16\\n  {an2b} = and i64 {sr2}, 281470681808895\\n  {m2} = or i64 {an2}, {an2b}\"\n        let sh3 \u2190 freshTmp \"gf_sh3\"; let sr3 \u2190 freshTmp \"gf_sr3\"; let mR \u2190 freshTmp \"gf_mR\"\n        emitLine s!\"  {sh3} = shl i64 {m2}, 32\\n  {sr3} = lshr i64 {m2}, 32\\n  {mR} = or i64 {sh3}, {sr3}\"\n        let xs \u2190 freshTmp \"gf_xs\"\n        emitLine s!\"  {xs} = and i64 {lVal}, 255\"\n        let va \u2190 freshTmp \"gf_va\"; let vb \u2190 freshTmp \"gf_vb\"\n        let va8 \u2190 freshTmp \"gf_va8\"; let vb8 \u2190 freshTmp \"gf_vb8\"\n        let r8 \u2190 freshTmp \"gf_r8\"; let r2 \u2190 freshTmp \"gf_r2\"; let res \u2190 freshTmp \"gf_res\"\n        emitLine s!\"  {va} = insertelement <2 x i64> zeroinitializer, i64 {xs}, i64 0\\n  {vb} = insertelement <2 x i64> zeroinitializer, i64 {mR}, i64 0\\n  {va8} = bitcast <2 x i64> {va} to <16 x i8>\\n  {vb8} = bitcast <2 x i64> {vb} to <16 x i8>\\n  {r8} = call <16 x i8> @llvm.x86.vgf2p8affineqb.128(<16 x i8> {va8}, <16 x i8> {vb8}, i8 0)\\n  {r2} = bitcast <16 x i8> {r8} to <2 x i64>\\n  {res} = extractelement <2 x i64> {r2}, i64 0\"\n        return res\n      let mut acc := \"0\"\n      for i in [0:8] do",
+      "oldString": "    | .gf2Affine =>\n      let st \u2190 get\n      -- W3-C1b: on optimized x86-64, lower the GF(2^8) affine map directly to\n      -- `vgf2p8affineqb` (GFNI) instead of the scalar shift/xor expansion.\n      -- Semantics mapping (differential-tested): `gf2Affine x m` equals, per\n      -- result bit `i`, `XOR_j (m.byte i).bit j AND (x AND 255).bit j`, which is\n      -- exactly GFNI affine with imm 0 over byte 0 of `x` using the bit-matrix\n      -- transpose of `m` as the packed matrix qword.\n      if st.optimized && (st.target == .x86_64 || st.target == .hybridCpuGpu) then\n        -- Hacker's Delight 8x8 bit-matrix transpose of `m` (steps 7/14/28).\n        let s1 \u2190 freshTmp \"gf_s1\"; let x1 \u2190 freshTmp \"gf_x1\"; let t1 \u2190 freshTmp \"gf_t1\"\n        let t1s \u2190 freshTmp \"gf_t1s\"; let x1b \u2190 freshTmp \"gf_x1b\"; let m1 \u2190 freshTmp \"gf_m1\"\n        emitLine s!\"  {s1} = lshr i64 {rVal}, 7\\n  {x1} = xor i64 {rVal}, {s1}\\n  {t1} = and i64 {x1}, 768363631824260222\\n  {t1s} = shl i64 {t1}, 7\\n  {x1b} = xor i64 {rVal}, {t1}\\n  {m1} = xor i64 {x1b}, {t1s}\"\n        let s2 \u2190 freshTmp \"gf_s2\"; let x2 \u2190 freshTmp \"gf_x2\"; let t2 \u2190 freshTmp \"gf_t2\"\n        let t2s \u2190 freshTmp \"gf_t2s\"; let x2b \u2190 freshTmp \"gf_x2b\"; let m2 \u2190 freshTmp \"gf_m2\"\n        emitLine s!\"  {s2} = lshr i64 {m1}, 14\\n  {x2} = xor i64 {m1}, {s2}\\n  {t2} = and i64 {x2}, 1210343285534224\\n  {t2s} = shl i64 {t2}, 14\\n  {x2b} = xor i64 {m1}, {t2}\\n  {m2} = xor i64 {x2b}, {t2s}\"\n        let s3 \u2190 freshTmp \"gf_s3\"; let x3 \u2190 freshTmp \"gf_x3\"; let t3 \u2190 freshTmp \"gf_t3\"\n        let t3s \u2190 freshTmp \"gf_t3s\"; let x3b \u2190 freshTmp \"gf_x3b\"; let mT \u2190 freshTmp \"gf_mt\"\n        emitLine s!\"  {s3} = lshr i64 {m2}, 28\\n  {x3} = xor i64 {m2}, {s3}\\n  {t3} = and i64 {x3}, 4042322160\\n  {t3s} = shl i64 {t3}, 28\\n  {x3b} = xor i64 {m2}, {t3}\\n  {mT} = xor i64 {x3b}, {t3s}\"\n        let xs \u2190 freshTmp \"gf_xs\"\n        emitLine s!\"  {xs} = and i64 {lVal}, 255\"\n        let va \u2190 freshTmp \"gf_va\"; let vb \u2190 freshTmp \"gf_vb\"\n        let va8 \u2190 freshTmp \"gf_va8\"; let vb8 \u2190 freshTmp \"gf_vb8\"\n        let r8 \u2190 freshTmp \"gf_r8\"; let r2 \u2190 freshTmp \"gf_r2\"; let res \u2190 freshTmp \"gf_res\"\n        emitLine s!\"  {va} = insertelement <2 x i64> zeroinitializer, i64 {mT}, i64 0\\n  {vb} = insertelement <2 x i64> zeroinitializer, i64 {xs}, i64 0\\n  {va8} = bitcast <2 x i64> {va} to <16 x i8>\\n  {vb8} = bitcast <2 x i64> {vb} to <16 x i8>\\n  {r8} = call <16 x i8> @llvm.x86.vgf2p8affineqb.128(<16 x i8> {va8}, <16 x i8> {vb8}, i8 0)\\n  {r2} = bitcast <16 x i8> {r8} to <2 x i64>\\n  {res} = extractelement <2 x i64> {r2}, i64 0\"\n        return res\n      let mut acc := \"0\"\n      for i in [0:8] do"
+    }
+  },
+  {
+    "seq": 1294,
+    "tool": "bash",
+    "ok": true,
+    "command": "source /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean/scripts/fixtures\" && python3 - <<'EOF'\nimport re\ns = open('Vec8Kernels.lean').read()\nfor k in range(8):\n    # insert gf2Affine term after the wK assembly line and fold into xK\n    s = s.replace(\n      f\"  let m{k} := clmul64 w{k} 0x87c37b911184f4c5\",\n      f\"  let g{k} := gf2Affine w{k} 0x1d8729143f0a5be9\\n  let m{k} := clmul64 w{k} 0x87c37b911184f4c5\")\n    s = s.replace(\n      f\"  let x{k} := (m{k} ^^^ n{k} ^^^ t{k}) ^^^ ((~~~(m{k} ^^^ t{k})) &&& n{k})\",\n      f\"  let x{k} := (m{k} ^^^ n{k} ^^^ t{k}) ^^^ ((~~~(m{k} ^^^ t{k})) &&& n{k}) ^^^ g{k}\")\n# also mention GFNI in the doc header\ns = s.replace(\"Keccak-chi-style three-input boolean fold (`vpternlogq`).\",\n  \"Keccak-chi-style three-input boolean fold (`vpternlogq`), and a GF(2^8) affine\\nbyte map (`vgf2p8affineqb`, GFNI).\")\nopen('Vec8Kernels.lean','w').write(s)\nprint(\"edited\")\nEOF\ngrep -c \"gf2Affine\" Vec8Kernels.lean"
+  },
+  {
+    "seq": 1327,
+    "tool": "bash",
+    "ok": true,
+    "command": "source /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean/scripts/fixtures\" && python3 - <<'EOF'\ns = open('Vec8Kernels.lean').read()\ns = s.replace(\" ^^^ g7\\n\", \"\\n\")\n# remove duplicated first b0_0 line of gfni8\nfirst = \"def gfni8 (ba : ByteArray) (h : 64 \u2264 ba.size) : UInt64 :=\\n  let b0_0 := ba.uget 0 (by simp; omega)\\n  let b0_0 := ba.uget 0 (by simp; omega)\\n\"\nrepl = \"def gfni8 (ba : ByteArray) (h : 64 \u2264 ba.size) : UInt64 :=\\n  let b0_0 := ba.uget 0 (by simp; omega)\\n\"\nassert first in s\ns = s.replace(first, repl)\nopen('Vec8Kernels.lean','w').write(s)\nprint(\"fixed\")\nEOF\ngrep -n \"^^^ g7\\|b0_0\" Vec8Kernels.lean | head -4"
+  },
+  {
+    "seq": 1331,
+    "tool": "bash",
+    "ok": true,
+    "command": "source /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean/scripts/fixtures\" && grep -n \"\\^^^ g[0-9]\" Vec8Kernels.lean; python3 - <<'EOF'\nimport re\ns = open('Vec8Kernels.lean').read()\ns2 = re.sub(r\" \\^\\^\\^ g\\d\\n\", \"\\n\", s)\nopen('Vec8Kernels.lean','w').write(s2)\nprint(\"removed\", len(re.findall(r\" \\^\\^\\^ g\\d\", s)))\nEOF\ngrep -cn \"\\^^^ g[0-9]\" Vec8Kernels.lean || echo \"clean\""
+  },
+  {
+    "seq": 1334,
+    "tool": "bash",
+    "ok": true,
+    "command": "source /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean/scripts/fixtures\" && python3 - <<'EOF'\nimport re\ns = open('Vec8Kernels.lean').read()\n# gfni8 a-lines: restore \" ^^^ gK\" suffix\ndef fix(m):\n    lane = m.group(1)\n    return f\"  let a{lane} := (w{lane} <<< 13) ||| (w{lane} >>> 51) ^^^ g{lane}\\n\"\ns2 = re.sub(r\"  let a(\\d) := \\(w\\d <<< 13\\) \\|\\|\\| \\(w\\d >>> 51\\)\\n\", fix, s)\nopen('Vec8Kernels.lean','w').write(s2)\nprint(\"a-lines fixed:\", len(re.findall(r\"\\^\\^\\^ g\\d\\n\", s2)))\nEOF\ngrep -n \"let a[0-7]\" Vec8Kernels.lean"
+  },
+  {
+    "seq": 1354,
+    "tool": "bash",
+    "ok": true,
+    "command": "source /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean/scripts/fixtures\" && sed -n '1,130p' Vec8Kernels.lean > /tmp/opencode/mix8_cur.lean && python3 - <<'EOF'\ncur = open('/tmp/opencode/mix8_cur.lean').read()\norig = open('/tmp/opencode/vec8_orig.lean').read()\n# reconstruct original mix8 from the first read (130 lines) via the same pattern checks\nfor probe in [\"let x0 := (m0 ^^^ n0 ^^^ t0) ^^^ ((~~~(m0 ^^^ t0)) &&& n0)\\n\",\n              \"let x7 := (m7 ^^^ n7 ^^^ t7) ^^^ ((~~~(m7 ^^^ t7)) &&& n7)\\n\",\n              \"Keccak-chi-style three-input boolean fold (`vpternlogq`). Compiled with\"]:\n    print(repr(probe[:40]), \"->\", probe in cur)\nprint(\"g-terms in mix8 block:\", \"gf2Affine\" in cur[:cur.index(\"def gfni8\")])\nEOF"
+  },
+  {
+    "seq": 1407,
+    "tool": "bash",
+    "ok": true,
+    "command": "source /var/lib/orb-node/work/caches/xmss-hub-v3/env.sh && cd \"$HUB/toolchain/turbo-lean/lean\" && cp .lake/build/bin/lean-native \"$HUB/bin/lean-native\" && sync && sha256sum \"$HUB/bin/lean-native\" \"$HUB/wave3/c1b/\"* | tee \"$HUB/wave3/c1b/SHA256SUMS.txt\""
+  }
+]

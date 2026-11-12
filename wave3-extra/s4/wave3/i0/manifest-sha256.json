@@ -1,0 +1,90 @@
+{
+  "wave3/i0/STATUS.md": {
+    "bytes": 2480,
+    "sha256": "5dd2bb0b41712de411c5d116d17c73ee2ced182a4e62ed68390a9975209f65a7"
+  },
+  "wave3/i0/TIMER_PARITY.md": {
+    "bytes": 6503,
+    "sha256": "e4e8dd7df4bf248d1f1c584c1091b568fee26283f875315cd5db59f477bb20ba"
+  },
+  "wave3/i0/g0-baseline.json": {
+    "bytes": 17098,
+    "sha256": "4f9ed2ff69cb590f71189fd03596673f2b1e8c6de27a465a75368b66f2f6fd2f"
+  },
+  "wave3/i0/phase-timings-g0.json": {
+    "bytes": 7190,
+    "sha256": "bc3324a2fb0fd08b7406c9bcd9d7291df10334d9746d9491bf9aed75d5e3ee34"
+  },
+  "wave3/i0/g0-vs-de39fd7.patch": {
+    "bytes": 568195,
+    "sha256": "29a0ba823a4b9a66d83238b2a416ec69aa894afaf56a26c4737457d55dc44345"
+  },
+  "wave3/i0/axiom-audit-repo.json": {
+    "bytes": 2143,
+    "sha256": "122d8426347d591dc2bc5e879bc01e6d58fd8935abee811f773c6c687db75ffd"
+  },
+  "wave3/i0/w2-sha256-verified.json": {
+    "bytes": 3327,
+    "sha256": "1cdb240e8393a7ea7db3627bd604b1da03886ff65344053a1994afeb6bd72606"
+  },
+  "wave3/i0/xmss4-phases.json": {
+    "bytes": 1631,
+    "sha256": "21eb15f43048d3270d8f3db46e720078a50d27a8e99ab51be1f9e8290ddb2048"
+  },
+  "wave3/i0/xmss16-phases.json": {
+    "bytes": 1639,
+    "sha256": "b67308143b04b6fabe00a3c9578a4aa5108a07f4886e4d0e14d65bca17d9c014"
+  },
+  "wave3/i0/xmss1400-phases.json": {
+    "bytes": 1705,
+    "sha256": "66638fc22c74dcf98089770c139584e1ba2b6351ed2c51ecee38a59ca60d89a2"
+  },
+  "wave3/i0/proofs/syn_tiny.proof": {
+    "bytes": 204736,
+    "sha256": "2ed3c7fa2be2d8e6d53a07f010520a5d7427008f4c7ab033dab65fdc1c733c06"
+  },
+  "wave3/i0/proofs/syn_jump.proof": {
+    "bytes": 204416,
+    "sha256": "7c5996137a656376c13dc766d2575fd1ff1aa43a67a3a0381769e78113e813ca"
+  },
+  "wave3/i0/proofs/syn_deref.proof": {
+    "bytes": 203648,
+    "sha256": "175c932bcc0f54501f1f28ca76fc7f24dce50c8cea7090d7fecdcfbe6a3d17f3"
+  },
+  "wave3/i0/proofs/syn_keccak.proof": {
+    "bytes": 203912,
+    "sha256": "81acbe680ce1f3ff750950a2075ad707aff61401897ba9b3456323301d41e05e"
+  },
+  "wave3/i0/proofs/xmss4.proof": {
+    "bytes": 241473,
+    "sha256": "ca0e390d5fc7364b42ecdd40e433d4b6ae3fb3f80648ab1abc779d4a94320815"
+  },
+  "wave3/i0/proofs/xmss16.proof": {
+    "bytes": 279625,
+    "sha256": "bab920905b70a74d4853be3593105d6056b759c9b208005e0fbc234588338dbd"
+  },
+  "wave3/i0/proofs/xmss1400.proof": {
+    "bytes": 359217,
+    "sha256": "9fcdb0ac8e76b81bbbb6cd42827aca27ef918c02d1f42e93865321b0b8d638a6"
+  },
+  "fixtures/xmss1400/manifest.json": {
+    "bytes": 609,
+    "sha256": "692bfb1d08560ddce225a0db7f5e839b756001ec1a1767565aa69d98b51abe13"
+  },
+  "artifacts/p2-e2e/e2e-aggregate": {
+    "bytes": 4958624,
+    "sha256": "bd635e0706a4f4f8be07e16ba57ebdd0ab8a6f3c917c08e73dfc9fb433ab7421"
+  },
+  "artifacts/p2-e2e-bins/leanvm-prove": {
+    "bytes": 4958624,
+    "sha256": "bd635e0706a4f4f8be07e16ba57ebdd0ab8a6f3c917c08e73dfc9fb433ab7421"
+  },
+  "artifacts/p2-e2e-bins/e2e-check": {
+    "bytes": 5016120,
+    "sha256": "b273fbf9f8e74d6694a230b7325e3034e3a59a440399ef4e64d05f5ae064d1ca"
+  },
+  "artifacts/w4-cli-traces-tierb/cli-check": {
+    "bytes": 5026560,
+    "sha256": "ee91a5d3ea74760fd4104c0020149e0d46d3fada9d8e84330d653f8aa12f2b6f"
+  }
+}

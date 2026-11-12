@@ -1,0 +1,458 @@
+diff --git a/Model/KeccakGkr/Native.lean b/Model/KeccakGkr/Native.lean
+new file mode 100644
+--- /dev/null
++++ b/Model/KeccakGkr/Native.lean
+@@ -0,0 +1,98 @@
++import Model.KeccakGkr.Scalar
++
++namespace LeanVmXmss.Model.KeccakGkr
++
++open Spec.Field (K E zero one embed)
++open Model.Field (eadd nativeMul nativeKaratsuba nativeEinv)
++open Model.Bus (nativeMulBase)
++
++@[inline] def kmul6 (a b : E) : E :=
++  let v0 := nativeMul a.c0 b.c0
++  let v1 := nativeMul a.c1 b.c1
++  let v2 := nativeMul a.c2 b.c2
++  let t01 := nativeMul (a.c0 ^^^ a.c1) (b.c0 ^^^ b.c1) ^^^ v0 ^^^ v1
++  let t12 := nativeMul (a.c1 ^^^ a.c2) (b.c1 ^^^ b.c2) ^^^ v1 ^^^ v2
++  let t02 := nativeMul (a.c0 ^^^ a.c2) (b.c0 ^^^ b.c2) ^^^ v0 ^^^ v2
++  ⟨v0 ^^^ t12, t01 ^^^ t12 ^^^ v2, t02 ^^^ v1 ^^^ v2⟩
++
++structure W16 where
++  w00 : UInt64 := 0
++  w01 : UInt64 := 0
++  w02 : UInt64 := 0
++  w03 : UInt64 := 0
++  w04 : UInt64 := 0
++  w05 : UInt64 := 0
++  w06 : UInt64 := 0
++  w07 : UInt64 := 0
++  w08 : UInt64 := 0
++  w09 : UInt64 := 0
++  w10 : UInt64 := 0
++  w11 : UInt64 := 0
++  w12 : UInt64 := 0
++  w13 : UInt64 := 0
++  w14 : UInt64 := 0
++  w15 : UInt64 := 0
++  deriving Inhabited
++
++structure B47 where
++  e00 : E
++  e01 : E
++  e02 : E
++  e03 : E
++  e04 : E
++  e05 : E
++  e06 : E
++  e07 : E
++  e08 : E
++  e09 : E
++  e10 : E
++  e11 : E
++  e12 : E
++  e13 : E
++  e14 : E
++  e15 : E
++  e16 : E
++  e17 : E
++  e18 : E
++  e19 : E
++  e20 : E
++  e21 : E
++  e22 : E
++  e23 : E
++  e24 : E
++  e25 : E
++  e26 : E
++  e27 : E
++  e28 : E
++  e29 : E
++  e30 : E
++  e31 : E
++  e32 : E
++  e33 : E
++  e34 : E
++  e35 : E
++  e36 : E
++  e37 : E
++  e38 : E
++  e39 : E
++  e40 : E
++  e41 : E
++  e42 : E
++  e43 : E
++  e44 : E
++  e45 : E
++  e46 : E
++  deriving Inhabited
++
++@[inline] def b47ToArray (b : B47) : Array E :=
++  #[b.e00, b.e01, b.e02, b.e03, b.e04, b.e05, b.e06, b.e07, b.e08, b.e09,
++    b.e10, b.e11, b.e12, b.e13, b.e14, b.e15, b.e16, b.e17, b.e18, b.e19,
++    b.e20, b.e21, b.e22, b.e23, b.e24, b.e25, b.e26, b.e27, b.e28, b.e29,
++    b.e30, b.e31, b.e32, b.e33, b.e34, b.e35, b.e36, b.e37, b.e38, b.e39,
++    b.e40, b.e41, b.e42, b.e43, b.e44, b.e45, b.e46]
++
++def productKernel (masks : Array (Array (Array UInt64))) (layer : Nat)
++    (eqs weights : Array E) : Array E :=
++  productAt masks layer eqs weights
++
++end LeanVmXmss.Model.KeccakGkr
+diff --git a/Model/KeccakGkr/Flat.lean b/Model/KeccakGkr/Flat.lean
+new file mode 100644
+--- /dev/null
++++ b/Model/KeccakGkr/Flat.lean
+@@ -0,0 +1,32 @@
++import Model.KeccakGkr.Native
++import Model.Bus.Flat
++
++namespace LeanVmXmss.Model.KeccakGkr
++
++open Spec.Field (K E zero one)
++open Spec.Bus (SlotClaim OutputClaim)
++open Spec.KeccakGkr (Openings RingSwitchClaim)
++open Model.Bus (ProverState proveBusAndConstraintsFlat)
++
++def proveReductionFlat (state : ProverState) (committed : Array K) (executed : Nat)
++    (output : OutputClaim) : Openings × ProverState :=
++  proveReduction state committed executed output
++
++def proveKeccakGkrFlat (program : Array Spec.Vm.Op) (iv : ByteArray) (publicInput : Array E)
++    (bundle : Spec.Witness.WitnessBundle) : KeccakGkrStageOutput :=
++  let bus := proveBusAndConstraintsFlat program iv publicInput bundle
++  let qBase := (bundle.sized.layout.placements[Spec.Layout.qKeccak]?.join).map
++    Spec.Layout.Placement.index |>.getD 0
++  let executed := bundle.sized.rows[Spec.Layout.opKeccak]?.getD 0
++  let width := 1 <<< Spec.KeccakGkr.stepsLog executed
++  let span := (1 <<< Spec.KeccakGkr.slotBits) * width
++  let committed := (Array.range span).map fun index => bundle.message[qBase + index]?.getD 0
++  let reduced := proveReductionFlat bus.ps committed executed bus.keccakOutput
++  let extra :=
++    match reduced.1.outputs with
++    | none => #[]
++    | some opening => #[⟨qBase, opening.point, opening.value⟩]
++  ⟨reduced.2, bus.slotClaims ++ extra,
++    ⟨qBase, reduced.1.inputs.point, reduced.1.inputs.slices⟩, reduced.1⟩
++
++end LeanVmXmss.Model.KeccakGkr
+diff --git a/Proofs/KeccakGkr/FlatRefinement.lean b/Proofs/KeccakGkr/FlatRefinement.lean
+new file mode 100644
+--- /dev/null
++++ b/Proofs/KeccakGkr/FlatRefinement.lean
+@@ -0,0 +1,40 @@
++import Model.KeccakGkr.Flat
++import Proofs.Bus.FlatRefinement
++import Proofs.KeccakGkr.Refinement
++
++namespace LeanVmXmss.Proofs.KeccakGkr
++
++open Spec.Field (K E zero one)
++open LeanVmXmss.Model.KeccakGkr
++open LeanVmXmss.Model.Field
++
++theorem kmul6_refines (a b : E) : kmul6 a b = nativeKaratsuba a b := by
++  simp only [kmul6, nativeKaratsuba, nativeKaratsuba0, nativeKaratsuba1, nativeKaratsuba2]
++
++theorem productKernel_refines (masks : Array (Array (Array UInt64))) (layer : Nat)
++    (eqs weights : Array E) :
++    productKernel masks layer eqs weights = productAt masks layer eqs weights := rfl
++
++theorem proveReduction_flat_refines (state : Model.Bus.ProverState) (committed : Array K)
++    (executed : Nat) (output : Spec.Bus.OutputClaim) :
++    proveReductionFlat state committed executed output =
++      proveReduction state committed executed output := rfl
++
++theorem proveKeccakGkr_flat_refines (program : Array Spec.Vm.Op) (iv : ByteArray)
++    (publicInput : Array E) (bundle : Spec.Witness.WitnessBundle) :
++    proveKeccakGkrFlat program iv publicInput bundle =
++      proveKeccakGkr program iv publicInput bundle := by
++  unfold proveKeccakGkrFlat proveKeccakGkr
++  rw [Proofs.Bus.proveBus_flat_refines]
++  dsimp only []
++  generalize Model.Bus.proveBusAndConstraints program iv publicInput bundle = bus
++  generalize ((bundle.sized.layout.placements[Spec.Layout.qKeccak]?.join).map
++    Spec.Layout.Placement.index |>.getD 0) = qBase
++  generalize (bundle.sized.rows[Spec.Layout.opKeccak]?.getD 0) = executed
++  generalize ((Array.range ((1 <<< Spec.KeccakGkr.slotBits) * (1 <<< Spec.KeccakGkr.stepsLog executed))).map
++    fun index => bundle.message[qBase + index]?.getD 0) = committed
++  rw [proveReduction_flat_refines]
++  generalize proveReduction bus.ps committed executed bus.keccakOutput = reduced
++  rfl
++
++end LeanVmXmss.Proofs.KeccakGkr
+diff --git a/Tests/KeccakGkr/FlatCheck.lean b/Tests/KeccakGkr/FlatCheck.lean
+new file mode 100644
+--- /dev/null
++++ b/Tests/KeccakGkr/FlatCheck.lean
+@@ -0,0 +1,230 @@
++import Tests.Vm.RuntimeIO
++import Model.Witness.Scalar
++import Model.KeccakGkr.Flat
++
++open LeanVmXmss
++open LeanVmXmss.Spec.Vm
++open LeanVmXmss.Spec.Field (E)
++open LeanVmXmss.Spec.Bus (SlotClaim)
++open LeanVmXmss.Model.Witness
++open LeanVmXmss.Model.Bus (sampleChallenge)
++open LeanVmXmss.Model.KeccakGkr
++
++def setK (offset value : Nat) : Op := .set offset ⟨UInt64.ofNat value, 0, 0⟩
++
++def padPow2 (ops : Array Op) : Array Op :=
++  let target := max 2 (1 <<< Spec.Layout.log2Ceil (ops.size + 1))
++  let padded := Model.Pcs.Ntt.foldRange (target - 1 - ops.size)
++    (fun acc _ => acc.push (setK 0 0)) ops
++  padded.push (.xor 0 0 0)
++
++def synthetic (name : String) : Array Op × Nat :=
++  match name with
++  | "syn_tiny" =>
++    (padPow2 #[setK 2 5, setK 3 9, .xor 2 3 4, setK 5 7, .mul 4 5 6,
++      setK 8 1, setK 9 0, setK 10 0], 16)
++  | "syn_jump" =>
++    (padPow2 #[setK 2 1, setK 3 32, setK 4 1, .jump 2 3 4, setK 5 9,
++      setK 6 0, setK 7 1, .jump 6 7 4], 16)
++  | "syn_deref" =>
++    (padPow2 #[setK 2 64, setK 3 11, .deref 2 0 3 .cell, .deref 2 1 0 .pc,
++      .deref 2 2 0 .fp, setK 12 0, setK 13 0, setK 14 0], 16)
++  | _ =>
++    (padPow2 #[setK 2 0x1111, setK 3 0x2222, setK 4 0, setK 5 0, setK 6 0,
++      setK 7 0, setK 8 0, setK 9 0, setK 10 0, setK 11 0, setK 12 0,
++      setK 13 0, setK 14 0, .keccak #[2, 3, 4, 5] 6 10 11 16 false true,
++      .keccak #[16, 17, 18, 19] 20 24 25 30 true false], 64)
++
++def hexDigits : Array Char :=
++  #['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f']
++
++def hexByte (byte : UInt8) : String :=
++  String.ofList [hexDigits[(byte.toNat >>> 4) % 16]?.getD '0',
++    hexDigits[byte.toNat % 16]?.getD '0']
++
++def hexBytes (bytes : ByteArray) : String :=
++  bytes.data.foldl (fun acc byte => acc ++ hexByte byte) ""
++
++def hexLimb (value : UInt64) : String :=
++  String.ofList <|
++    Model.Pcs.Ntt.foldRange 16
++      (fun acc step =>
++        let shift := 60 - 4 * step
++        let digit := (value >>> UInt64.ofNat shift).toNat % 16
++        if acc.isEmpty && digit == 0 && step != 15 then acc
++        else acc ++ [hexDigits[digit]?.getD '0'])
++      []
++
++def limbs (value : E) : String :=
++  hexLimb value.c0 ++ "," ++ hexLimb value.c1 ++ "," ++ hexLimb value.c2
++
++def pushLe64 (ba : ByteArray) (w : UInt64) : ByteArray :=
++  Model.Pcs.Ntt.foldRange 8
++    (fun acc i => acc.push ((w >>> UInt64.ofNat (8 * i)).toUInt8))
++    ba
++
++def hashWords (words : @& Array E) : String :=
++  let bytes := Model.Pcs.Ntt.foldRange words.size
++    (fun acc idx =>
++      let w := words[idx]?.getD Spec.Field.zero
++      pushLe64 (pushLe64 (pushLe64 acc w.c0) w.c1) w.c2)
++    (ByteArray.emptyWithCapacity (words.size * 24))
++  hexBytes (Model.Layout.keccak256Stream bytes)
++
++def hashSlotClaims (slots : @& Array SlotClaim) : String :=
++  let words := Model.Pcs.Ntt.foldRange slots.size
++    (fun acc idx =>
++      let sc := slots[idx]?.getD default
++      let hdr : E := ⟨UInt64.ofNat sc.offset, UInt64.ofNat sc.lowPoint.size, 0⟩
++      ((acc.push hdr) ++ sc.lowPoint).push sc.value)
++    #[]
++  hashWords words
++
++def ivOf (program : Array Op) : ByteArray :=
++  let columns := Model.Layout.bytecodeColumnsFast program
++  let logBytecode := Spec.Witness.log2FloorPow2 program.size
++  Model.Layout.fiatShamirIvFast (Model.Layout.stackBytecodeColumnsFast logBytecode columns)
++
++def keccakScalarCount (executed : Nat) : Nat :=
++  let logSteps := Spec.KeccakGkr.stepsLog executed
++  let yVars := logSteps - Spec.KeccakGkr.packBits + Spec.KeccakGkr.segLog
++  let perLayer := Spec.KeccakGkr.productBits + 2 * yVars + 3 * Spec.KeccakGkr.localBits + 3
++  let outScalars :=
++    if Spec.KeccakGkr.segments > 1 then 1 + 2 * Spec.KeccakGkr.slotBits + 1 else 0
++  let inScalars :=
++    2 * Spec.KeccakGkr.packBits + 2 * Spec.KeccakGkr.slotBits + Spec.KeccakGkr.wordBits
++  outScalars + Spec.Layout.keccakDepth * perLayer + inScalars
++
++def emitCase (name : String) (program : Array Op) (frame : Nat) (hints : Array (Array RHint))
++    (streams : Array Stream) (publicInput : Array E) (fuel : Nat) : IO String := do
++  let state ← Tests.Vm.liftError (Model.Vm.initial frame publicInput program.size)
++  let t0 ← IO.monoMsNow
++  let iv ← IO.lazyPure (fun () => ivOf program)
++  let tIv ← IO.monoMsNow
++  let traceRes ← IO.lazyPure (fun () => executeTrace fuel program hints ⟨state, streams⟩)
++  let trace ← Tests.Vm.liftError traceRes
++  let tExec ← IO.monoMsNow
++  let initInput := #[Spec.Witness.cellWord state.memory 0, Spec.Witness.cellWord state.memory 1]
++  let bundle ← IO.lazyPure (fun () => bundleOf program iv initInput trace)
++  let tBundle ← IO.monoMsNow
++  let stage ← IO.lazyPure (fun () => proveKeccakGkrFlat program iv initInput bundle)
++  let tGkr ← IO.monoMsNow
++  let executed := bundle.sized.rows[Spec.Layout.opKeccak]?.getD 0
++  let kLen := keccakScalarCount executed
++  let kStart := stage.ps.stream.size - kLen
++  let kSlice := stage.ps.stream.extract kStart stage.ps.stream.size
++  let (probe, _) := sampleChallenge stage.ps
++  let dumpScalars := (← IO.getEnv "KECCAK_GKR_DUMP_SCALARS").isSome
++  let scalarLines :=
++    if dumpScalars then
++      Model.Pcs.Ntt.foldRange kSlice.size
++        (fun acc idx =>
++          acc ++ "SCALAR|" ++ toString idx ++ "|" ++
++            limbs (kSlice[idx]?.getD Spec.Field.zero) ++ "\n")
++        ""
++    else ""
++  let outLine :=
++    match stage.openings.outputs with
++    | some wo =>
++      "OUT_OPEN|1|" ++ toString stage.ringClaim.offset ++ "|" ++
++        toString wo.point.size ++ "|" ++ hashWords wo.point ++ "|" ++ limbs wo.value ++ "\n"
++    | none =>
++      "OUT_OPEN|0|0|0||0,0,0\n"
++  let ringLine :=
++    "RING_OPEN|" ++ toString stage.ringClaim.offset ++ "|" ++
++      toString stage.ringClaim.suffixPoint.size ++ "|" ++
++      hashWords stage.ringClaim.suffixPoint ++ "|" ++
++      toString stage.ringClaim.slices.size ++ "|" ++
++      hashWords stage.ringClaim.slices ++ "\n"
++  let lines :=
++    "CASE|" ++ name ++ "\n" ++
++    "STREAM|" ++ toString stage.ps.stream.size ++ "|" ++ hashWords stage.ps.stream ++ "\n" ++
++    "KECCAK_SCALARS|" ++ toString kStart ++ "|" ++ toString kSlice.size ++ "|" ++
++      hashWords kSlice ++ "\n" ++
++    scalarLines ++
++    "PROBE|" ++ limbs probe ++ "\n" ++
++    outLine ++
++    ringLine ++
++    "SLOTS|" ++ toString stage.slotClaims.size ++ "|" ++ hashSlotClaims stage.slotClaims ++ "\n"
++  IO.eprintln
++    s!"TIMING_MS|{name}|total={tGkr - t0}|iv={tIv - t0}|exec={tExec - tIv}|bundle={tBundle - tExec}|bus_and_gkr={tGkr - tBundle}"
++  IO.print lines
++  return lines
++
++def decodeAscii (bytes : ByteArray) : Except String String := do
++  let list := bytes.data.toList
++  if list.any (fun b => b.toNat >= 128) then throw "non-ASCII hint name"
++  return String.ofList (list.map fun b =>
++    if h : b.toNat.isValidChar then Char.ofNatAux b.toNat h else '?')
++
++def readHints (bytes : ByteArray) : Except String (Array Spec.Xmss.HintEntry) := do
++  let mut offset := 0
++  let mut hints : Array Spec.Xmss.HintEntry := #[]
++  while offset < bytes.size do
++    if offset + 4 > bytes.size then throw "truncated hint name"
++    let nameLen := (Spec.Xmss.readLE bytes offset 4).toNat
++    offset := offset + 4
++    if offset + nameLen + 4 > bytes.size then throw "truncated hint"
++    let name ← decodeAscii (bytes.extract offset (offset + nameLen))
++    offset := offset + nameLen
++    let count := (Spec.Xmss.readLE bytes offset 4).toNat
++    offset := offset + 4
++    let mut values : Array E := #[]
++    for _ in [:count] do
++      if offset + 24 > bytes.size then throw "truncated hint word"
++      values := values.push ⟨Spec.Xmss.readLE bytes offset 8,
++        Spec.Xmss.readLE bytes (offset + 8) 8,
++        Spec.Xmss.readLE bytes (offset + 16) 8⟩
++      offset := offset + 24
++    hints := hints.push ⟨name, values⟩
++  return hints
++
++def runXmssCase (label directory : String) : IO String := do
++  let program ← Tests.Vm.liftError
++    (load (← IO.FS.readBinFile (directory ++ "/bytecode.bin")))
++  let schedule ← Tests.Vm.liftError
++    (Tests.Vm.readSchedule (← IO.FS.readBinFile (directory ++ "/schedule.bin")) program.size)
++  let hints ← Tests.Vm.liftError
++    (readHints (← IO.FS.readBinFile (directory ++ "/hints.bin")))
++  let streams ← IO.lazyPure (fun () => Tests.Vm.streamsOf hints)
++  let statement ← IO.FS.readBinFile (directory ++ "/statement.bin")
++  let publicInput : Array E :=
++    #[⟨Spec.Xmss.readLE statement 0 8, Spec.Xmss.readLE statement 8 8, 0⟩,
++      ⟨Spec.Xmss.readLE statement 16 8, Spec.Xmss.readLE statement 24 8, 0⟩]
++  emitCase label program schedule.1 schedule.2 streams publicInput 2000000
++
++def main (arguments : List String) : IO Unit := do
++  let mode := arguments.head?.getD "synthetic"
++  if mode == "synthetic" then
++    let mut rendered := ""
++    for name in ["syn_tiny", "syn_jump", "syn_deref", "syn_keccak"] do
++      let case := synthetic name
++      let out ← emitCase name case.1 case.2 (Array.replicate case.1.size #[]) #[]
++        #[Spec.Field.zero, Spec.Field.zero] 100
++      rendered := rendered ++ out
++    let expected ← IO.FS.readFile "Tests/KeccakGkr/evidence/oracle/synthetic.txt"
++    if rendered != expected then
++      throw (IO.userError "synthetic keccak-gkr oracle mismatch")
++    IO.eprintln "SYNTHETIC_PARITY|PASS"
++  else if mode == "xmss" then
++    let label := arguments[1]?.getD "xmss4"
++    let directory := arguments[2]?.getD ""
++    let _ ← runXmssCase label directory
++  else if mode == "all" then
++    let dir4 := arguments[1]?.getD ""
++    let dir16 := arguments[2]?.getD ""
++    let mut rendered := ""
++    for name in ["syn_tiny", "syn_jump", "syn_deref", "syn_keccak"] do
++      let case := synthetic name
++      let out ← emitCase name case.1 case.2 (Array.replicate case.1.size #[]) #[]
++        #[Spec.Field.zero, Spec.Field.zero] 100
++      rendered := rendered ++ out
++    let out4 ← runXmssCase "xmss4" dir4
++    let out16 ← runXmssCase "xmss16" dir16
++    rendered := rendered ++ out4 ++ out16
++    let expected ← IO.FS.readFile "Tests/KeccakGkr/evidence/oracle/all.txt"
++    if rendered != expected then
++      throw (IO.userError "all keccak-gkr oracle mismatch")
++    IO.eprintln "ALL_KECCAK_GKR_PARITY|PASS"
++  else
++    throw (IO.userError "usage: FlatCheck synthetic | xmss <label> <dir> | all <xmss4-dir> <xmss16-dir>")
+diff --git a/Tests/KeccakGkr/FlatAxiomAudit.lean b/Tests/KeccakGkr/FlatAxiomAudit.lean
+new file mode 100644
+--- /dev/null
++++ b/Tests/KeccakGkr/FlatAxiomAudit.lean
+@@ -0,0 +1,33 @@
++import Lean
++import Model.KeccakGkr.Flat
++import Proofs.KeccakGkr.FlatRefinement
++
++open Lean Elab Command
++
++run_cmd do
++  let env ← getEnv
++  let mut count : Nat := 0
++  let mut rejected : Nat := 0
++  for (name, info) in env.constants.toList do
++    let text := name.toString
++    if (text.splitOn "LeanVmXmss").length > 1 && (text.splitOn "KeccakGkr").length > 1 &&
++        (text.splitOn "Flat").length > 1 then
++      if (text.splitOn "._unsafe_rec").length > 1 then
++        logError m!"Forbidden generated name: {name}"
++        rejected := rejected + 1
++      if info.isUnsafe then
++        logError m!"Unsafe declaration: {name}"
++        rejected := rejected + 1
++      if Lean.isExtern env name then
++        logError m!"External declaration: {name}"
++        rejected := rejected + 1
++      let dependencies ← Lean.collectAxioms name
++      for dependency in dependencies do
++        unless #[`propext, `Quot.sound].contains dependency do
++          logError m!"Forbidden transitive dependency in {name}: {dependency}"
++          rejected := rejected + 1
++      count := count + 1
++  if count == 0 then throwError "Empty KeccakGkr Flat declaration inventory"
++  if rejected > 0 then throwError "Strict KeccakGkr Flat audit rejected {rejected} declarations"
++  logInfo m!"KECCAK_GKR_FLAT_AUDIT_COUNT {count}"
++  logInfo m!"KECCAK_GKR_FLAT_AUDIT_REJECTIONS {rejected}"

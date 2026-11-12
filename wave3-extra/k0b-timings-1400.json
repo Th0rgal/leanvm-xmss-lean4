@@ -1,0 +1,32 @@
+{
+  "mission_id": "95ccc45c-e495-42db-9c47-6bbbd89977a0",
+  "worker": "W3-K0B-XMSS-PAR-A",
+  "node": "managed-mmn43bczex (xlarge-k, boat:xlarge 16 vCPU Zen 5)",
+  "patch_path": "/var/lib/sandboxed-node/23bad383-5b27-4b83-9a84-d86d34223509/preserved/wave3/wave3-k0b-xmss-par.patch",
+  "patch_bytes": 78196,
+  "patch_sha256": "430f33a8bae229958a97596c125184d70611a4afae7e4b43e1993ab829c82aea",
+  "modified_files": [
+    "Model/Keccak/Registers.lean",
+    "Model/Xmss/Hints.lean",
+    "Model/Cli/Inputs.lean",
+    "Model/Cli/E2E.lean",
+    "Model/Cli/Aggregate.lean",
+    "Tests/Cli/Check.lean"
+  ],
+  "baseline_ms": 8786.0,
+  "target_ms": 80.0,
+  "achieved_mean_ms_cooldown_0_5passes": 32.19,
+  "achieved_mean_ms_cooldown_2000_3passes": 39.62,
+  "statement_digest": "ded8679e548f3d7c810a3c50e1c69b4fed50773b35189e3a67d7728accafe423",
+  "hints_keccak256": "0038d98ce4f3337fc02da9c4ac0c8c9393e12ab8eda96094a41e636ebfcd08d4",
+  "audits": {
+    "audit_spec_all_11_modules": "PASS",
+    "cli_strict_audit_count": 255,
+    "cli_strict_audit_rejections": 0,
+    "w5_repo_audit_count": 7274,
+    "w5_repo_audit_rejections": 0,
+    "w5_repo_audit_modules": 38,
+    "cli_check_gate": "PASS",
+    "rust_verify_eth_xmss4_xmss16": "PASS"
+  }
+}

@@ -1,0 +1,534 @@
+{
+  "gate": "G0",
+  "mission_id": "85f9f7f5-5d5a-4598-9201-1a48fa754a71",
+  "machine": "xlarge-m (managed-mmgnhpsxy5, 16 vCPU AMD EPYC Zen 5, 32 GiB RAM)",
+  "baseline_commit": "de39fd791908a6b2c4b6752872e9a11b40ec31f4",
+  "rust_reference_commit": "59c2984df79cc9ff1914e547c5d390fffc8f3e",
+  "axiom_audit": {
+    "total_declarations": 8229,
+    "rejected": 0,
+    "modules": 40,
+    "axioms_used": [
+      "propext",
+      "Quot.sound"
+    ]
+  },
+  "rust_leanvm_native_baseline": {
+    "binary": "/var/lib/orb-node/work/caches/xmss-hub-v3/targets/rust/release/leanvm",
+    "target_cpu": "znver5 (AVX-512 + VPCLMULQDQ)",
+    "xmss4": {
+      "passes_s": [
+        0.185,
+        0.163,
+        0.316
+      ],
+      "mean_s": 0.221,
+      "tracing_prove_ms": {
+        "total_prove_ms": 184.0,
+        "1_execute_program_ms": 13.0,
+        "1_build_witness_ms": 24.6,
+        "2_commit_ntt_merkle_ms": 9.74,
+        "3_bus_and_constraints_ms": 43.14,
+        "4_keccak_gkr_ms": 48.2,
+        "5_pcs_open_ms": 45.32
+      }
+    },
+    "xmss16": {
+      "passes_s": [
+        0.243,
+        0.316,
+        0.214
+      ],
+      "mean_s": 0.258,
+      "tracing_prove_ms": {
+        "total_prove_ms": 204.0,
+        "1_execute_program_ms": 14.3,
+        "1_build_witness_ms": 10.9,
+        "2_commit_ntt_merkle_ms": 8.35,
+        "3_bus_and_constraints_ms": 46.21,
+        "4_keccak_gkr_ms": 64.4,
+        "5_pcs_open_ms": 59.84
+      }
+    },
+    "xmss1400": {
+      "passes_run1_s": [
+        3.423,
+        3.037,
+        2.368
+      ],
+      "mean_run1_s": 2.943,
+      "passes_run2_s": [
+        3.846,
+        2.235,
+        2.812
+      ],
+      "mean_run2_s": 2.964,
+      "min_pass_s": 2.235,
+      "peak_rss_kbytes": 6086532,
+      "peak_memory_gib": 5.805,
+      "proof_size_kib": 350.2,
+      "verify_ms": 12.027,
+      "tracing_prove_ms": {
+        "0b_statement_hints_ms": 21.69,
+        "total_prove_ms": 4100.0,
+        "1_execute_program_ms": 1700.0,
+        "1_build_witness_ms": 346.0,
+        "2_commit_ntt_merkle_ms": 269.0,
+        "3_bus_and_constraints_ms": 667.4,
+        "4_keccak_gkr_ms": 698.0,
+        "5_pcs_open_ms": 420.0
+      }
+    }
+  },
+  "rust_e2e_oracle_unoptimized_reference": {
+    "binary": "/var/lib/orb-node/work/caches/xmss-hub-v3/targets/rust/release/e2e-oracle",
+    "note": "Built without -C target-cpu=native in Tests/Cli/Rust; used as external verifier and unoptimized reference.",
+    "xmss4_mean_nanos": 5083470842,
+    "xmss16_mean_nanos": 5732689885,
+    "xmss1400_passes_nanos": [
+      144402682828,
+      140506866389
+    ]
+  },
+  "lean_g0_baseline": {
+    "xmss4": {
+      "xmss": 4,
+      "records": 4,
+      "signers": 4,
+      "log_inv_rate": 1,
+      "warmup": {
+        "pass": 0,
+        "phases_nanos": {
+          "0b_statement_hints": 17018952,
+          "1_execute_witness": 409812301,
+          "2_commit_ntt_merkle": 237911638,
+          "3_bus_constraints": 1614238659,
+          "4_keccak_gkr": 2006970386,
+          "5_pcs_open": 3970188517,
+          "6_wire_encode": 13574687
+        },
+        "total_nanos": 8256140453,
+        "vm_rss_bytes": 586715136,
+        "vm_hwm_bytes": 669339648,
+        "phase_rss_bytes": {
+          "0b_statement_hints": 361721856,
+          "1_execute_witness": 463011840,
+          "2_commit_ntt_merkle": 406224896,
+          "3_bus_constraints": 664735744,
+          "4_keccak_gkr": 623394816,
+          "5_pcs_open": 586272768,
+          "6_wire_encode": 586715136
+        }
+      },
+      "passes": [
+        {
+          "pass": 1,
+          "phases_nanos": {
+            "0b_statement_hints": 8992471,
+            "1_execute_witness": 355799210,
+            "2_commit_ntt_merkle": 202863413,
+            "3_bus_constraints": 1375088358,
+            "4_keccak_gkr": 1784610632,
+            "5_pcs_open": 3814539962,
+            "6_wire_encode": 11987013
+          },
+          "total_nanos": 7541894046,
+          "vm_rss_bytes": 761536512,
+          "vm_hwm_bytes": 850956288,
+          "phase_rss_bytes": {
+            "0b_statement_hints": 587239424,
+            "1_execute_witness": 650833920,
+            "2_commit_ntt_merkle": 632246272,
+            "3_bus_constraints": 808640512,
+            "4_keccak_gkr": 791814144,
+            "5_pcs_open": 761294848,
+            "6_wire_encode": 761536512
+          }
+        }
+      ],
+      "mean": {
+        "pass": 1,
+        "phases_nanos": {
+          "0b_statement_hints": 8992471,
+          "1_execute_witness": 355799210,
+          "2_commit_ntt_merkle": 202863413,
+          "3_bus_constraints": 1375088358,
+          "4_keccak_gkr": 1784610632,
+          "5_pcs_open": 3814539962,
+          "6_wire_encode": 11987013
+        },
+        "total_nanos": 7541894046,
+        "vm_rss_bytes": 761536512,
+        "vm_hwm_bytes": 850956288,
+        "phase_rss_bytes": {
+          "0b_statement_hints": 587239424,
+          "1_execute_witness": 650833920,
+          "2_commit_ntt_merkle": 632246272,
+          "3_bus_constraints": 808640512,
+          "4_keccak_gkr": 791814144,
+          "5_pcs_open": 761294848,
+          "6_wire_encode": 761536512
+        }
+      }
+    },
+    "xmss16": {
+      "xmss": 16,
+      "records": 16,
+      "signers": 16,
+      "log_inv_rate": 1,
+      "warmup": {
+        "pass": 0,
+        "phases_nanos": {
+          "0b_statement_hints": 15797152,
+          "1_execute_witness": 436046108,
+          "2_commit_ntt_merkle": 254466405,
+          "3_bus_constraints": 1649077845,
+          "4_keccak_gkr": 5576615720,
+          "5_pcs_open": 4168782780,
+          "6_wire_encode": 11985911
+        },
+        "total_nanos": 12100786010,
+        "vm_rss_bytes": 658964480,
+        "vm_hwm_bytes": 778391552,
+        "phase_rss_bytes": {
+          "0b_statement_hints": 362151936,
+          "1_execute_witness": 513753088,
+          "2_commit_ntt_merkle": 494911488,
+          "3_bus_constraints": 751697920,
+          "4_keccak_gkr": 752365568,
+          "5_pcs_open": 658350080,
+          "6_wire_encode": 658964480
+        }
+      },
+      "passes": [
+        {
+          "pass": 1,
+          "phases_nanos": {
+            "0b_statement_hints": 25083304,
+            "1_execute_witness": 453650662,
+            "2_commit_ntt_merkle": 248207951,
+            "3_bus_constraints": 1629273569,
+            "4_keccak_gkr": 5198540585,
+            "5_pcs_open": 4240549396,
+            "6_wire_encode": 15344884
+          },
+          "total_nanos": 11795305467,
+          "vm_rss_bytes": 865521664,
+          "vm_hwm_bytes": 987226112,
+          "phase_rss_bytes": {
+            "0b_statement_hints": 660365312,
+            "1_execute_witness": 755404800,
+            "2_commit_ntt_merkle": 716292096,
+            "3_bus_constraints": 935772160,
+            "4_keccak_gkr": 899002368,
+            "5_pcs_open": 864972800,
+            "6_wire_encode": 865521664
+          }
+        }
+      ],
+      "mean": {
+        "pass": 1,
+        "phases_nanos": {
+          "0b_statement_hints": 25083304,
+          "1_execute_witness": 453650662,
+          "2_commit_ntt_merkle": 248207951,
+          "3_bus_constraints": 1629273569,
+          "4_keccak_gkr": 5198540585,
+          "5_pcs_open": 4240549396,
+          "6_wire_encode": 15344884
+        },
+        "total_nanos": 11795305467,
+        "vm_rss_bytes": 865521664,
+        "vm_hwm_bytes": 987226112,
+        "phase_rss_bytes": {
+          "0b_statement_hints": 660365312,
+          "1_execute_witness": 755404800,
+          "2_commit_ntt_merkle": 716292096,
+          "3_bus_constraints": 935772160,
+          "4_keccak_gkr": 899002368,
+          "5_pcs_open": 864972800,
+          "6_wire_encode": 865521664
+        }
+      }
+    },
+    "xmss1400": {
+      "xmss": 1400,
+      "records": 1400,
+      "signers": 1400,
+      "log_inv_rate": 1,
+      "warmup": {
+        "pass": 0,
+        "phases_nanos": {
+          "0b_statement_hints": 190256135,
+          "1_execute_witness": 45282928496,
+          "2_commit_ntt_merkle": 29960849136,
+          "3_bus_constraints": 117329508546,
+          "4_keccak_gkr": 193062985071,
+          "5_pcs_open": 159309861740,
+          "6_wire_encode": 8959328
+        },
+        "total_nanos": 545136389124,
+        "vm_rss_bytes": 6190444544,
+        "vm_hwm_bytes": 12950040576,
+        "phase_rss_bytes": {
+          "0b_statement_hints": 256110592,
+          "1_execute_witness": 6474043392,
+          "2_commit_ntt_merkle": 6646722560,
+          "3_bus_constraints": 7205163008,
+          "4_keccak_gkr": 6197178368,
+          "5_pcs_open": 6190080000,
+          "6_wire_encode": 6190444544
+        }
+      },
+      "passes": [
+        {
+          "pass": 1,
+          "phases_nanos": {
+            "0b_statement_hints": 154288672,
+            "1_execute_witness": 25085589512,
+            "2_commit_ntt_merkle": 9054531518,
+            "3_bus_constraints": 33443413705,
+            "4_keccak_gkr": 184661296930,
+            "5_pcs_open": 188754508642,
+            "6_wire_encode": 10149148
+          },
+          "total_nanos": 441153628979,
+          "vm_rss_bytes": 7897255936,
+          "vm_hwm_bytes": 14913695744,
+          "phase_rss_bytes": {
+            "0b_statement_hints": 3257843712,
+            "1_execute_witness": 8398946304,
+            "2_commit_ntt_merkle": 8059031552,
+            "3_bus_constraints": 8997081088,
+            "4_keccak_gkr": 7922180096,
+            "5_pcs_open": 7896702976,
+            "6_wire_encode": 7897255936
+          }
+        }
+      ],
+      "mean": {
+        "pass": 1,
+        "phases_nanos": {
+          "0b_statement_hints": 154288672,
+          "1_execute_witness": 25085589512,
+          "2_commit_ntt_merkle": 9054531518,
+          "3_bus_constraints": 33443413705,
+          "4_keccak_gkr": 184661296930,
+          "5_pcs_open": 188754508642,
+          "6_wire_encode": 10149148
+        },
+        "total_nanos": 441153628979,
+        "vm_rss_bytes": 7897255936,
+        "vm_hwm_bytes": 14913695744,
+        "phase_rss_bytes": {
+          "0b_statement_hints": 3257843712,
+          "1_execute_witness": 8398946304,
+          "2_commit_ntt_merkle": 8059031552,
+          "3_bus_constraints": 8997081088,
+          "4_keccak_gkr": 7922180096,
+          "5_pcs_open": 7896702976,
+          "6_wire_encode": 7897255936
+        }
+      }
+    }
+  },
+  "verification": {
+    "syn_tiny": {
+      "status": "PASS",
+      "proof_bytes": 204736,
+      "keccak_scalars_len": 1238
+    },
+    "syn_jump": {
+      "status": "PASS",
+      "proof_bytes": 204416,
+      "keccak_scalars_len": 1238
+    },
+    "syn_deref": {
+      "status": "PASS",
+      "proof_bytes": 203648,
+      "keccak_scalars_len": 1238
+    },
+    "syn_keccak": {
+      "status": "PASS",
+      "proof_bytes": 203912,
+      "keccak_scalars_len": 1238
+    },
+    "xmss4": {
+      "status": "PASS",
+      "wire_bytes": 241473,
+      "proof_size": 240912,
+      "signers": 4,
+      "cycles": 21465,
+      "mem_used": 65536
+    },
+    "xmss16": {
+      "status": "PASS",
+      "wire_bytes": 279625,
+      "proof_size": 279064,
+      "signers": 16,
+      "cycles": 31140,
+      "mem_used": 117322
+    },
+    "xmss1400": {
+      "status": "PASS",
+      "wire_bytes": 359217,
+      "proof_size": 358656,
+      "signers": 1400,
+      "cycles": 1146537,
+      "mem_used": 8668972
+    }
+  },
+  "xmss1400_shard_fixtures": {
+    "committed_words": 106954752,
+    "wq_bytes": 855638016,
+    "mu": 27,
+    "n_lanes": 51,
+    "keccak_rows": 261066,
+    "root_hex": "cd069a6b06b4c45f13cebbcfa182cba32151d028e0268ace474e2e081d62fe13",
+    "wq_keccak256": "fe7654f579cb4b7197c81f0f0358db8250cc0334cf5ef32729601ce2ca5f6c3b",
+    "bus_stream_keccak256": "d455e52fefd45ea541c03a0bdc4482a0b8f7813641128ecc4d5fb051d885b7f7",
+    "gkr_stream_keccak256": "3676f3fa9fbfd116af96b46035bddec399b48274669505e4a587572045693eb4",
+    "vm_proof_keccak256": "51a6bb55695a4fc66139bf8f45fabb2de6fed3807c0038f675dd6bacb1f21b7b",
+    "eth_wire_keccak256": "3b42443c2b9c681e5c383a49284419e833cf6db2658ecb520057dd48e90dcc90"
+  },
+  "code_manifest": {
+    "lakefile.toml": {
+      "bytes": 253,
+      "sha256": "db6893d89fa9c774d706225c04805fbdaf56f12ecc69f40123dcb991d2f62d58"
+    },
+    "Model/Prim/Slice64.lean": {
+      "bytes": 8353,
+      "sha256": "58f5db9d1e097b7852b2a383a8ad82fae034aa5fdaa7e62b0512ce925bc65bc9"
+    },
+    "Native/Kernels.lean": {
+      "bytes": 219,
+      "sha256": "ad1cc6723c509ce3eb0f29caf8c4a5f0841818f56e97cc934a5197f1d3ed1e98"
+    },
+    "Native/Kernels/FieldSimd.lean": {
+      "bytes": 1919,
+      "sha256": "78bf16e9d2055d7437daed447127ef0f8b58a20cce6db7e8bf5de37df3dbf283"
+    },
+    "Native/Kernels/BusSimd.lean": {
+      "bytes": 926,
+      "sha256": "f9da4825e136f46769138d0a9de54fae0afd7a793001e81a928dc838635660c2"
+    },
+    "Native/Kernels/KeccakGkrSimd.lean": {
+      "bytes": 848,
+      "sha256": "3843ca6c602ea4cf60cf07e86592e63b735085628ff55b32e3daf9737c53d48a"
+    },
+    "Native/Kernels/NttMerkle.lean": {
+      "bytes": 731,
+      "sha256": "b230a292a2f09ec7818061f1f8df236b822df2c214cc63df04eb613ec9107100"
+    },
+    "Native/Kernels/MemSlice.lean": {
+      "bytes": 768,
+      "sha256": "cac3a30416b5b971209058ac7c8ff6e9453a18ac7a3469db3d2113c19a1e8e7c"
+    },
+    "Model/KeccakGkr/Flat.lean": {
+      "bytes": 42441,
+      "sha256": "b9567b021a72821a19246e11f6877e0ed31bb8b249d3b137efd325462bea6e6f"
+    },
+    "Model/Pcs/FlatWhir.lean": {
+      "bytes": 55685,
+      "sha256": "29d46464d497cbf063e32b5d6a9ab10ac90fa2e984c89188054ff9732bb20890"
+    },
+    "Proofs/Bus/FlatRefinement.lean": {
+      "bytes": 65365,
+      "sha256": "5c149923349c8c388393a385ca1cad5459bd17f18d9a07bbbcb1e7c721ed7deb"
+    },
+    "Model/Cli/Inputs.lean": {
+      "bytes": 12486,
+      "sha256": "ffe475c2a2fea799ea328c297584e57fc24ad6a9504a7663469c755e09ad91ff"
+    },
+    "Model/Cli/E2E.lean": {
+      "bytes": 25387,
+      "sha256": "548f3a44693b5fc869fff0bd56e04273d9c3f9ece909ee68cce456df62c1808c"
+    },
+    "Model/Cli/Aggregate.lean": {
+      "bytes": 13546,
+      "sha256": "f5067ead9e4c20dd8e26faf3ab609051403828347d101bc5ada3de37637a180a"
+    },
+    "Model/Cli/E2EMain.lean": {
+      "bytes": 113,
+      "sha256": "cf1e29420d9254bc9e4760fd9b069e62f18c726bbffc059d72342d89e182e427"
+    },
+    "Tests/Audit/WholeRepoAxiomAudit.lean": {
+      "bytes": 7380,
+      "sha256": "03a2ba3b5133572adfe0b88d9319126c6926e1fc5cb2a2b93bb9f85a0affcb23"
+    }
+  },
+  "artifact_manifest": {
+    "artifacts/p2-e2e/e2e-aggregate": {
+      "bytes": 4958624,
+      "sha256": "bd635e0706a4f4f8be07e16ba57ebdd0ab8a6f3c917c08e73dfc9fb433ab7421"
+    },
+    "artifacts/p2-e2e-bins/e2e-check": {
+      "bytes": 5016120,
+      "sha256": "b273fbf9f8e74d6694a230b7325e3034e3a59a440399ef4e64d05f5ae064d1ca"
+    },
+    "artifacts/w4-cli-traces-tierb/cli-check": {
+      "bytes": 5026560,
+      "sha256": "ee91a5d3ea74760fd4104c0020149e0d46d3fada9d8e84330d653f8aa12f2b6f"
+    },
+    "wave3/i0/w2-sha256-verified.json": {
+      "bytes": 3327,
+      "sha256": "1cdb240e8393a7ea7db3627bd604b1da03886ff65344053a1994afeb6bd72606"
+    },
+    "wave3/i0/axiom-audit-repo.json": {
+      "bytes": 2143,
+      "sha256": "122d8426347d591dc2bc5e879bc01e6d58fd8935abee811f773c6c687db75ffd"
+    },
+    "wave3/i0/TIMER_PARITY.md": {
+      "bytes": 6503,
+      "sha256": "e4e8dd7df4bf248d1f1c584c1091b568fee26283f875315cd5db59f477bb20ba"
+    },
+    "wave3/i0/g0-vs-de39fd7.patch": {
+      "bytes": 568195,
+      "sha256": "29a0ba823a4b9a66d83238b2a416ec69aa894afaf56a26c4737457d55dc44345"
+    },
+    "wave3/i0/xmss4-phases.json": {
+      "bytes": 1631,
+      "sha256": "21eb15f43048d3270d8f3db46e720078a50d27a8e99ab51be1f9e8290ddb2048"
+    },
+    "wave3/i0/xmss16-phases.json": {
+      "bytes": 1639,
+      "sha256": "b67308143b04b6fabe00a3c9578a4aa5108a07f4886e4d0e14d65bca17d9c014"
+    },
+    "wave3/i0/xmss1400-phases.json": {
+      "bytes": 1705,
+      "sha256": "66638fc22c74dcf98089770c139584e1ba2b6351ed2c51ecee38a59ca60d89a2"
+    },
+    "wave3/i0/proofs/syn_tiny.proof": {
+      "bytes": 204736,
+      "sha256": "2ed3c7fa2be2d8e6d53a07f010520a5d7427008f4c7ab033dab65fdc1c733c06"
+    },
+    "wave3/i0/proofs/syn_jump.proof": {
+      "bytes": 204416,
+      "sha256": "7c5996137a656376c13dc766d2575fd1ff1aa43a67a3a0381769e78113e813ca"
+    },
+    "wave3/i0/proofs/syn_deref.proof": {
+      "bytes": 203648,
+      "sha256": "175c932bcc0f54501f1f28ca76fc7f24dce50c8cea7090d7fecdcfbe6a3d17f3"
+    },
+    "wave3/i0/proofs/syn_keccak.proof": {
+      "bytes": 203912,
+      "sha256": "81acbe680ce1f3ff750950a2075ad707aff61401897ba9b3456323301d41e05e"
+    },
+    "wave3/i0/proofs/xmss4.proof": {
+      "bytes": 241473,
+      "sha256": "ca0e390d5fc7364b42ecdd40e433d4b6ae3fb3f80648ab1abc779d4a94320815"
+    },
+    "wave3/i0/proofs/xmss16.proof": {
+      "bytes": 279625,
+      "sha256": "bab920905b70a74d4853be3593105d6056b759c9b208005e0fbc234588338dbd"
+    },
+    "wave3/i0/proofs/xmss1400.proof": {
+      "bytes": 359217,
+      "sha256": "9fcdb0ac8e76b81bbbb6cd42827aca27ef918c02d1f42e93865321b0b8d638a6"
+    },
+    "fixtures/xmss1400/manifest.json": {
+      "bytes": 609,
+      "sha256": "692bfb1d08560ddce225a0db7f5e839b756001ec1a1767565aa69d98b51abe13"
+    }
+  }
+}

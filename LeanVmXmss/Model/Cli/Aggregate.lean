@@ -85,9 +85,33 @@ def stubProver : AggregateProverFn := fun ctx signers statement hints => do
     prover := "stub", logInvRate := ctx.logInvRate,
     records := ctx.records.size, signers := signers.size,
     hintEntries := hints.size, statement,
-    hintsKeccak := Model.Xmss.hashFast (encodeHints hints),
+    hintsKeccak := hashEncodedHints hints,
     cycles := none, memoryCells := none,
     memoryKeccak := ByteArray.empty }
+
+def runStubPass (ctx : AggregateContext) : IO (ProofArtifact × Nat) := do
+  let t0 ← IO.monoNanosNow
+  let signers := signersOf ctx.records
+  let statement := Model.Xmss.statementDigest ctx.seed signers ctx.bytecodeValue
+  let seedCells := #[packCell ctx.seed, packCell ctx.seed 16]
+  let (hintEntries, hintsKeccak) ← liftText (do
+    let r ← hashWorkloadHintsFromSignersDirect seedCells signers ctx.bytecodeValue
+    if signers.size == ctx.records.size then
+      .ok r
+    else
+      let allOk := Fin.foldl ctx.records.size (fun ok i =>
+        if !ok then false
+        else if hi : i.val < ctx.records.size then Model.Xmss.verifySignatureFast ctx.records[i.val]
+        else true) true
+      if allOk then .ok r else .error "Lean signature verification failed")
+  let artifact : ProofArtifact := {
+    prover := "stub", logInvRate := ctx.logInvRate,
+    records := ctx.records.size, signers := signers.size,
+    hintEntries, statement, hintsKeccak,
+    cycles := none, memoryCells := none,
+    memoryKeccak := ByteArray.empty }
+  let t1 ← IO.monoNanosNow
+  return (artifact, t1 - t0)
 
 def e2eProver (fuel : Nat := 10000000) : AggregateProverFn :=
     fun ctx signers statement hints => do
@@ -253,6 +277,8 @@ def aggregateMain (args : List String) : IO Unit := do
       let (art, ns, tm) ← runPhasedE2EPass ctx exp0
       warmupTimings := tm
       pure (art, ns)
+    else if proverName == "stub" then
+      runStubPass ctx
     else
       runAggregatePass prover ctx
   out.putStrLn s!"WARMUP|nanos={warmupNanos}"
@@ -269,6 +295,11 @@ def aggregateMain (args : List String) : IO Unit := do
       last := artifact
       times := times.push nanos
       passTimings := passTimings.push tm
+      out.putStrLn s!"PASS|i={i}|nanos={nanos}"
+    else if proverName == "stub" then
+      let (artifact, nanos) ← runStubPass ctx
+      last := artifact
+      times := times.push nanos
       out.putStrLn s!"PASS|i={i}|nanos={nanos}"
     else
       let (artifact, nanos) ← runAggregatePass prover ctx

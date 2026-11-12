@@ -1,0 +1,3 @@
+8608c70647b6f38e00bc87913f28608d597634cbb28fd76ea16b56e1382f46c9  Native/Kernels/Ntt.lean
+5940ff76561aca5f78c637d558d5da031c8f267cf00085f242eef19a413d1722  Native/Kernels/Keccak8x.lean
+787303d10b73661a71530c712cd88572392ac8f73c5a152fa07fc6c78ff4cab5  Tests/Unit/NativePcsMerkleKernelTest.lean
