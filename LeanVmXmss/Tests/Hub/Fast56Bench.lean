@@ -694,7 +694,8 @@ def deepAndHashLvl3CosetSub (shards : @& Array (Array Row56)) (resPerShard : Nat
       let gws : GatherWs :=
         ⟨w, allocUniqueRow56Array (8 * groupRows), allocUniqueRow56Array groupRows,
          allocUniqueRow56Array (groupRows * resPerShard)⟩
-    
+      let dws : DeepWs :=
+        ⟨w, allocUniqueRow56Array (1 <<< subLog), mkLeaf64Ws w⟩
       (gws, dws)
   let workerInit := initTasks.map Task.get
   let mut gWsPool : Array GatherWs := workerInit.map (·.1)

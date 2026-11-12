@@ -32,7 +32,7 @@ structure RetainedL0 where
     if decide (col + lanes ≥ width) then
       message.getD ((width - 1 - col) * rows + rowIdx) 0
     else 0
-  ⟨word 0, word 1, word 2, word 3, word 4, w
+  ⟨word 0, word 1, word 2, word 3, word 4, word 5, word 6, word 7⟩
 
 @[inline] def fillGroupRowLoop (message : Array K) (lanes width nVecs rows baseRow step : Nat)
     (rem i : Nat) (grp : Array Vec8) : Array Vec8 :=
@@ -105,7 +105,7 @@ def runGatheredShard (message : Array K) (twiddleRows : Array (Array K))
 /-- Assemble sub-block `subIdx` (`subRows = 2^subLog` rows) from the `nShards` gathered shards,
     then run the deep NTT layers `deepStart .. logD - 1` in place in L2 cache! -/
 def assembleAndDeepSubBlock (shards : Array (Array Vec8)) (resPerShard : Nat)
-    (deepTwiddleRows : Array (Array K)) (nVecs subLog deepStart subIdx : Nat) : Array Vec8 :=
+    (deepTwiddleRows : Array (Array K)) (nVecs subLog _deepStart subIdx : Nat) : Array Vec8 :=
   let subRows := 1 <<< subLog
   let totalVecs := subRows * nVecs
   let buf : Array Vec8 := Array.emptyWithCapacity totalVecs
