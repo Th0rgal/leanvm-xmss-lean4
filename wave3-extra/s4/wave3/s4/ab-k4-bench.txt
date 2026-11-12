@@ -1,0 +1,6 @@
+BENCH|impl=lean-cli|prover=e2e|xmss=1400|records=1400|signers=1400|log_inv_rate=1|repeat=1|cooldown_ms=500
+WARMUP|nanos=563887657681
+PASS|i=1|nanos=615586282039
+LAST|statement=ded8679e548f3d7c810a3c50e1c69b4fed50773b35189e3a67d7728accafe423|hints_keccak256=none|proof_bytes=359217|proof_size=358656|cycles=1146537|memory_cells_used=8668972|memory_keccak256=none|vm_hwm_bytes=14939541504
+STATS|passes=1|mean_nanos=615586282039
+ARTIFACT|path=/tmp/opencode/ab-test/k4-proof.bin|bytes=359217
