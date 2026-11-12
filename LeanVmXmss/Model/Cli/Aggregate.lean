@@ -1,30 +1,11 @@
 import Model.Cli.Inputs
 import Model.Cli.E2E
-import Model.Vm.Linear
-
-/-!
-The pluggable aggregate prover and its benchmark CLI.
-
-`AggregateContext` carries everything loaded outside the timer; an
-`AggregateProverFn` turns the raw fixture plus the freshly derived statement and
-hints into a `ProofArtifact`. The default `vmWitnessProver` runs the linear VM
-interpreter over the schedule (`Model.Vm.scheduledRunLinear`) and packages the
-execution statistics as the artifact; a stub prover covers statement/hints-only
-benchmarking for workloads too large to interpret here.
-
-The timing loop matches the Rust reference (`bins/leanvm/src/benchmark.rs` with
-`bench::Plan`): bytecode, schedule and fixture inputs are loaded outside the
-timer; one discarded warmup pass precedes `repeat` measured passes; a cooldown
-sleep precedes each measured pass outside the timer; every pass recomputes
-statement and hints from the raw `(pubkey, message, signature)` records and then
-runs the prover. Pass times are reported as unrounded nanoseconds.
--/
+import Model.Vm.Flat
 
 namespace LeanVmXmss.Model.Cli
 
 open Spec.Xmss Spec.Vm
 
-/-- Everything the prover needs, loaded once outside the timer. -/
 structure AggregateContext where
   program : Array Op
   frame : Nat
@@ -33,8 +14,9 @@ structure AggregateContext where
   bytecodeValue : Spec.Field.E
   records : Array RawSignature
   logInvRate : Nat
+  bytecodeCols : Array (Array Spec.Field.K)
+  iv : ByteArray
 
-/-- What one proving pass produced. -/
 structure ProofArtifact where
   prover : String
   logInvRate : Nat
@@ -47,12 +29,12 @@ structure ProofArtifact where
   memoryCells : Option Nat
   memoryKeccak : ByteArray
   wireBytes : ByteArray := ByteArray.empty
+  proofSize : Option Nat := none
+  ethProof : Option Spec.Aggregate.Wire.EthereumProof := none
   deriving Inhabited
 
-/-- A pluggable prover entrypoint: context, freshly derived statement, fresh hints. -/
-abbrev AggregateProverFn := AggregateContext → ByteArray → Array HintEntry → IO ProofArtifact
-
-/-! ### The default VM-witness prover -/
+abbrev AggregateProverFn :=
+  AggregateContext → Array RawSignature → ByteArray → Array HintEntry → IO ProofArtifact
 
 def pushWord (bytes : ByteArray) (value : UInt64) : ByteArray :=
   bytes.push value.toUInt8
@@ -64,7 +46,6 @@ def pushWord (bytes : ByteArray) (value : UInt64) : ByteArray :=
     |>.push (value >>> 48).toUInt8
     |>.push (value >>> 56).toUInt8
 
-/-- The used prefix of the write-once memory image, word-serialized. -/
 def serializeMemory (cells : Array Cell) (used : Nat) : ByteArray := Id.run do
   let mut bytes := ByteArray.emptyWithCapacity (used * 24)
   for i in [:used] do
@@ -74,82 +55,90 @@ def serializeMemory (cells : Array Cell) (used : Nat) : ByteArray := Id.run do
     bytes := pushWord bytes x.c2
   return bytes
 
-/-- The largest raw workload the VM-witness prover accepts here: interpreting a
-leaf's full witness is for the small fixtures; bigger ones benchmark with the
-stub prover (statement + hints only). -/
-def vmProverMaxRecords : Nat := 500
+def vmProverMaxRecords : Nat := 16384
 
-/-- The default prover: derive the witness by executing the guest in the linear
-interpreter, then package the execution statistics. -/
-def vmWitnessProver (fuel : Nat := 100000000) : AggregateProverFn := fun ctx statement hints => do
+def vmWitnessProver (fuel : Nat := 100000000) : AggregateProverFn :=
+    fun ctx signers statement hints => do
   if ctx.records.size > vmProverMaxRecords then
     throw (IO.userError s!"vm prover is for fixtures of at most {vmProverMaxRecords} records")
   let encoded := encodeHints hints
   let streams := streamsOfHints hints
   let state ← liftFault (Model.Vm.initial ctx.frame #[packCell statement, packCell statement 16]
     ctx.program.size)
-  let mut cur : Runtime := ⟨state, streams⟩
-  for _ in [:fuel] do
-    if cur.state.pc+1 == ctx.program.size && cur.state.fp == 0 then break
-    let op ← liftFault (match ctx.program[cur.state.pc]? with
-      | some op => Except.ok op
-      | none => Except.error Fault.badProgram)
-    let ⟨ready, streams'⟩ ← liftFault (Model.Vm.applyHintsLinear (ctx.schedule[cur.state.pc]?.getD #[]) cur)
-    let st ← liftFault (Model.Vm.stepLinear op ready)
-    cur := ⟨st, streams'⟩
-  let s := cur.state
-  unless s.memory.unconstrainedReads.isEmpty do throw (IO.userError "unconstrained reads")
-  let memory := serializeMemory s.memory.cells s.memory.used
+  let fs0 : Model.Vm.Flat.FlatState :=
+    ⟨Model.Vm.Flat.flatOf state.memory, state.pc, state.fp, state.nextFree, state.g,
+      state.cycles, state.opcodeCounts⟩
+  let (fs, _) ← liftFault
+    (Model.Vm.Flat.scheduledRunFlat fuel ctx.program ctx.schedule fs0 streams)
+  let mem := Model.Vm.Flat.toMemory fs.m
+  unless mem.unconstrainedReads.isEmpty do throw (IO.userError "unconstrained reads")
+  let memory := serializeMemory mem.cells mem.used
   return {
     prover := "vm-witness", logInvRate := ctx.logInvRate,
-    records := ctx.records.size, signers := (signersOf ctx.records).size,
-    hintEntries := hints.size, statement, hintsKeccak := Spec.Vm.KeccakInternal.hash encoded,
-    cycles := some s.cycles, memoryCells := some s.memory.used,
-    memoryKeccak := Spec.Vm.KeccakInternal.hash memory }
+    records := ctx.records.size, signers := signers.size,
+    hintEntries := hints.size, statement, hintsKeccak := Model.Xmss.hashFast encoded,
+    cycles := some fs.cycles, memoryCells := some mem.used,
+    memoryKeccak := Model.Xmss.hashFast memory }
 
-/-- The stub prover: statement and hints only, no VM execution. -/
-def stubProver : AggregateProverFn := fun ctx statement hints => do
+def stubProver : AggregateProverFn := fun ctx signers statement hints => do
   return {
     prover := "stub", logInvRate := ctx.logInvRate,
-    records := ctx.records.size, signers := (signersOf ctx.records).size,
+    records := ctx.records.size, signers := signers.size,
     hintEntries := hints.size, statement,
-    hintsKeccak := Spec.Vm.KeccakInternal.hash (encodeHints hints),
+    hintsKeccak := Model.Xmss.hashFast (encodeHints hints),
     cycles := none, memoryCells := none,
     memoryKeccak := ByteArray.empty }
 
-def e2eProver (fuel : Nat := 10000000) : AggregateProverFn := fun ctx statement hints => do
+def e2eProver (fuel : Nat := 10000000) : AggregateProverFn :=
+    fun ctx signers statement hints => do
   if ctx.records.size > vmProverMaxRecords then
     throw (IO.userError s!"e2e prover is for fixtures of at most {vmProverMaxRecords} records")
-  let encoded := encodeHints hints
-  let (wire, run) ← proveLeafEthereum ctx.program ctx.frame ctx.schedule ctx.seed
-    ctx.bytecodeValue ctx.records ctx.logInvRate statement hints fuel
+  let (eth, run) ← proveLeafEthereumFast ctx.program ctx.frame ctx.schedule ctx.seed
+    ctx.bytecodeValue signers ctx.logInvRate statement hints ctx.iv ctx.bytecodeCols fuel
   return {
     prover := "e2e", logInvRate := ctx.logInvRate,
-    records := ctx.records.size, signers := (signersOf ctx.records).size,
+    records := ctx.records.size, signers := signers.size,
     hintEntries := hints.size, statement,
-    hintsKeccak := Spec.Vm.KeccakInternal.hash encoded,
+    hintsKeccak := ByteArray.empty,
     cycles := some run.cycles, memoryCells := some run.memUsed,
-    memoryKeccak := run.memoryKeccak, wireBytes := wire }
+    memoryKeccak := ByteArray.empty,
+    wireBytes := ByteArray.empty,
+    proofSize := some (Model.Aggregate.Wire.EthereumProof.proofSize eth),
+    ethProof := some eth }
 
 def proverOf (name : String) : IO AggregateProverFn :=
   match name with
-  | "vm" => pure (vmWitnessProver)
+  | "vm" => pure vmWitnessProver
   | "stub" => pure stubProver
-  | "e2e" => pure (e2eProver)
+  | "e2e" => pure e2eProver
   | other => throw (IO.userError s!"unknown prover: {other}")
 
-/-! ### One timed pass -/
-
-/-- One full pass: statement and hints recomputed from raw, then the prover.
-Returns the artifact and the pass duration in nanoseconds. -/
 def runAggregatePass (prover : AggregateProverFn) (ctx : AggregateContext)
     : IO (ProofArtifact × Nat) := do
   let t0 ← IO.monoNanosNow
-  let statement := statementOf ctx.seed ctx.records ctx.bytecodeValue
-  let hints ← liftText (hintsOf ctx.seed ctx.records ctx.bytecodeValue)
-  let artifact ← prover ctx statement hints
+  let (signers, hints) ← verifyAndHintsParallel ctx.seed ctx.records ctx.bytecodeValue
+  let statement := Model.Xmss.statementDigest ctx.seed signers ctx.bytecodeValue
+  let artifact ← prover ctx signers statement hints
   let t1 ← IO.monoNanosNow
   return (artifact, t1 - t0)
+
+def runPhasedE2EPass (ctx : AggregateContext) (exportDir : Option System.FilePath := none)
+    (fuel : Nat := 10000000) : IO (ProofArtifact × Nat × PhaseTimings) := do
+  if ctx.records.size > vmProverMaxRecords then
+    throw (IO.userError s!"e2e prover is for fixtures of at most {vmProverMaxRecords} records")
+  let (eth, statement, hintCount, run, wire, timings) ← proveLeafEthereumTimedPass ctx.program
+    ctx.frame ctx.schedule ctx.seed ctx.bytecodeValue ctx.records ctx.logInvRate ctx.iv
+    ctx.bytecodeCols exportDir fuel
+  let artifact : ProofArtifact := {
+    prover := "e2e", logInvRate := ctx.logInvRate,
+    records := ctx.records.size, signers := eth.claims.xmss.size,
+    hintEntries := hintCount, statement,
+    hintsKeccak := ByteArray.empty,
+    cycles := some run.cycles, memoryCells := some run.memUsed,
+    memoryKeccak := ByteArray.empty, wireBytes := wire,
+    proofSize := some (Model.Aggregate.Wire.EthereumProof.proofSize eth),
+    ethProof := some eth }
+  return (artifact, timings.total, timings)
 
 def artifactLines (a : ProofArtifact) : String :=
   "prover=" ++ a.prover ++ "\n" ++
@@ -163,19 +152,23 @@ def artifactLines (a : ProofArtifact) : String :=
   "memory_cells_used=" ++ (a.memoryCells.map toString |>.getD "none") ++ "\n" ++
   "memory_keccak256=" ++ (if a.memoryKeccak.isEmpty then "none" else hex a.memoryKeccak) ++ "\n"
 
-/-! ### The benchmark CLI -/
-
 def flagValue (args : List String) (name : String) : Option String :=
   (List.range (args.length + 1)).foldl (fun acc i =>
     match acc with
     | some _ => acc
-    | none => if (args[i]?.getD "") == name then args[i+1]? else none) none
+    | none => if (args[i]?.getD "") == name then args[i + 1]? else none) none
 
 def parseNat (text : String) : Option Nat :=
-  let bytes := text.toUTF8.data
+  let bytes := text.toUTF8
   if bytes.isEmpty then none
-  else bytes.foldlM (fun n b =>
-    if b.toNat >= 48 && b.toNat <= 57 then some (n*10+b.toNat-48) else none) 0
+  else Model.Pcs.Ntt.foldRange bytes.size
+    (fun acc i =>
+      match acc with
+      | none => none
+      | some n =>
+        let d := (bytes[i]?.getD 0).toNat
+        if d >= 48 && d <= 57 then some (n * 10 + d - 48) else none)
+    (some 0)
 
 def natFlag (args : List String) (name : String) (fallback : Nat) : IO Nat := do
   match flagValue args name with
@@ -189,8 +182,45 @@ def stringFlag (args : List String) (name : String) : IO String := do
   | some v => pure v
   | none => throw (IO.userError s!"missing required flag {name}")
 
-/-- Usage: aggregateMain [--xmss N] --inputs DIR --out-proof PATH
-  [--log-inv-rate 1] [--repeat 3] [--cooldown-ms 2000] [--prover vm|stub|e2e] -/
+def writePhaseReportJson (path : System.FilePath) (xmss records signers logInvRate : Nat)
+    (warmup : PhaseTimings) (passes : Array PhaseTimings) : IO Unit := do
+  let n := max passes.size 1
+  let meanOf (proj : PhaseTimings → Nat) : Nat :=
+    (passes.foldl (fun acc p => acc + proj p) 0) / n
+  let maxHwm := passes.foldl (fun m p => max m p.vmHwmBytes) warmup.vmHwmBytes
+  let maxRss := passes.foldl (fun m p => max m p.vmRssBytes) warmup.vmRssBytes
+  let mut passItems := ""
+  for idx in [:passes.size] do
+    let sep := if idx == 0 then "" else ","
+    passItems := passItems ++ sep ++ phaseTimingsJson (idx + 1) (passes[idx]?.getD default)
+  let meanTimings : PhaseTimings := {
+    statementHints := meanOf PhaseTimings.statementHints
+    executeWitness := meanOf PhaseTimings.executeWitness
+    commitNttMerkle := meanOf PhaseTimings.commitNttMerkle
+    busConstraints := meanOf PhaseTimings.busConstraints
+    keccakGkr := meanOf PhaseTimings.keccakGkr
+    pcsOpen := meanOf PhaseTimings.pcsOpen
+    wireEncode := meanOf PhaseTimings.wireEncode
+    total := meanOf PhaseTimings.total
+    vmRssBytes := maxRss
+    vmHwmBytes := maxHwm
+    rssStatementHints := meanOf PhaseTimings.rssStatementHints
+    rssExecuteWitness := meanOf PhaseTimings.rssExecuteWitness
+    rssCommitNttMerkle := meanOf PhaseTimings.rssCommitNttMerkle
+    rssBusConstraints := meanOf PhaseTimings.rssBusConstraints
+    rssKeccakGkr := meanOf PhaseTimings.rssKeccakGkr
+    rssPcsOpen := meanOf PhaseTimings.rssPcsOpen
+    rssWireEncode := meanOf PhaseTimings.rssWireEncode }
+  let doc :=
+    "{\"xmss\":" ++ toString xmss ++ "," ++
+    "\"records\":" ++ toString records ++ "," ++
+    "\"signers\":" ++ toString signers ++ "," ++
+    "\"log_inv_rate\":" ++ toString logInvRate ++ "," ++
+    "\"warmup\":" ++ phaseTimingsJson 0 warmup ++ "," ++
+    "\"passes\":[" ++ passItems ++ "]," ++
+    "\"mean\":" ++ phaseTimingsJson passes.size meanTimings ++ "}\n"
+  IO.FS.writeFile path doc
+
 def aggregateMain (args : List String) : IO Unit := do
   let xmss ← natFlag args "--xmss" 0
   let inputs ← stringFlag args "--inputs"
@@ -199,35 +229,75 @@ def aggregateMain (args : List String) : IO Unit := do
   let repeatCount ← natFlag args "--repeat" 3
   let cooldownMs ← natFlag args "--cooldown-ms" 2000
   let proverName := (flagValue args "--prover").getD "vm"
+  let phaseTimingsOut := flagValue args "--phase-timings"
+  let exportFixturesOut := flagValue args "--export-fixtures"
   let prover ← proverOf proverName
   let dir : System.FilePath := ⟨inputs⟩
   let records ← loadRawInputs (childPath dir "xmss-inputs.bin")
   let seed ← loadSeed (childPath dir "seed.bin")
   let bytecodeValue ← loadBytecodeValue (childPath dir "bytecode-value.bin")
   let (program, frame, schedule) ← loadGuest dir
-  let ctx : AggregateContext := ⟨program, frame, schedule, seed, bytecodeValue, records, logInvRate⟩
+  let bytecodeCols := Model.Layout.bytecodeColumnsFast program
+  let iv := ivOfCols program bytecodeCols
+  let ctx : AggregateContext :=
+    ⟨program, frame, schedule, seed, bytecodeValue, records, logInvRate, bytecodeCols, iv⟩
+  let usePhased := proverName == "e2e" && (phaseTimingsOut.isSome || exportFixturesOut.isSome)
   let out ← IO.getStdout
   out.putStrLn (s!"BENCH|impl=lean-cli|prover={proverName}|xmss={xmss}|records={records.size}" ++
-    s!"|signers={(signersOf records).size}|log_inv_rate={logInvRate}|repeat={repeatCount}|cooldown_ms={cooldownMs}")
-  let (warmupArtifact, warmupNanos) ← runAggregatePass prover ctx
+    s!"|signers={(signersOf records).size}|log_inv_rate={logInvRate}" ++
+    s!"|repeat={repeatCount}|cooldown_ms={cooldownMs}")
+  let mut warmupTimings : PhaseTimings := default
+  let (warmupArtifact, warmupNanos) ←
+    if usePhased then do
+      let exp0 := if repeatCount == 0 then exportFixturesOut.map System.FilePath.mk else none
+      let (art, ns, tm) ← runPhasedE2EPass ctx exp0
+      warmupTimings := tm
+      pure (art, ns)
+    else
+      runAggregatePass prover ctx
   out.putStrLn s!"WARMUP|nanos={warmupNanos}"
-  let mut last : ProofArtifact := warmupArtifact
+  let mut last : ProofArtifact :=
+    if repeatCount == 0 then warmupArtifact else { warmupArtifact with ethProof := none }
   let mut times : Array Nat := #[]
-  for i in [1:repeatCount+1] do
+  let mut passTimings : Array PhaseTimings := #[]
+  for i in [1:repeatCount + 1] do
     if cooldownMs > 0 then IO.sleep cooldownMs.toUInt32
-    let (artifact, nanos) ← runAggregatePass prover ctx
-    last := artifact
-    times := times.push nanos
-    out.putStrLn s!"PASS|i={i}|nanos={nanos}"
+    if usePhased then
+      let expDir :=
+        if i == repeatCount then exportFixturesOut.map System.FilePath.mk else none
+      let (artifact, nanos, tm) ← runPhasedE2EPass ctx expDir
+      last := artifact
+      times := times.push nanos
+      passTimings := passTimings.push tm
+      out.putStrLn s!"PASS|i={i}|nanos={nanos}"
+    else
+      let (artifact, nanos) ← runAggregatePass prover ctx
+      last := artifact
+      times := times.push nanos
+      out.putStrLn s!"PASS|i={i}|nanos={nanos}"
+  let finalWire :=
+    if !last.wireBytes.isEmpty then last.wireBytes
+    else match last.ethProof with
+      | some eth => Model.Aggregate.Wire.EthereumProof.toBytesWithoutPubkeys eth
+      | none => ByteArray.empty
   let mean := (times.foldl (· + ·) 0) / (max times.size 1)
-  out.putStrLn (s!"LAST|statement={hex last.statement}|hints_keccak256={hex last.hintsKeccak}" ++
+  let hintsHex := if last.hintsKeccak.isEmpty then "none" else hex last.hintsKeccak
+  let memHex := if last.memoryKeccak.isEmpty then "none" else hex last.memoryKeccak
+  let wireSizeStr := if finalWire.isEmpty then "none" else toString finalWire.size
+  let proofSizeStr := last.proofSize.map toString |>.getD "none"
+  let (_, hwmBytes) ← readProcMemBytes
+  out.putStrLn (s!"LAST|statement={hex last.statement}|hints_keccak256={hintsHex}" ++
+    s!"|proof_bytes={wireSizeStr}|proof_size={proofSizeStr}" ++
     s!"|cycles={(last.cycles.map toString |>.getD "none")}|memory_cells_used=" ++
     s!"{(last.memoryCells.map toString |>.getD "none")}|memory_keccak256=" ++
-    (if last.memoryKeccak.isEmpty then "none" else hex last.memoryKeccak))
+    s!"{memHex}|vm_hwm_bytes={hwmBytes}")
   out.putStrLn s!"STATS|passes={times.size}|mean_nanos={mean}"
-  if !last.wireBytes.isEmpty then
-    IO.FS.writeBinFile (⟨outProof⟩ : System.FilePath) last.wireBytes
-    out.putStrLn s!"ARTIFACT|path={outProof}|bytes={last.wireBytes.size}"
+  if let some ptPath := phaseTimingsOut then
+    writePhaseReportJson ⟨ptPath⟩ xmss records.size last.signers logInvRate
+      warmupTimings passTimings
+  if !finalWire.isEmpty then
+    IO.FS.writeBinFile (⟨outProof⟩ : System.FilePath) finalWire
+    out.putStrLn s!"ARTIFACT|path={outProof}|bytes={finalWire.size}"
   else
     let text := artifactLines last
     IO.FS.writeFile (⟨outProof⟩ : System.FilePath) text

@@ -13,3 +13,6 @@ name = "Proofs"
 
 [[lean_lib]]
 name = "Tests"
+
+[[lean_lib]]
+name = "Native"

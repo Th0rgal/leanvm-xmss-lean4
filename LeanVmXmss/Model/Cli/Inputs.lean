@@ -136,17 +136,145 @@ def loadGuest (dir : System.FilePath) : IO (Array Op × Nat × Array (Array RHin
 
 /-! ### The aggregate pipeline -/
 
+def u64Eq (a b : UInt64) : Bool := decide (a.toNat = b.toNat)
+
+def rawBytesLT (a b : ByteArray) (len : Nat) : Bool :=
+  (Model.Pcs.Ntt.foldRange len
+    (fun dec i =>
+      match dec with
+      | some _ => dec
+      | none =>
+        let ba := (a[i]?.getD 0).toNat
+        let bb := (b[i]?.getD 0).toNat
+        if decide (ba = bb) then none else some (decide (ba < bb)))
+    none).getD false
+
+def claimLT (a b : RawSignature) : Bool :=
+  let pkEq :=
+    u64Eq (Model.Layout.readWordLE a.publicKey 0) (Model.Layout.readWordLE b.publicKey 0) &&
+    u64Eq (Model.Layout.readWordLE a.publicKey 8) (Model.Layout.readWordLE b.publicKey 8) &&
+    u64Eq (Model.Layout.readWordLE a.publicKey 16) (Model.Layout.readWordLE b.publicKey 16) &&
+    u64Eq (Model.Layout.readWordLE a.publicKey 24) (Model.Layout.readWordLE b.publicKey 24)
+  if pkEq then rawBytesLT a.message b.message 32
+  else rawBytesLT a.publicKey b.publicKey 32
+
+def claimEqFast (a b : RawSignature) : Bool :=
+  u64Eq (Model.Layout.readWordLE a.publicKey 0) (Model.Layout.readWordLE b.publicKey 0) &&
+  u64Eq (Model.Layout.readWordLE a.publicKey 8) (Model.Layout.readWordLE b.publicKey 8) &&
+  u64Eq (Model.Layout.readWordLE a.publicKey 16) (Model.Layout.readWordLE b.publicKey 16) &&
+  u64Eq (Model.Layout.readWordLE a.publicKey 24) (Model.Layout.readWordLE b.publicKey 24) &&
+  u64Eq (Model.Layout.readWordLE a.message 0) (Model.Layout.readWordLE b.message 0) &&
+  u64Eq (Model.Layout.readWordLE a.message 8) (Model.Layout.readWordLE b.message 8) &&
+  u64Eq (Model.Layout.readWordLE a.message 16) (Model.Layout.readWordLE b.message 16) &&
+  u64Eq (Model.Layout.readWordLE a.message 24) (Model.Layout.readWordLE b.message 24)
+
+def bytesEqFast (a b : ByteArray) : Bool :=
+  decide (a.size = b.size) &&
+    Model.Pcs.Ntt.foldRange (a.size / 8)
+      (fun ok i =>
+        ok && u64Eq (Model.Layout.readWordLE a (8 * i)) (Model.Layout.readWordLE b (8 * i)))
+      true &&
+    Model.Pcs.Ntt.foldRange (a.size % 8)
+      (fun ok r =>
+        let idx := (a.size / 8) * 8 + r
+        ok && decide ((a[idx]?.getD 0).toNat = (b[idx]?.getD 0).toNat))
+      true
+
+def sortedSignersAndExtras (raw : Array RawSignature) :
+    Array RawSignature × Array RawSignature := Id.run do
+  let sorted := raw.qsort claimLT
+  let mut signers := Array.emptyWithCapacity sorted.size
+  let mut extras : Array RawSignature := #[]
+  for x in sorted do
+    match signers.back? with
+    | some y =>
+      if claimEqFast y x then
+        if !bytesEqFast y.signature x.signature then extras := extras.push x
+      else
+        signers := signers.push x
+    | none => signers := signers.push x
+  return (signers, extras)
+
 /-- The deduplicated, sorted signer set of a raw workload. -/
-def signersOf (raw : Array RawSignature) : Array RawSignature := sortedUnique raw
+def signersOf (raw : Array RawSignature) : Array RawSignature :=
+  (sortedSignersAndExtras raw).1
 
 /-- The aggregate statement digest over the sorted, deduplicated raw records. -/
 def statementOf (seed : ByteArray) (raw : Array RawSignature) (bytecodeValue : Spec.Field.E) : ByteArray :=
-  statementDigest seed (sortedUnique raw) bytecodeValue
+  Model.Xmss.statementDigest seed (signersOf raw) bytecodeValue
 
 /-- The aggregate witness hints over the raw (unsorted) records. -/
 def hintsOf (seed : ByteArray) (raw : Array RawSignature)
     (bytecodeValue : Spec.Field.E) : Except String (Array HintEntry) :=
-  workloadHints #[packCell seed, packCell seed 16] raw bytecodeValue
+  Model.Xmss.workloadHints #[packCell seed, packCell seed 16] raw bytecodeValue
+
+def hintsOfParallel (seed : ByteArray) (raw : Array RawSignature)
+    (bytecodeValue : Spec.Field.E) : IO (Array HintEntry) :=
+  Model.Xmss.workloadHintsParallel #[packCell seed, packCell seed 16] raw bytecodeValue
+
+def verifyAndHintsParallel (seed : ByteArray) (raw : Array RawSignature)
+    (bytecodeValue : Spec.Field.E) : IO (Array RawSignature × Array HintEntry) := do
+  let t := Model.Xmss.hintGpowTable
+  let (signers, extras) := sortedSignersAndExtras raw
+  if !extras.isEmpty then
+    let exN := extras.size
+    let exTasks ← (Array.range 16).mapM fun p =>
+      IO.asTask (prio := .dedicated) <| IO.lazyPure fun () => Id.run do
+        let mut failed : Option String := none
+        for i in [p * exN / 16:(p + 1) * exN / 16] do
+          if failed.isNone then
+            let ex := extras[i]!
+            match Model.Xmss.signatureHintsFast t ex with
+            | .ok (_, root) =>
+              unless bytesEqFast root (ex.publicKey.extract 0 16) do
+                failed := some "Lean signature verification failed"
+            | .error msg => failed := some msg
+        failed
+    for task in exTasks do
+      match ← IO.wait task with
+      | .ok (some msg) => throw (IO.userError msg)
+      | .ok none => pure ()
+      | .error e => throw e
+  let mut head : Array HintEntry := #[
+    ⟨"meta", #[Model.Xmss.hintCount t signers.size, Model.Xmss.hintCount t 0,
+      Model.Xmss.hintCount t signers.size, Model.Xmss.hintCount t 0,
+      Model.Xmss.hintCount t 0, Model.Xmss.hintCount t 0,
+      Model.Xmss.hintCount t 0, Model.Xmss.hintCount t 0]⟩,
+    ⟨"fs_seed", #[packCell seed, packCell seed 16]⟩]
+  if !signers.isEmpty then
+    head := head.push ⟨"signers_split",
+      #[Model.Xmss.hintCount t (signers.size / (claimGroup * bigGroups)),
+        Model.Xmss.hintCount t (signers.size % (claimGroup * bigGroups) / claimGroup),
+        Model.Xmss.hintCount t (signers.size % claimGroup)]⟩
+  for x in signers do
+    head := head.push ⟨"claims",
+      #[packCell x.publicKey, packCell x.publicKey 16,
+        packCell x.message, packCell x.message 16]⟩
+  let n := signers.size
+  let tasks ← (Array.range 16).mapM fun p =>
+    IO.asTask (prio := .dedicated) <| IO.lazyPure fun () => Id.run do
+      let mut out : Array HintEntry := #[]
+      let mut failed : Option String := none
+      for i in [p * n / 16:(p + 1) * n / 16] do
+        if failed.isNone then
+          let rec_i := signers[i]!
+          out := out.push ⟨"raw_index", #[Model.Xmss.hintCount t i]⟩
+          match Model.Xmss.signatureHintsFast t rec_i with
+          | .ok (s, root) =>
+            if bytesEqFast root (rec_i.publicKey.extract 0 16) then
+              out := out ++ s
+            else
+              failed := some "Lean signature verification failed"
+          | .error msg => failed := some msg
+      (failed, out)
+  let mut body : Array HintEntry := #[]
+  for task in tasks do
+    match ← IO.wait task with
+    | .ok (some msg, _) => throw (IO.userError msg)
+    | .ok (none, e) => body := body ++ e
+    | .error e => throw e
+  return (signers, head ++ body ++ #[⟨"leaf_defer", #[bytecodeValue]⟩,
+    ⟨"da_pick", #[Model.Xmss.hintCount t 0]⟩])
 
 /-- The `hints.bin` wire encoding of a hint list. -/
 def encodeHints (hints : Array HintEntry) : ByteArray := hints.foldl (fun acc h =>
