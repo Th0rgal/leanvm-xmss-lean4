@@ -25,7 +25,10 @@ Writes a per-module JSON report to $W5_AUDIT_OUT/axiom-audit-repo.json (or
 $TMPDIR/w5-audit) and fails the build if any declaration is rejected.
 -/
 import Lean
+import Model.Aggregate.Verify
 import Model.Aggregate.Wire
+import Model.Bus.Flat
+import Model.Bus.Native
 import Model.Bus.Scalar
 import Model.Cli.Aggregate
 import Model.Cli.E2E
@@ -52,9 +55,12 @@ import Model.Vm.Kernel
 import Model.Vm.Linear
 import Model.Vm.PowerTable
 import Model.Vm.Scheduled
+import Model.Witness.Flat
 import Model.Witness.Scalar
 import Model.Xmss.Hints
+import Proofs.Aggregate.Verify
 import Proofs.Aggregate.Wire
+import Proofs.Bus.FlatRefinement
 import Proofs.Bus.Refinement
 import Proofs.Field.Associativity
 import Proofs.Field.Basic
@@ -93,9 +99,11 @@ import Proofs.Vm.GPow
 import Proofs.Vm.Kernel
 import Proofs.Vm.Linear
 import Proofs.Vm.RuntimePowers
+import Proofs.Witness.FlatRefinement
 import Proofs.Witness.Refinement
 import Proofs.Xmss.Basic
 import Proofs.Xmss.Encoding
+import Spec.Aggregate.Verify
 import Spec.Aggregate.Wire
 import Spec.Bus.Basic
 import Spec.Field.Basic

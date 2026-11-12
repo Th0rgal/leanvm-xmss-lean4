@@ -62,15 +62,19 @@ theorem polyEval_refines (coeffs : Array E) (point : E) :
     Model.Pcs.Whir.polyEval coeffs point = Spec.Pcs.Whir.polyEval coeffs point := by
   simp only [Model.Pcs.Whir.polyEval, Spec.Pcs.Whir.polyEval, RingSwitch.nativeKaratsuba_eq_emul]
 
-theorem multilinearEval_refines (table : Array K) (point : Array E) :
-    Model.Pcs.Whir.multilinearEval table point = Spec.Pcs.Whir.multilinearEval table point := by
-  simp only [Model.Pcs.Whir.multilinearEval, Spec.Pcs.Whir.multilinearEval,
+theorem multilinearEvalE_refines (values : Array E) (point : Array E) :
+    Model.Pcs.Whir.multilinearEvalE values point = Spec.Pcs.Whir.multilinearEvalE values point := by
+  simp only [Model.Pcs.Whir.multilinearEvalE, Spec.Pcs.Whir.multilinearEvalE,
     RingSwitch.nativeKaratsuba_eq_emul]
 
-theorem terminal_refines (residual : Array K) (folds : Array E) (weight : E) :
+theorem multilinearEval_refines (table : Array K) (point : Array E) :
+    Model.Pcs.Whir.multilinearEval table point = Spec.Pcs.Whir.multilinearEval table point := by
+  simp only [Model.Pcs.Whir.multilinearEval, Spec.Pcs.Whir.multilinearEval, multilinearEvalE_refines]
+
+theorem terminal_refines (residual : Array E) (folds : Array E) (weight : E) :
     Model.Pcs.Whir.terminal residual folds weight =
       Spec.Pcs.Whir.terminal residual folds weight := by
-  simp only [Model.Pcs.Whir.terminal, Spec.Pcs.Whir.terminal, multilinearEval_refines,
+  simp only [Model.Pcs.Whir.terminal, Spec.Pcs.Whir.terminal, multilinearEvalE_refines,
     RingSwitch.nativeKaratsuba_eq_emul]
 
 theorem baseRowDot_refines (row : Array K) (weights : Array E) :

@@ -21,11 +21,14 @@ def coordinateBasis (w : Nat) : E :=
   | 1 => ⟨0, 1 <<< UInt64.ofNat i, 0⟩
   | _ => ⟨0, 0, 1 <<< UInt64.ofNat i⟩
 
+def esquareN (a : E) (n : Nat) : E :=
+  Spec.Field.squareNWith esquare a n
+
 def applyComposed (value : E) (challenges : Array E) : E :=
   (Array.range compositionShifts.size).foldl (fun value t =>
     let shift := compositionShifts.getD t 0
     let challenge := challenges.getD t zero
-    eadd value (emul challenge (epow value (1 <<< shift)))) value
+    eadd value (emul challenge (esquareN value shift))) value
 
 def coordinateWeights (challenges : Array E) : Array E :=
   (Array.range degreeE).map fun w => applyComposed (coordinateBasis w) challenges
@@ -34,7 +37,7 @@ def frobeniusCoefficient (challenges : Array E) (k : Nat) : E :=
   (Array.range compositionShifts.size).foldl (fun acc p =>
     let shift := compositionShifts.getD p 0
     if (k &&& shift) != 0 then
-      emul acc (epow (challenges.getD p zero) (1 <<< (k % shift)))
+      emul acc (esquareN (challenges.getD p zero) (k % shift))
     else acc) one
 
 def frobeniusCoefficients (challenges : Array E) : Array E :=

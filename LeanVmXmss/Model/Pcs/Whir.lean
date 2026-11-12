@@ -46,8 +46,8 @@ def inducedWeight (messageLog : Nat) (queries : Array Nat) (weights point : Arra
 @[noinline] def polyEval (coeffs : Array E) (point : E) : E :=
   coeffs.foldr (fun c acc => Spec.Field.eadd (Model.Field.nativeKaratsuba acc point) c) Spec.Field.zero
 
-@[noinline] def multilinearEval (table : Array K) (point : Array E) : E :=
-  if decide (table.size = 1 <<< point.size) then
+@[noinline] def multilinearEvalE (values : Array E) (point : Array E) : E :=
+  if decide (values.size = 1 <<< point.size) then
     (Array.range point.size).foldl (fun cur k =>
       let r := point.getD k Spec.Field.zero
       let half := cur.size / 2
@@ -55,11 +55,14 @@ def inducedWeight (messageLog : Nat) (queries : Array Nat) (weights point : Arra
         let lo := cur.getD (2 * i) Spec.Field.zero
         Spec.Field.eadd lo (Model.Field.nativeKaratsuba r
           (Spec.Field.eadd lo (cur.getD (2 * i + 1) Spec.Field.zero))))
-      (table.map Spec.Field.embed) |>.getD 0 Spec.Field.zero
+      values |>.getD 0 Spec.Field.zero
   else Spec.Field.zero
 
-def terminal (residual : Array K) (folds : Array E) (weight : E) : E :=
-  Model.Field.nativeKaratsuba weight (multilinearEval residual folds)
+@[noinline] def multilinearEval (table : Array K) (point : Array E) : E :=
+  multilinearEvalE (table.map Spec.Field.embed) point
+
+def terminal (residual : Array E) (folds : Array E) (weight : E) : E :=
+  Model.Field.nativeKaratsuba weight (multilinearEvalE residual folds)
 
 def laneDot (row weights : Array E) : E :=
   (Array.range (min row.size weights.size)).foldl (fun acc i =>
@@ -116,7 +119,7 @@ def verifyLevel (config : Spec.Pcs.Whir.Config) (logN placed : Nat) (ls : LevelS
   let (quad, levelFolds, folds, s) ← (Array.range foldCount).foldlM
     (fun (quad, levelFolds, folds, s) _ => do
       let (challenge, s) := Spec.Transcript.verifierSample s
-      let (quad, s) ← Spec.Transcript.sumcheckRoundPoly s 3 (polyEval quad challenge) none
+      let (quad, s) ← Spec.Transcript.sumcheckRoundPoly s 2 (polyEval quad challenge) none
       some (quad, levelFolds.push challenge, folds.push challenge, s))
     (ls.quad, #[], ls.folds, ls.state)
   let messageLog := logN - folds.size
@@ -130,7 +133,7 @@ def verifyLevel (config : Spec.Pcs.Whir.Config) (logN placed : Nat) (ls : LevelS
       let next ← Spec.Merkle.fromHalves (halves.getD 0 Spec.Field.zero) (halves.getD 1 Spec.Field.zero)
       let (oodPoint, s) := verifierSamples s messageLog
       let (oodValue, s) ← Spec.Transcript.nextScalar s
-      let (intro, s) ← Spec.Transcript.sumcheckRoundPoly s 3 oodValue none
+      let (intro, s) ← Spec.Transcript.sumcheckRoundPoly s 2 oodValue none
       pure (#[], next, #[(intro, Spec.Pcs.Whir.ClaimWeight.ood oodPoint)], s)
   let s ← Spec.Transcript.grindCheck s queryGrindingBits
   let blockLog := messageLog + config.logInvRates.getD level 0
@@ -152,7 +155,7 @@ def verifyLevel (config : Spec.Pcs.Whir.Config) (logN placed : Nat) (ls : LevelS
           baseRowDot (leaf.extract (leafWords - rowWords) leafWords) laneWeights
       else
         leaves.map fun leaf => laneDot (extRow leaf) laneWeights
-    let (intro, s) ← Spec.Transcript.sumcheckRoundPoly s 3 (dot rowValues queryWeights) none
+    let (intro, s) ← Spec.Transcript.sumcheckRoundPoly s 2 (dot rowValues queryWeights) none
     let pending := pending.push (intro, Spec.Pcs.Whir.ClaimWeight.induced messageLog queries queryWeights)
     let (quad, _, glued) := pending.foldl (fun (quad, scalar, glued) item =>
       let scalar := Model.Field.nativeKaratsuba scalar lam
@@ -164,7 +167,7 @@ def verifyWhir (s : Spec.Transcript.VerifierState) (logN placed logInvRate : Nat
     (root : Spec.Merkle.Digest) (evaluateBasis : Array E → E) : Option Spec.Transcript.VerifierState := do
   let config ← deriveConfig logN logInvRate
   if config.folds.isEmpty then none else
-    let (quad0, s) ← Spec.Transcript.sumcheckRoundPoly s 3 target none
+    let (quad0, s) ← Spec.Transcript.sumcheckRoundPoly s 2 target none
     let done ← (Array.range config.folds.size).foldlM (verifyLevel config logN placed)
       ⟨quad0, #[], #[], root, #[], s⟩
     let messageLog := logN - done.folds.size
@@ -173,23 +176,21 @@ def verifyWhir (s : Spec.Transcript.VerifierState) (logN placed logInvRate : Nat
         let (challenge, s) := Spec.Transcript.verifierSample s
         let running := polyEval quad challenge
         if k + 1 < messageLog then
-          let (quad, s) ← Spec.Transcript.sumcheckRoundPoly s 3 running none
+          let (quad, s) ← Spec.Transcript.sumcheckRoundPoly s 2 running none
           some (quad, tail.push challenge, running, s)
         else
           some (quad, tail.push challenge, running, s))
       (done.quad, #[], Spec.Field.zero, done.state)
-    if !(done.residual.all fun v => decide (v.c1 = 0 ∧ v.c2 = 0)) then none else
-      let residualK := done.residual.map (·.c0)
-      let point := done.folds ++ tail
-      let laneFolds := config.folds.getD 0 0
-      let reordered := point.extract laneFolds point.size ++ point.extract 0 laneFolds
-      let weight ← done.glued.foldlM (fun acc claim => do
-        let w ← ClaimWeight.eval claim.weight (point.extract claim.foldStart point.size)
-        some (Spec.Field.eadd acc (Model.Field.nativeKaratsuba claim.scalar w))) (evaluateBasis reordered)
-      if decide (1 <<< tail.size = residualK.size) &&
-          Spec.Vm.wordBEq (terminal residualK tail weight) running then
-        some s
-      else none
+    let point := done.folds ++ tail
+    let laneFolds := config.folds.getD 0 0
+    let reordered := point.extract laneFolds point.size ++ point.extract 0 laneFolds
+    let weight ← done.glued.foldlM (fun acc claim => do
+      let w ← ClaimWeight.eval claim.weight (point.extract claim.foldStart point.size)
+      some (Spec.Field.eadd acc (Model.Field.nativeKaratsuba claim.scalar w))) (evaluateBasis reordered)
+    if decide (1 <<< tail.size = done.residual.size) &&
+        Spec.Vm.wordBEq (terminal done.residual tail weight) running then
+      some s
+    else none
 
 def verifyStackedOpening (s : Spec.Transcript.VerifierState) (root : Spec.Merkle.Digest)
     (stackLog placed logInvRate : Nat) (values : Array E)
