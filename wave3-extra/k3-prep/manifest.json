@@ -1,0 +1,29 @@
+{
+  "benchmarks": {
+    "merkle_flat_8x_2_14_us": 26927,
+    "merkle_leaves_8x_2_14x56_us": 102362,
+    "ntt_encode_2_14x56_us": 48467,
+    "pcs_commit_16core_log15_lanes51_ms": 132,
+    "pcs_commit_1thread_log15_lanes51_ms": 793,
+    "pcs_commit_root": "09be9237bcb43c88335e928ac9a670b890918071458e01754f7d9769471ee434",
+    "whir_fold_batch_2_14_4rounds_us": 1250
+  },
+  "files": {
+    "Native/Kernels/Keccak8x.lean": {
+      "bytes": 35314,
+      "sha256": "5940ff76561aca5f78c637d558d5da031c8f267cf00085f242eef19a413d1722"
+    },
+    "Native/Kernels/Ntt.lean": {
+      "bytes": 22383,
+      "sha256": "8608c70647b6f38e00bc87913f28608d597634cbb28fd76ea16b56e1382f46c9"
+    },
+    "Tests/Unit/NativePcsMerkleKernelTest.lean": {
+      "bytes": 12963,
+      "sha256": "787303d10b73661a71530c712cd88572392ac8f73c5a152fa07fc6c78ff4cab5"
+    }
+  },
+  "mission_id": "b79e0790-f5f8-45ce-b85a-8fad6e066b2c",
+  "strict_audit_count": 173,
+  "strict_audit_rejections": 0,
+  "track": "xmss1400-w3-k3-prep-ntt-keccak8x"
+}

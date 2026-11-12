@@ -1,0 +1,12 @@
+SLICE64_CODECS_OK=true
+SCALAR_KERNELS_OK=true
+TREE_KERNELS_OK=true
+TABLE_KERNELS_OK=true
+MLE_KERNELS_OK=true
+ALL_UNIT_TESTS_OK=true
+BENCH_TREE_MSG rows=524288 scalar_ms=63 slice1_ms=70 slice16_ms=11
+BENCH_FOLD_TREE rows=524288 scalar_ms=47 slice1_ms=69 slice16_ms=17
+BENCH_FOLD_TABLE half=524288 cols=3 scalar_ms=57 slice1_ms=80 slice16_ms=30
+BENCH_TABLE_MSG_E half=524288 cols=3 scalar_ms=43 slice1_ms=65 slice16_ms=15
+BENCH_MLE_EVAL n=1048576 scalar_ms=38 slice1_ms=8 slice16_ms=2
+BENCH_PARITY_OK=true

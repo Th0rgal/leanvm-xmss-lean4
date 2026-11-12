@@ -1,0 +1,39 @@
+{
+  "files": {
+    "Native/Kernels/KeccakGkr.lean": {
+      "bytes": 231,
+      "sha256": "394f1401f4048a96c029d12e0fdce5172c738ec2c3694c8ad7e63b83286411f1"
+    },
+    "Native/Kernels/KeccakGkr/Chi.lean": {
+      "bytes": 1124,
+      "sha256": "777a62d88c299d017751064e25fc4b29b01e1aa376bb51a8a87fe4f2b973c5ed"
+    },
+    "Native/Kernels/KeccakGkr/Fold.lean": {
+      "bytes": 1128,
+      "sha256": "6365d3e2b8b5f629e8eef49d9ca4edc5440a12df026ccc91a3c4571dd6f8a7c7"
+    },
+    "Native/Kernels/KeccakGkr/Planes.lean": {
+      "bytes": 3437,
+      "sha256": "4dd45ea203a3aa496c0cd125d08962ef0ee057ea03c019db1824cfc39718d553"
+    },
+    "Native/Kernels/KeccakGkr/Rmfe.lean": {
+      "bytes": 3116,
+      "sha256": "76b420165b7cd1b8f3c038ac5cf53ce23b65d754ee69aeeb96e5021cf2ae6818"
+    },
+    "Native/Kernels/KeccakGkr/Support.lean": {
+      "bytes": 7425,
+      "sha256": "b0b2d2547e8e1672a4fb005c6d7c725b556e8ecdb6eb32296251284336fafab8"
+    },
+    "Native/Kernels/KeccakGkr/Transpose.lean": {
+      "bytes": 1675,
+      "sha256": "6c55927b25674fbbef9d950eb7e6b38cb8f7ec96e6008a5386753d22dc02afc8"
+    },
+    "Tests/Unit/NativeKeccakGkrKernelTest.lean": {
+      "bytes": 13523,
+      "sha256": "453e8be28a4d890072a691081cd0d6ff81337cc5b2355ffddad6743c39fd71c7"
+    }
+  },
+  "mission_id": "ffd864ce-abb9-4701-9370-ae59ddd34e0a",
+  "track": "xmss1400-w3-k2-prep-keccakgkr",
+  "version": "v2"
+}

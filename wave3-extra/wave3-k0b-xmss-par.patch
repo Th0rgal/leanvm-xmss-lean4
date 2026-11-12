@@ -1,0 +1,1461 @@
+diff --git a/Model/Cli/Aggregate.lean b/Model/Cli/Aggregate.lean
+index dbc49a9..9ac2dfb 100644
+--- a/Model/Cli/Aggregate.lean
++++ b/Model/Cli/Aggregate.lean
+@@ -84,7 +84,6 @@ interpreter, then package the execution statistics. -/
+ def vmWitnessProver (fuel : Nat := 100000000) : AggregateProverFn := fun ctx statement hints => do
+   if ctx.records.size > vmProverMaxRecords then
+     throw (IO.userError s!"vm prover is for fixtures of at most {vmProverMaxRecords} records")
+-  let encoded := encodeHints hints
+   let streams := streamsOfHints hints
+   let state ← liftFault (Model.Vm.initial ctx.frame #[packCell statement, packCell statement 16]
+     ctx.program.size)
+@@ -94,7 +93,8 @@ def vmWitnessProver (fuel : Nat := 100000000) : AggregateProverFn := fun ctx sta
+     let op ← liftFault (match ctx.program[cur.state.pc]? with
+       | some op => Except.ok op
+       | none => Except.error Fault.badProgram)
+-    let ⟨ready, streams'⟩ ← liftFault (Model.Vm.applyHintsLinear (ctx.schedule[cur.state.pc]?.getD #[]) cur)
++    let ⟨ready, streams'⟩ ← liftFault (Model.Vm.applyHintsLinear
++      (ctx.schedule[cur.state.pc]?.getD #[]) cur)
+     let st ← liftFault (Model.Vm.stepLinear op ready)
+     cur := ⟨st, streams'⟩
+   let s := cur.state
+@@ -103,9 +103,9 @@ def vmWitnessProver (fuel : Nat := 100000000) : AggregateProverFn := fun ctx sta
+   return {
+     prover := "vm-witness", logInvRate := ctx.logInvRate,
+     records := ctx.records.size, signers := (signersOf ctx.records).size,
+-    hintEntries := hints.size, statement, hintsKeccak := Spec.Vm.KeccakInternal.hash encoded,
++    hintEntries := hints.size, statement, hintsKeccak := hashEncodedHints hints,
+     cycles := some s.cycles, memoryCells := some s.memory.used,
+-    memoryKeccak := Spec.Vm.KeccakInternal.hash memory }
++    memoryKeccak := Model.Keccak.keccak256CPS memory }
+ 
+ /-- The stub prover: statement and hints only, no VM execution. -/
+ def stubProver : AggregateProverFn := fun ctx statement hints => do
+@@ -113,24 +113,22 @@ def stubProver : AggregateProverFn := fun ctx statement hints => do
+     prover := "stub", logInvRate := ctx.logInvRate,
+     records := ctx.records.size, signers := (signersOf ctx.records).size,
+     hintEntries := hints.size, statement,
+-    hintsKeccak := Spec.Vm.KeccakInternal.hash (encodeHints hints),
++    hintsKeccak := hashEncodedHints hints,
+     cycles := none, memoryCells := none,
+     memoryKeccak := ByteArray.empty }
+ 
+ def e2eProver (fuel : Nat := 10000000) : AggregateProverFn := fun ctx statement hints => do
+   if ctx.records.size > vmProverMaxRecords then
+     throw (IO.userError s!"e2e prover is for fixtures of at most {vmProverMaxRecords} records")
+-  let encoded := encodeHints hints
+-  let (wire, run) ← proveLeafEthereum ctx.program ctx.frame ctx.schedule ctx.seed
++  let (wire, run) ← proveLeafEthereumCore ctx.program ctx.frame ctx.schedule ctx.seed
+     ctx.bytecodeValue ctx.records ctx.logInvRate statement hints fuel
+   return {
+     prover := "e2e", logInvRate := ctx.logInvRate,
+     records := ctx.records.size, signers := (signersOf ctx.records).size,
+     hintEntries := hints.size, statement,
+-    hintsKeccak := Spec.Vm.KeccakInternal.hash encoded,
++    hintsKeccak := hashEncodedHints hints,
+     cycles := some run.cycles, memoryCells := some run.memUsed,
+     memoryKeccak := run.memoryKeccak, wireBytes := wire }
+-
+ def proverOf (name : String) : IO AggregateProverFn :=
+   match name with
+   | "vm" => pure (vmWitnessProver)
+@@ -140,13 +138,50 @@ def proverOf (name : String) : IO AggregateProverFn :=
+ 
+ /-! ### One timed pass -/
+ 
++/-- Fused Phase 0b pass for `stub` mode: recomputes `signers`, `statement`, and stream-hashed
++verified XMSS hints without materializing boxed `HintEntry` objects. -/
++def runStubPass (ctx : AggregateContext) : IO (ProofArtifact × Nat) := do
++  let t0 ← IO.monoNanosNow
++  let signers := signersOf ctx.records
++  let statement := Model.Xmss.statementDigest ctx.seed signers ctx.bytecodeValue
++  let seedCells := #[packCell ctx.seed, packCell ctx.seed 16]
++  let (hintEntries, hintsKeccak) ← liftText (do
++    let r ← hashWorkloadHintsFromSignersDirect seedCells signers ctx.bytecodeValue
++    if signers.size == ctx.records.size then
++      .ok r
++    else
++      let allOk := Fin.foldl ctx.records.size (fun ok i =>
++        if !ok then false
++        else if hi : i.val < ctx.records.size then Model.Xmss.verifySignatureFast ctx.records[i.val]
++        else true) true
++      if allOk then .ok r else .error "Lean signature verification failed")
++  let artifact : ProofArtifact := {
++    prover := "stub", logInvRate := ctx.logInvRate,
++    records := ctx.records.size, signers := signers.size,
++    hintEntries, statement, hintsKeccak,
++    cycles := none, memoryCells := none,
++    memoryKeccak := ByteArray.empty }
++  let t1 ← IO.monoNanosNow
++  return (artifact, t1 - t0)
++
+ /-- One full pass: statement and hints recomputed from raw, then the prover.
+ Returns the artifact and the pass duration in nanoseconds. -/
+ def runAggregatePass (prover : AggregateProverFn) (ctx : AggregateContext)
+     : IO (ProofArtifact × Nat) := do
+   let t0 ← IO.monoNanosNow
+-  let statement := statementOf ctx.seed ctx.records ctx.bytecodeValue
+-  let hints ← liftText (hintsOf ctx.seed ctx.records ctx.bytecodeValue)
++  let signers := signersOf ctx.records
++  let statement := Model.Xmss.statementDigest ctx.seed signers ctx.bytecodeValue
++  let seedCells := #[packCell ctx.seed, packCell ctx.seed 16]
++  let hints ← liftText (do
++    let h ← Model.Xmss.buildWorkloadHintsFromSigners seedCells signers ctx.bytecodeValue true
++    if signers.size == ctx.records.size then
++      .ok h
++    else
++      let allOk := Fin.foldl ctx.records.size (fun ok i =>
++        if !ok then false
++        else if hi : i.val < ctx.records.size then Model.Xmss.verifySignatureFast ctx.records[i.val]
++        else true) true
++      if allOk then .ok h else .error "Lean signature verification failed")
+   let artifact ← prover ctx statement hints
+   let t1 ← IO.monoNanosNow
+   return (artifact, t1 - t0)
+@@ -206,16 +241,18 @@ def aggregateMain (args : List String) : IO Unit := do
+   let bytecodeValue ← loadBytecodeValue (childPath dir "bytecode-value.bin")
+   let (program, frame, schedule) ← loadGuest dir
+   let ctx : AggregateContext := ⟨program, frame, schedule, seed, bytecodeValue, records, logInvRate⟩
++  let passRunner : AggregateContext → IO (ProofArtifact × Nat) :=
++    if proverName == "stub" then runStubPass else runAggregatePass prover
+   let out ← IO.getStdout
+   out.putStrLn (s!"BENCH|impl=lean-cli|prover={proverName}|xmss={xmss}|records={records.size}" ++
+     s!"|signers={(signersOf records).size}|log_inv_rate={logInvRate}|repeat={repeatCount}|cooldown_ms={cooldownMs}")
+-  let (warmupArtifact, warmupNanos) ← runAggregatePass prover ctx
++  let (warmupArtifact, warmupNanos) ← passRunner ctx
+   out.putStrLn s!"WARMUP|nanos={warmupNanos}"
+   let mut last : ProofArtifact := warmupArtifact
+   let mut times : Array Nat := #[]
+   for i in [1:repeatCount+1] do
+     if cooldownMs > 0 then IO.sleep cooldownMs.toUInt32
+-    let (artifact, nanos) ← runAggregatePass prover ctx
++    let (artifact, nanos) ← passRunner ctx
+     last := artifact
+     times := times.push nanos
+     out.putStrLn s!"PASS|i={i}|nanos={nanos}"
+diff --git a/Model/Cli/E2E.lean b/Model/Cli/E2E.lean
+index 12522e2..6391938 100644
+--- a/Model/Cli/E2E.lean
++++ b/Model/Cli/E2E.lean
+@@ -89,13 +89,13 @@ def proveVmRun (fuel : Nat) (program : Array Op) (frame : Nat)
+     proof := ⟨ps1.stream, phases⟩
+     cycles := trace.cycles
+     memUsed := trace.memUsed
+-    memoryKeccak := Spec.Vm.KeccakInternal.hash memBytes
++    memoryKeccak := Model.Keccak.keccak256CPS memBytes
+     stage := stage
+     mu := mu }
+ 
+ def signatureClaimsOf (raw : Array Spec.Xmss.RawSignature) :
+     Array Spec.Aggregate.Wire.SignaturePair :=
+-  (Spec.Xmss.sortedUnique raw).map fun record => ⟨record.publicKey, record.message⟩
++  (Model.Xmss.sortedUniqueFast raw).map fun record => ⟨record.publicKey, record.message⟩
+ 
+ def ethereumProofOf (claims : Array Spec.Aggregate.Wire.SignaturePair)
+     (bytecodeValue : E) (proof : Spec.Aggregate.Wire.VmProof) :
+@@ -111,7 +111,7 @@ def verifyAllSignatures (raw : Array Spec.Xmss.RawSignature) : IO Unit :=
+       acc
+       match raw[idx]? with
+       | some record =>
+-        unless Spec.Xmss.verifySignature record do
++        unless Model.Xmss.verifySignatureFast record do
+           throw (IO.userError "Lean signature verification failed")
+       | none => pure ())
+     (pure ())
+@@ -120,11 +120,10 @@ def scalarPairBytes (pair : E × E) : ByteArray :=
+   Spec.Xmss.writeLE pair.1.c0 8 ++ Spec.Xmss.writeLE pair.1.c1 8 ++
+     Spec.Xmss.writeLE pair.2.c0 8 ++ Spec.Xmss.writeLE pair.2.c1 8
+ 
+-def proveLeafEthereum (program : Array Op) (frame : Nat) (schedule : Array (Array RHint))
++def proveLeafEthereumCore (program : Array Op) (frame : Nat) (schedule : Array (Array RHint))
+     (seed : ByteArray) (bytecodeValue : E) (records : Array Spec.Xmss.RawSignature)
+     (logInvRate : Nat) (statement : ByteArray) (hints : Array Spec.Xmss.HintEntry)
+     (fuel : Nat := 10000000) : IO (ByteArray × VmProvedRun) := do
+-  verifyAllSignatures records
+   let streams := streamsOfHints hints
+   let publicInput := #[Spec.Xmss.packCell statement, Spec.Xmss.packCell statement 16]
+   let run ← proveVmRun fuel program frame schedule publicInput streams logInvRate
+@@ -139,4 +138,11 @@ def proveLeafEthereum (program : Array Op) (frame : Nat) (schedule : Array (Arra
+   let wire := Model.Aggregate.Wire.EthereumProof.toBytesWithoutPubkeys eth
+   return (wire, run)
+ 
++def proveLeafEthereum (program : Array Op) (frame : Nat) (schedule : Array (Array RHint))
++    (seed : ByteArray) (bytecodeValue : E) (records : Array Spec.Xmss.RawSignature)
++    (logInvRate : Nat) (statement : ByteArray) (hints : Array Spec.Xmss.HintEntry)
++    (fuel : Nat := 10000000) : IO (ByteArray × VmProvedRun) := do
++  verifyAllSignatures records
++  proveLeafEthereumCore program frame schedule seed bytecodeValue records logInvRate statement hints fuel
++
+ end LeanVmXmss.Model.Cli
+diff --git a/Model/Cli/Inputs.lean b/Model/Cli/Inputs.lean
+index 3e0366a..d063ce6 100644
+--- a/Model/Cli/Inputs.lean
++++ b/Model/Cli/Inputs.lean
+@@ -137,33 +137,395 @@ def loadGuest (dir : System.FilePath) : IO (Array Op × Nat × Array (Array RHin
+ /-! ### The aggregate pipeline -/
+ 
+ /-- The deduplicated, sorted signer set of a raw workload. -/
+-def signersOf (raw : Array RawSignature) : Array RawSignature := sortedUnique raw
++def signersOf (raw : Array RawSignature) : Array RawSignature :=
++  Model.Xmss.sortedUniqueFast raw
+ 
+ /-- The aggregate statement digest over the sorted, deduplicated raw records. -/
+ def statementOf (seed : ByteArray) (raw : Array RawSignature) (bytecodeValue : Spec.Field.E) : ByteArray :=
+-  statementDigest seed (sortedUnique raw) bytecodeValue
++  Model.Xmss.statementDigest seed (Model.Xmss.sortedUniqueFast raw) bytecodeValue
+ 
+ /-- The aggregate witness hints over the raw (unsorted) records. -/
+ def hintsOf (seed : ByteArray) (raw : Array RawSignature)
+     (bytecodeValue : Spec.Field.E) : Except String (Array HintEntry) :=
+-  workloadHints #[packCell seed, packCell seed 16] raw bytecodeValue
++  Model.Xmss.workloadHints #[packCell seed, packCell seed 16] raw bytecodeValue
++
++/-- The aggregate witness hints with integrated root-signature verification. -/
++def hintsOfVerified (seed : ByteArray) (raw : Array RawSignature)
++    (bytecodeValue : Spec.Field.E) : Except String (Array HintEntry) :=
++  Model.Xmss.workloadHintsVerified #[packCell seed, packCell seed 16] raw bytecodeValue
++
++@[inline] def pushU32LE (b : ByteArray) (x : UInt64) : ByteArray :=
++  b.push x.toUInt8
++    |>.push (x >>> 8).toUInt8
++    |>.push (x >>> 16).toUInt8
++    |>.push (x >>> 24).toUInt8
++
++def utf8Meta : ByteArray := "meta".toUTF8
++def utf8FsSeed : ByteArray := "fs_seed".toUTF8
++def utf8SignersSplit : ByteArray := "signers_split".toUTF8
++def utf8Claims : ByteArray := "claims".toUTF8
++def utf8RawIndex : ByteArray := "raw_index".toUTF8
++def utf8LxIndex : ByteArray := "lx_index".toUTF8
++def utf8LxWindows : ByteArray := "lx_windows".toUTF8
++def utf8LxPath : ByteArray := "lx_path".toUTF8
++def utf8Randomizer : ByteArray := "randomizer".toUTF8
++def utf8LxDigits : ByteArray := "lx_digits".toUTF8
++def utf8ChainStarts : ByteArray := "chain_starts".toUTF8
++def utf8LeafDefer : ByteArray := "leaf_defer".toUTF8
++def utf8DaPick : ByteArray := "da_pick".toUTF8
++
++@[inline] def hintNameUTF8 (name : @& String) : ByteArray :=
++  if name == "chain_starts" then utf8ChainStarts
++  else if name == "lx_path" then utf8LxPath
++  else if name == "randomizer" then utf8Randomizer
++  else if name == "lx_digits" then utf8LxDigits
++  else if name == "claims" then utf8Claims
++  else if name == "raw_index" then utf8RawIndex
++  else if name == "lx_index" then utf8LxIndex
++  else if name == "lx_windows" then utf8LxWindows
++  else if name == "meta" then utf8Meta
++  else if name == "fs_seed" then utf8FsSeed
++  else if name == "signers_split" then utf8SignersSplit
++  else if name == "leaf_defer" then utf8LeafDefer
++  else if name == "da_pick" then utf8DaPick
++  else name.toUTF8
++
++def hdrRawIndex : ByteArray := pushU32LE (pushU32LE ByteArray.empty 9 ++ "raw_index".toUTF8) 1
++def hdrLxIndex : ByteArray := pushU32LE (pushU32LE ByteArray.empty 8 ++ "lx_index".toUTF8) 4
++def hdrLxWindows : ByteArray := pushU32LE (pushU32LE ByteArray.empty 10 ++ "lx_windows".toUTF8) 4
++def hdrLxPath : ByteArray := pushU32LE (pushU32LE ByteArray.empty 7 ++ "lx_path".toUTF8) 1
++def hdrRandomizer : ByteArray := pushU32LE (pushU32LE ByteArray.empty 10 ++ "randomizer".toUTF8) 1
++def hdrLxDigits : ByteArray := pushU32LE (pushU32LE ByteArray.empty 9 ++ "lx_digits".toUTF8) 15
++def hdrChainStarts : ByteArray := pushU32LE (pushU32LE ByteArray.empty 12 ++ "chain_starts".toUTF8) 1
++
++@[inline] def pushFieldBytes (b : ByteArray) (x : Spec.Field.E) : ByteArray :=
++  Model.Keccak.pushU64LE (Model.Keccak.pushU64LE (Model.Keccak.pushU64LE b x.c0) x.c1) x.c2
++
++@[inline] def pushPairBytes (b : ByteArray) (p : Model.Keccak.Pair64) : ByteArray :=
++  pushFieldBytes b (Model.Xmss.packPair64 p)
++
++@[inline] def pushHdr (b : ByteArray) (hdr : ByteArray) : ByteArray :=
++  Fin.foldl hdr.size (fun acc i => if h : i.val < hdr.size then acc.push hdr[i.val] else acc) b
++
++/-- Encode a slice `[start, start + len)` of hint entries into `init`. -/
++def encodeHintsSliceInto (hints : @& Array HintEntry) (start len : Nat) (init : ByteArray) : ByteArray :=
++  let chunkBytes := Fin.foldl len (fun sum k =>
++    let idx := start + k.val
++    if h : idx < hints.size then
++      let entry := hints[idx]
++      sum + 8 + entry.name.utf8ByteSize + entry.values.size * 24
++    else sum) init.size
++  let base := if init.size == 0 then ByteArray.emptyWithCapacity chunkBytes else
++    let b := ByteArray.emptyWithCapacity chunkBytes
++    Fin.foldl init.size (fun acc j =>
++      if hj : j.val < init.size then acc.push init[j.val] else acc) b
++  Fin.foldl len (fun acc k =>
++    let idx := start + k.val
++    if h : idx < hints.size then
++      let entry := hints[idx]
++      let name := hintNameUTF8 entry.name
++      let acc := pushU32LE acc name.size.toUInt64
++      let acc := Fin.foldl name.size (fun b j =>
++        if hj : j.val < name.size then b.push name[j.val] else b) acc
++      let acc := pushU32LE acc entry.values.size.toUInt64
++      Fin.foldl entry.values.size (fun b j =>
++        if hj : j.val < entry.values.size then
++          pushFieldBytes b entry.values[j.val]
++        else b) acc
++    else acc) base
++
++/-- Encode a slice `[start, start + len)` of hint entries. -/
++def encodeHintsSlice (hints : @& Array HintEntry) (start len : Nat) : ByteArray :=
++  encodeHintsSliceInto hints start len ByteArray.empty
++
++/-- Stream-hash a hint list into its `hints.bin` Keccak-256 digest while encoding slices in parallel. -/
++def hashEncodedHints (hints : Array HintEntry) : ByteArray :=
++  let n := hints.size
++  if n <= 512 then
++    Model.Keccak.keccak256CPS (encodeHintsSlice hints 0 n)
++  else
++    let wCount := 16
++    let tasks := Fin.foldl wCount (fun ts w =>
++      let start := (w.val * n) / wCount
++      let stop := ((w.val + 1) * n) / wCount
++      let len := stop - start
++      let t : Task ByteArray := Task.spawn fun () => encodeHintsSlice hints start len
++      ts.push t) (Array.emptyWithCapacity wCount : Array (Task ByteArray))
++    let (st, carry) := Fin.foldl tasks.size (fun (s, rem) w =>
++      if h : w.val < tasks.size then
++        Model.Keccak.absorbChunkCPS s rem tasks[w.val].get
++      else (s, rem)) (Model.Keccak.zeroState25Fast, ByteArray.empty)
++    Model.Keccak.finalizeKeccak256CPS st carry 0 carry.size
++
++def signerLayerDirectBytes (pp : Model.Keccak.Pair64) (sig : @& ByteArray) (hsig : sig.size = 2404)
++    (index layer : Nat) (hlayer : layer < 2)
++    (out : ByteArray) (rootLo rootHi root2 root3 : UInt64) : Except String (ByteArray × Model.Keccak.Pair64) :=
++  let offset := 4 + layer * 1200
++  let e := index >>> (layer * 16)
++  let rand := Model.Xmss.readPair64Proof sig offset (by omega)
++  let addrMsg := Model.Xmss.addressLo 12 layer 0 e 0
++  let digest : Model.Keccak.Pair64 :=
++    if layer == 0 then
++      let s0 := Model.Keccak.permuteAbsorb25 Model.Keccak.zeroState25Fast pp.lo pp.hi addrMsg 0
++        rootLo rootHi root2 root3 rand.lo rand.hi 0x01 0 0 0 0 0 0x8000000000000000
++      ⟨s0.a00, s0.a01⟩
++    else
++      Model.Keccak.keccak1Block16 pp.lo pp.hi addrMsg 0 rootLo rootHi rand.lo rand.hi 0x01
++  match Model.Xmss.codeword58 digest with
++  | none => .error "invalid WOTS+C codeword"
++  | some digits =>
++    let ends := Fin.foldl 58 (fun acc i =>
++      let stOff := offset + 16 + i.val * 16
++      let startVal := Model.Xmss.readPair64Proof sig stOff (by omega)
++      let dig := digits[i.val]?.getD 0
++      acc.push (Model.Xmss.chainFast pp layer e i.val dig startVal)) (Array.emptyWithCapacity 58)
++    let leafRoot := Model.Xmss.hashLeafEnds pp layer e ends
++    let (out, climbedRoot) := Fin.foldl 16 (fun st lv =>
++      let level := lv.val
++      let sibOff := offset + 944 + level * 16
++      let sib := Model.Xmss.readPair64Proof sig sibOff (by omega)
++      let b1 := pushPairBytes (pushHdr st.1 hdrLxPath) sib
++      let cur := st.2
++      let addrTree := Model.Xmss.addressLo 3 layer (level + 1) (e >>> (level + 1)) 0
++      let nextRoot :=
++        if ((e >>> level) &&& 1) == 0 then
++          Model.Keccak.keccak1Block16 pp.lo pp.hi addrTree 0 cur.lo cur.hi sib.lo sib.hi 0x01
++        else
++          Model.Keccak.keccak1Block16 pp.lo pp.hi addrTree 0 sib.lo sib.hi cur.lo cur.hi 0x01
++      (b1, nextRoot)) (out, leafRoot)
++    let out := pushPairBytes (pushHdr out hdrRandomizer) rand
++    let out := pushHdr out hdrLxDigits
++    let out := Fin.foldl 15 (fun b g =>
++      let grp := g.val
++      let cnt := min 4 (58 - grp * 4)
++      let val := Fin.foldl cnt (fun n j =>
++        let d := digits[grp * 4 + j.val]?.getD 0
++        n + d * (1 <<< (2 * j.val))) 0
++      pushFieldBytes b (Model.Xmss.countFast val)) out
++    let out := Fin.foldl 58 (fun b i =>
++      let stOff := offset + 16 + i.val * 16
++      let startCell := Model.Xmss.packCellProof sig stOff (by omega)
++      pushFieldBytes (pushHdr b hdrChainStarts) startCell) out
++    .ok (out, climbedRoot)
++
++def signerDirectBytes (raw : @& RawSignature) (rawIdxVal : Spec.Field.E) (out : ByteArray) :
++    Except String ByteArray :=
++  if hpk : raw.publicKey.size = 32 then
++    if hmsg : raw.message.size = 32 then
++      if hsig : raw.signature.size = 2404 then
++        let out := pushFieldBytes (pushHdr out hdrRawIndex) rawIdxVal
++        let pkRoot := Model.Xmss.readPair64Proof raw.publicKey 0 (by omega)
++        let pp := Model.Xmss.readPair64Proof raw.publicKey 16 (by omega)
++        let index : Nat :=
++          (raw.signature[0]).toNat |||
++          ((raw.signature[1]).toNat <<< 8) |||
++          ((raw.signature[2]).toNat <<< 16) |||
++          ((raw.signature[3]).toNat <<< 24)
++        let s0 := index
++        let s1 := index >>> 8
++        let s2 := index >>> 16
++        let s3 := index >>> 24
++        let out := pushHdr out hdrLxIndex
++        let out := pushFieldBytes out ⟨s0.toUInt64, 0, 0⟩
++        let out := pushFieldBytes out ⟨s1.toUInt64, 0, 0⟩
++        let out := pushFieldBytes out ⟨s2.toUInt64, 0, 0⟩
++        let out := pushFieldBytes out ⟨s3.toUInt64, 0, 0⟩
++        let out := pushHdr out hdrLxWindows
++        let out := pushFieldBytes out (Model.Xmss.countFast (s0 &&& 255))
++        let out := pushFieldBytes out (Model.Xmss.countFast (s1 &&& 255))
++        let out := pushFieldBytes out (Model.Xmss.countFast (s2 &&& 255))
++        let out := pushFieldBytes out (Model.Xmss.countFast (s3 &&& 255))
++        let m0 := Model.Keccak.readWordLEProof raw.message 0 (by omega)
++        let m1 := Model.Keccak.readWordLEProof raw.message 8 (by omega)
++        let m2 := Model.Keccak.readWordLEProof raw.message 16 (by omega)
++        let m3 := Model.Keccak.readWordLEProof raw.message 24 (by omega)
++        match signerLayerDirectBytes pp raw.signature hsig index 0 (by omega) out m0 m1 m2 m3 with
++        | .error e => .error e
++        | .ok (out, r0) =>
++          match signerLayerDirectBytes pp raw.signature hsig index 1 (by omega) out r0.lo r0.hi 0 0 with
++          | .error e => .error e
++          | .ok (out, r1) =>
++            if Model.Xmss.u64Eq r1.lo pkRoot.lo && Model.Xmss.u64Eq r1.hi pkRoot.hi then .ok out
++            else .error "Lean signature verification failed"
++      else .error "invalid XMSS record dimensions"
++    else .error "invalid XMSS record dimensions"
++  else .error "invalid XMSS record dimensions"
++
++/-- Directly verify and encode workload hints into `hints.bin` wire format without materializing
++boxed `HintEntry` objects. -/
++def encodeHintsFromSignersDirect (seed : Array Spec.Field.E) (signers : Array RawSignature)
++    (bytecodeValue : Spec.Field.E) : Except String ByteArray := do
++  let n := signers.size
++  let rawIdxTable := Model.Xmss.buildCountArray n
++  let wCount := min Model.Xmss.numWorkers (max n 1)
++  let tasks := Fin.foldl wCount (fun ts w =>
++    let start := (w.val * n) / wCount
++    let stop := ((w.val + 1) * n) / wCount
++    let len := stop - start
++    let t : Task (Except String ByteArray) := Task.spawn fun () =>
++      Fin.foldl len (fun (acc : Except String ByteArray) k =>
++        match acc with
++        | .error e => .error e
++        | .ok b =>
++          let idx := start + k.val
++          if h : idx < signers.size then
++            let rv := if hr : idx < rawIdxTable.size then rawIdxTable[idx] else Model.Xmss.countFast idx
++            signerDirectBytes signers[idx] rv b
++          else .ok b) (.ok (ByteArray.emptyWithCapacity (len * 7457)))
++    ts.push t) (Array.emptyWithCapacity wCount : Array (Task (Except String ByteArray)))
++  let zeroCount := Model.Xmss.countFast 0
++  let nCount := if hn : n < rawIdxTable.size then rawIdxTable[n] else Model.Xmss.countFast n
++  let headerEntries : Array HintEntry := Array.emptyWithCapacity (3 + n)
++  let headerEntries := headerEntries.push ⟨"meta", #[nCount, zeroCount, nCount, zeroCount, zeroCount, zeroCount, zeroCount, zeroCount]⟩
++  let headerEntries := headerEntries.push ⟨"fs_seed", seed⟩
++  let headerEntries := if n > 0 then headerEntries.push ⟨"signers_split", Model.Xmss.listSplitFast n⟩ else headerEntries
++  let headerEntries := Fin.foldl n (fun acc i =>
++    if h : i.val < signers.size then
++      let x := signers[i.val]
++      if hpk : x.publicKey.size = 32 then
++        if hmsg : x.message.size = 32 then
++          acc.push ⟨"claims", #[
++            Model.Xmss.packCellProof x.publicKey 0 (by omega),
++            Model.Xmss.packCellProof x.publicKey 16 (by omega),
++            Model.Xmss.packCellProof x.message 0 (by omega),
++            Model.Xmss.packCellProof x.message 16 (by omega)]⟩
++        else
++          acc.push ⟨"claims", #[packCell x.publicKey, packCell x.publicKey 16, packCell x.message, packCell x.message 16]⟩
++      else
++        acc.push ⟨"claims", #[packCell x.publicKey, packCell x.publicKey 16, packCell x.message, packCell x.message 16]⟩
++    else acc) headerEntries
++  let headerBytes := encodeHintsSlice headerEntries 0 headerEntries.size
++  let footerEntries : Array HintEntry := #[⟨"leaf_defer", #[bytecodeValue]⟩, ⟨"da_pick", #[zeroCount]⟩]
++  let footerBytes := encodeHintsSlice footerEntries 0 footerEntries.size
++  let chunks ← Fin.foldl tasks.size (fun (acc : Except String (Array ByteArray)) w =>
++    match acc with
++    | .error e => .error e
++    | .ok arr =>
++      if h : w.val < tasks.size then
++        match tasks[w.val].get with
++        | .error e => .error e
++        | .ok chunkBytes => .ok (arr.push chunkBytes)
++      else .ok arr) (.ok (Array.emptyWithCapacity wCount))
++  let total := Fin.foldl chunks.size (fun s w =>
++    if h : w.val < chunks.size then s + chunks[w.val].size else s) (headerBytes.size + footerBytes.size)
++  let out := ByteArray.emptyWithCapacity total
++  let out := ByteArray.copySlice headerBytes 0 out out.size headerBytes.size false
++  let out := Fin.foldl chunks.size (fun b w =>
++    if h : w.val < chunks.size then
++      let c := chunks[w.val]
++      ByteArray.copySlice c 0 b b.size c.size false
++    else b) out
++  let out := ByteArray.copySlice footerBytes 0 out out.size footerBytes.size false
++  .ok out
++
++/-- Directly verify and encode `hints.bin` wire bytes from raw inputs. -/
++def encodedHintsOfVerified (seed : ByteArray) (raw : Array RawSignature)
++    (bytecodeValue : Spec.Field.E) : Except String ByteArray := do
++  let signers := Model.Xmss.sortedUniqueFast raw
++  let out ← encodeHintsFromSignersDirect #[packCell seed, packCell seed 16] signers bytecodeValue
++  if signers.size == raw.size then
++    .ok out
++  else
++    let allOk := Fin.foldl raw.size (fun ok i =>
++      if !ok then false
++      else if h : i.val < raw.size then Model.Xmss.verifySignatureFast raw[i.val]
++      else true) true
++    if allOk then .ok out else .error "Lean signature verification failed"
++
++/-- Directly verify, encode, and stream-hash workload hints into `(hintEntryCount, hintsKeccak256)`
++without materializing boxed `HintEntry` arrays. -/
++def hashWorkloadHintsFromSignersDirect (seed : Array Spec.Field.E) (signers : Array RawSignature)
++    (bytecodeValue : Spec.Field.E) : Except String (Nat × ByteArray) := do
++  let n := signers.size
++  let rawIdxTable := Model.Xmss.buildCountArray n
++  let wCount := min Model.Xmss.numWorkers (max n 1)
++  let tasks := Fin.foldl wCount (fun ts w =>
++    let start := (w.val * n) / wCount
++    let stop := ((w.val + 1) * n) / wCount
++    let len := stop - start
++    let t : Task (Except String ByteArray) := Task.spawn fun () =>
++      Fin.foldl len (fun (acc : Except String ByteArray) k =>
++        match acc with
++        | .error e => .error e
++        | .ok b =>
++          let idx := start + k.val
++          if h : idx < signers.size then
++            let rv := if hr : idx < rawIdxTable.size then rawIdxTable[idx] else Model.Xmss.countFast idx
++            signerDirectBytes signers[idx] rv b
++          else .ok b) (.ok (ByteArray.emptyWithCapacity (len * 7457)))
++    ts.push t) (Array.emptyWithCapacity wCount : Array (Task (Except String ByteArray)))
++  let zeroCount := Model.Xmss.countFast 0
++  let nCount := if hn : n < rawIdxTable.size then rawIdxTable[n] else Model.Xmss.countFast n
++  let headerEntries : Array HintEntry := Array.emptyWithCapacity (3 + n)
++  let headerEntries := headerEntries.push ⟨"meta", #[nCount, zeroCount, nCount, zeroCount, zeroCount, zeroCount, zeroCount, zeroCount]⟩
++  let headerEntries := headerEntries.push ⟨"fs_seed", seed⟩
++  let headerEntries := if n > 0 then headerEntries.push ⟨"signers_split", Model.Xmss.listSplitFast n⟩ else headerEntries
++  let headerEntries := Fin.foldl n (fun acc i =>
++    if h : i.val < signers.size then
++      let x := signers[i.val]
++      if hpk : x.publicKey.size = 32 then
++        if hmsg : x.message.size = 32 then
++          acc.push ⟨"claims", #[
++            Model.Xmss.packCellProof x.publicKey 0 (by omega),
++            Model.Xmss.packCellProof x.publicKey 16 (by omega),
++            Model.Xmss.packCellProof x.message 0 (by omega),
++            Model.Xmss.packCellProof x.message 16 (by omega)]⟩
++        else
++          acc.push ⟨"claims", #[packCell x.publicKey, packCell x.publicKey 16, packCell x.message, packCell x.message 16]⟩
++      else
++        acc.push ⟨"claims", #[packCell x.publicKey, packCell x.publicKey 16, packCell x.message, packCell x.message 16]⟩
++    else acc) headerEntries
++  let headerBytes := encodeHintsSlice headerEntries 0 headerEntries.size
++  let (st0, carry0) := Model.Keccak.absorbChunkCPS Model.Keccak.zeroState25Fast ByteArray.empty headerBytes
++  let (st1, carry1) ← Fin.foldl tasks.size (fun (acc : Except String (Model.Keccak.State25 × ByteArray)) w =>
++    match acc with
++    | .error e => .error e
++    | .ok (s, rem) =>
++      if h : w.val < tasks.size then
++        match tasks[w.val].get with
++        | .error e => .error e
++        | .ok chunkBytes => .ok (Model.Keccak.absorbChunkCPS s rem chunkBytes)
++      else .ok (s, rem)) (.ok (st0, carry0))
++  let footerEntries : Array HintEntry := #[⟨"leaf_defer", #[bytecodeValue]⟩, ⟨"da_pick", #[zeroCount]⟩]
++  let footerBytes := encodeHintsSlice footerEntries 0 footerEntries.size
++  let (st2, carry2) := Model.Keccak.absorbChunkCPS st1 carry1 footerBytes
++  let digest := Model.Keccak.finalizeKeccak256CPS st2 carry2 0 carry2.size
++  let totalEntries := headerEntries.size + n * 155 + 2
++  .ok (totalEntries, digest)
+ 
+ /-- The `hints.bin` wire encoding of a hint list. -/
+-def encodeHints (hints : Array HintEntry) : ByteArray := hints.foldl (fun acc h =>
+-  let name := h.name.toUTF8
+-  let header := writeLE name.size.toUInt64 4 ++ name ++ writeLE h.values.size.toUInt64 4
+-  let words := h.values.foldl (fun bytes x =>
+-      bytes ++ writeLE x.c0 8 ++ writeLE x.c1 8 ++ writeLE x.c2 8) ByteArray.empty
+-  acc ++ header ++ words) ByteArray.empty
++def encodeHints (hints : Array HintEntry) : ByteArray :=
++  let n := hints.size
++  if n <= 512 then
++    encodeHintsSlice hints 0 n
++  else
++    let wCount := 16
++    let tasks := Fin.foldl wCount (fun ts w =>
++      let start := (w.val * n) / wCount
++      let stop := ((w.val + 1) * n) / wCount
++      let len := stop - start
++      let t : Task ByteArray := Task.spawn fun () => encodeHintsSlice hints start len
++      ts.push t) (Array.emptyWithCapacity wCount : Array (Task ByteArray))
++    let chunks := Fin.foldl tasks.size (fun acc w =>
++      if h : w.val < tasks.size then acc.push tasks[w.val].get else acc)
++      (Array.emptyWithCapacity wCount : Array ByteArray)
++    let total := Fin.foldl chunks.size (fun s w =>
++      if h : w.val < chunks.size then s + chunks[w.val].size else s) 0
++    Fin.foldl chunks.size (fun out w =>
++      if h : w.val < chunks.size then
++        let c := chunks[w.val]
++        ByteArray.copySlice c 0 out out.size c.size false
++      else out) (ByteArray.emptyWithCapacity total)
+ 
+ /-- Group hint entries into the named witness streams the VM pops entries from. -/
+-def streamsOfHints (hints : Array HintEntry) : Array Stream := Id.run do
+-  let mut streams : Array Stream := #[]
+-  for hint in hints do
+-    if let some i := streams.findIdx? (fun s => s.name == hint.name) then
+-      streams := streams.modify i fun s => {s with entries := s.entries.push hint.values}
+-    else streams := streams.push ⟨hint.name, #[hint.values], 0⟩
+-  return streams
++def streamsOfHints (hints : Array HintEntry) : Array Stream :=
++  Fin.foldl hints.size (fun streams idx =>
++    if h : idx.val < hints.size then
++      let hint := hints[idx.val]
++      match streams.findIdx? (fun s => s.name == hint.name) with
++      | some i => streams.modify i fun s => {s with entries := s.entries.push hint.values}
++      | none => streams.push ⟨hint.name, #[hint.values], 0⟩
++    else streams) (Array.emptyWithCapacity 16)
+ 
+ def hex (bytes : ByteArray) : String := String.ofList (bytes.data.toList.flatMap fun b =>
+   let digits := #[ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' ]
+diff --git a/Model/Keccak/Registers.lean b/Model/Keccak/Registers.lean
+index 7a07b90..517ca08 100644
+--- a/Model/Keccak/Registers.lean
++++ b/Model/Keccak/Registers.lean
+@@ -444,4 +444,393 @@ def rounds25 (count : Nat) : Nat → State25 → State25 :=
+ 
+ def keccakF1600 (s : State25) : State25 := rounds25 24 0 s
+ 
++structure Pair64 where
++  lo : UInt64
++  hi : UInt64
++  deriving Repr, DecidableEq, Inhabited
++
++@[inline] def rotl64Fast (x : UInt64) (k : UInt64) : UInt64 :=
++  (x <<< k) ||| (x >>> (64 - k))
++
++@[inline] def round25CPS {α : Type}
++    (a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 rc : UInt64)
++    (k : UInt64 → UInt64 → UInt64 → UInt64 → UInt64 →
++         UInt64 → UInt64 → UInt64 → UInt64 → UInt64 →
++         UInt64 → UInt64 → UInt64 → UInt64 → UInt64 →
++         UInt64 → UInt64 → UInt64 → UInt64 → UInt64 →
++         UInt64 → UInt64 → UInt64 → UInt64 → UInt64 → α) : α :=
++  let c0 := a00 ^^^ a05 ^^^ a10 ^^^ a15 ^^^ a20
++  let c1 := a01 ^^^ a06 ^^^ a11 ^^^ a16 ^^^ a21
++  let c2 := a02 ^^^ a07 ^^^ a12 ^^^ a17 ^^^ a22
++  let c3 := a03 ^^^ a08 ^^^ a13 ^^^ a18 ^^^ a23
++  let c4 := a04 ^^^ a09 ^^^ a14 ^^^ a19 ^^^ a24
++  let d0 := c4 ^^^ rotl64Fast c1 1
++  let d1 := c0 ^^^ rotl64Fast c2 1
++  let d2 := c1 ^^^ rotl64Fast c3 1
++  let d3 := c2 ^^^ rotl64Fast c4 1
++  let d4 := c3 ^^^ rotl64Fast c0 1
++  let b00 := a00 ^^^ d0
++  let b10 := rotl64Fast (a01 ^^^ d1) 1
++  let b20 := rotl64Fast (a02 ^^^ d2) 62
++  let b05 := rotl64Fast (a03 ^^^ d3) 28
++  let b15 := rotl64Fast (a04 ^^^ d4) 27
++  let b16 := rotl64Fast (a05 ^^^ d0) 36
++  let b01 := rotl64Fast (a06 ^^^ d1) 44
++  let b11 := rotl64Fast (a07 ^^^ d2) 6
++  let b21 := rotl64Fast (a08 ^^^ d3) 55
++  let b06 := rotl64Fast (a09 ^^^ d4) 20
++  let b07 := rotl64Fast (a10 ^^^ d0) 3
++  let b17 := rotl64Fast (a11 ^^^ d1) 10
++  let b02 := rotl64Fast (a12 ^^^ d2) 43
++  let b12 := rotl64Fast (a13 ^^^ d3) 25
++  let b22 := rotl64Fast (a14 ^^^ d4) 39
++  let b23 := rotl64Fast (a15 ^^^ d0) 41
++  let b08 := rotl64Fast (a16 ^^^ d1) 45
++  let b18 := rotl64Fast (a17 ^^^ d2) 15
++  let b03 := rotl64Fast (a18 ^^^ d3) 21
++  let b13 := rotl64Fast (a19 ^^^ d4) 8
++  let b14 := rotl64Fast (a20 ^^^ d0) 18
++  let b24 := rotl64Fast (a21 ^^^ d1) 2
++  let b09 := rotl64Fast (a22 ^^^ d2) 61
++  let b19 := rotl64Fast (a23 ^^^ d3) 56
++  let b04 := rotl64Fast (a24 ^^^ d4) 14
++  k ((b00 ^^^ ((~~~b01) &&& b02)) ^^^ rc)
++    (b01 ^^^ ((~~~b02) &&& b03))
++    (b02 ^^^ ((~~~b03) &&& b04))
++    (b03 ^^^ ((~~~b04) &&& b00))
++    (b04 ^^^ ((~~~b00) &&& b01))
++    (b05 ^^^ ((~~~b06) &&& b07))
++    (b06 ^^^ ((~~~b07) &&& b08))
++    (b07 ^^^ ((~~~b08) &&& b09))
++    (b08 ^^^ ((~~~b09) &&& b05))
++    (b09 ^^^ ((~~~b05) &&& b06))
++    (b10 ^^^ ((~~~b11) &&& b12))
++    (b11 ^^^ ((~~~b12) &&& b13))
++    (b12 ^^^ ((~~~b13) &&& b14))
++    (b13 ^^^ ((~~~b14) &&& b10))
++    (b14 ^^^ ((~~~b10) &&& b11))
++    (b15 ^^^ ((~~~b16) &&& b17))
++    (b16 ^^^ ((~~~b17) &&& b18))
++    (b17 ^^^ ((~~~b18) &&& b19))
++    (b18 ^^^ ((~~~b19) &&& b15))
++    (b19 ^^^ ((~~~b15) &&& b16))
++    (b20 ^^^ ((~~~b21) &&& b22))
++    (b21 ^^^ ((~~~b22) &&& b23))
++    (b22 ^^^ ((~~~b23) &&& b24))
++    (b23 ^^^ ((~~~b24) &&& b20))
++    (b24 ^^^ ((~~~b20) &&& b21))
++
++def permuteAbsorb25 (s : State25)
++    (w0 w1 w2 w3 w4 w5 w6 w7 w8 w9 w10 w11 w12 w13 w14 w15 w16 : UInt64) : State25 :=
++  round25CPS (s.a00 ^^^ w0) (s.a01 ^^^ w1) (s.a02 ^^^ w2) (s.a03 ^^^ w3) (s.a04 ^^^ w4)
++    (s.a05 ^^^ w5) (s.a06 ^^^ w6) (s.a07 ^^^ w7) (s.a08 ^^^ w8) (s.a09 ^^^ w9)
++    (s.a10 ^^^ w10) (s.a11 ^^^ w11) (s.a12 ^^^ w12) (s.a13 ^^^ w13) (s.a14 ^^^ w14)
++    (s.a15 ^^^ w15) (s.a16 ^^^ w16) s.a17 s.a18 s.a19 s.a20 s.a21 s.a22 s.a23 s.a24
++    0x0000000000000001
++    fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x0000000000008082 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x800000000000808a fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x8000000080008000 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x000000000000808b fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x0000000080000001 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x8000000080008081 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x8000000000008009 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x000000000000008a fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x0000000000000088 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x0000000080008009 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x000000008000000a fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x000000008000808b fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x800000000000008b fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x8000000000008089 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x8000000000008003 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x8000000000008002 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x8000000000000080 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x000000000000800a fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x800000008000000a fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x8000000080008081 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x8000000000008080 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x0000000080000001 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x8000000080008008 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  ⟨a00, a01, a02, a03, a04, a05, a06, a07, a08, a09, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23, a24⟩
++
++def keccak1Block16 (w0 w1 w2 w3 w4 w5 w6 w7 w8 : UInt64) : Pair64 :=
++  round25CPS w0 w1 w2 w3 w4 w5 w6 w7 w8 0 0 0 0 0 0 0 0x8000000000000000 0 0 0 0 0 0 0 0
++    0x0000000000000001
++    fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x0000000000008082 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x800000000000808a fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x8000000080008000 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x000000000000808b fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x0000000080000001 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x8000000080008081 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x8000000000008009 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x000000000000008a fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x0000000000000088 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x0000000080008009 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x000000008000000a fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x000000008000808b fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x800000000000008b fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x8000000000008089 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x8000000000008003 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x8000000000008002 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x8000000000000080 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x000000000000800a fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x800000008000000a fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x8000000080008081 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x8000000000008080 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x0000000080000001 fun a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24 =>
++  round25CPS a00 a01 a02 a03 a04 a05 a06 a07 a08 a09 a10 a11 a12 a13 a14 a15 a16 a17 a18 a19 a20 a21 a22 a23 a24
++    0x8000000080008008 fun a00 a01 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ =>
++  ⟨a00, a01⟩
++
++def zeroState25Fast : State25 :=
++  ⟨0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0⟩
++
++@[inline] def readWordLEProof (b : @& ByteArray) (offset : Nat) (_ : offset + 7 < b.size) : UInt64 :=
++  (b[offset]).toUInt64 |||
++  ((b[offset + 1]).toUInt64 <<< 8) |||
++  ((b[offset + 2]).toUInt64 <<< 16) |||
++  ((b[offset + 3]).toUInt64 <<< 24) |||
++  ((b[offset + 4]).toUInt64 <<< 32) |||
++  ((b[offset + 5]).toUInt64 <<< 40) |||
++  ((b[offset + 6]).toUInt64 <<< 48) |||
++  ((b[offset + 7]).toUInt64 <<< 56)
++
++@[inline] def readWordLEFast (b : @& ByteArray) (offset : Nat) : UInt64 :=
++  if h : offset + 7 < b.size then
++    readWordLEProof b offset h
++  else
++    Fin.foldl 8 (fun w j =>
++      let idx := offset + j.val
++      if h2 : idx < b.size then w ||| ((b[idx]).toUInt64 <<< (8 * j.val).toUInt64) else w) 0
++
++@[inline] def pushU64LE (b : ByteArray) (w : UInt64) : ByteArray :=
++  b.push w.toUInt8
++    |>.push (w >>> 8).toUInt8
++    |>.push (w >>> 16).toUInt8
++    |>.push (w >>> 24).toUInt8
++    |>.push (w >>> 32).toUInt8
++    |>.push (w >>> 40).toUInt8
++    |>.push (w >>> 48).toUInt8
++    |>.push (w >>> 56).toUInt8
++
++theorem usize_1073741824_lt : 1073741824 < USize.size := by
++  cases USize.size_eq with
++  | inl h32 => rw [h32]; decide
++  | inr h64 => rw [h64]; decide
++
++theorem usize_ofNat_small (k : Nat) (hk : k ≤ 256) : (USize.ofNat k).toNat = k := by
++  have h1 := usize_1073741824_lt
++  exact USize.toNat_ofNat_of_lt (by omega)
++
++theorem add_usize_k {a : USize} {k n : Nat}
++    (hk : k ≤ 256) (hn : n < USize.size) (ha : a.toNat + k < n) :
++    (a + USize.ofNat k).toNat < n := by
++  have h1 : (a + USize.ofNat k).toNat = (a.toNat + (USize.ofNat k).toNat) % USize.size :=
++    USize.toNat_add a (USize.ofNat k)
++  rw [h1, usize_ofNat_small k hk, Nat.mod_eq_of_lt (by omega)]
++  exact ha
++
++@[inline] def readWordLEUSize1 (b : @& ByteArray) (off : USize)
++    (hsz : b.size < USize.size) (h : off.toNat + 7 < b.size) : UInt64 :=
++  (b.uget off (by omega)).toUInt64 |||
++  ((b.uget (off + USize.ofNat 1) (add_usize_k (k := 1) (by omega) hsz (by omega))).toUInt64 <<< 8) |||
++  ((b.uget (off + USize.ofNat 2) (add_usize_k (k := 2) (by omega) hsz (by omega))).toUInt64 <<< 16) |||
++  ((b.uget (off + USize.ofNat 3) (add_usize_k (k := 3) (by omega) hsz (by omega))).toUInt64 <<< 24) |||
++  ((b.uget (off + USize.ofNat 4) (add_usize_k (k := 4) (by omega) hsz (by omega))).toUInt64 <<< 32) |||
++  ((b.uget (off + USize.ofNat 5) (add_usize_k (k := 5) (by omega) hsz (by omega))).toUInt64 <<< 40) |||
++  ((b.uget (off + USize.ofNat 6) (add_usize_k (k := 6) (by omega) hsz (by omega))).toUInt64 <<< 48) |||
++  ((b.uget (off + USize.ofNat 7) (add_usize_k (k := 7) (by omega) hsz (by omega))).toUInt64 <<< 56)
++
++@[inline] def rdWordAt (b : @& ByteArray) (baseU : USize) (k : Nat)
++    (hk : k ≤ 128) (hsz : b.size < USize.size) (hblk : baseU.toNat + 135 < b.size) : UInt64 :=
++  have hadd : (baseU + USize.ofNat k).toNat + 7 < b.size := by
++    have h1 : (baseU + USize.ofNat k).toNat = (baseU.toNat + (USize.ofNat k).toNat) % USize.size :=
++      USize.toNat_add baseU (USize.ofNat k)
++    rw [h1, usize_ofNat_small k (by omega), Nat.mod_eq_of_lt (by omega)]
++    omega
++  readWordLEUSize1 b (baseU + USize.ofNat k) hsz hadd
++
++def absorbFullBlocksAtCPS (st : State25) (b : @& ByteArray) (startOff : Nat) : State25 :=
++  if hle : startOff ≤ b.size then
++    let nFull := (b.size - startOff) / 136
++    if hsz : b.size < 1073741824 then
++      have hszU : b.size < USize.size := Nat.lt_trans hsz usize_1073741824_lt
++      let startU : USize := startOff.toUSize
++      have hstartU : startU.toNat = startOff := USize.toNat_ofNat_of_lt (by omega)
++      Fin.foldl nFull (fun s i =>
++        let idxU : USize := i.val.toUSize
++        let baseU : USize := startU + idxU * USize.ofNat 136
++        have hbase : baseU.toNat = startOff + i.val * 136 := by
++          have hi : i.val < (b.size - startOff) / 136 := i.isLt
++          have hiU : i.val < USize.size := by omega
++          have hidx : idxU.toNat = i.val := USize.toNat_ofNat_of_lt hiU
++          have hmul : (idxU * USize.ofNat 136).toNat = i.val * 136 := by
++            have hm : (idxU * USize.ofNat 136).toNat = (idxU.toNat * (USize.ofNat 136).toNat) % USize.size :=
++              USize.toNat_mul idxU (USize.ofNat 136)
++            rw [hm, hidx, usize_ofNat_small 136 (by omega), Nat.mod_eq_of_lt (by omega)]
++          have hadd : baseU.toNat = (startU.toNat + (idxU * USize.ofNat 136).toNat) % USize.size :=
++            USize.toNat_add startU (idxU * USize.ofNat 136)
++          rw [hadd, hstartU, hmul, Nat.mod_eq_of_lt (by omega)]
++        have hblk : baseU.toNat + 135 < b.size := by
++          have hi : i.val < (b.size - startOff) / 136 := i.isLt
++          omega
++        permuteAbsorb25 s
++          (readWordLEUSize1 b baseU hszU (by omega))
++          (rdWordAt b baseU 8 (by omega) hszU hblk)
++          (rdWordAt b baseU 16 (by omega) hszU hblk)
++          (rdWordAt b baseU 24 (by omega) hszU hblk)
++          (rdWordAt b baseU 32 (by omega) hszU hblk)
++          (rdWordAt b baseU 40 (by omega) hszU hblk)
++          (rdWordAt b baseU 48 (by omega) hszU hblk)
++          (rdWordAt b baseU 56 (by omega) hszU hblk)
++          (rdWordAt b baseU 64 (by omega) hszU hblk)
++          (rdWordAt b baseU 72 (by omega) hszU hblk)
++          (rdWordAt b baseU 80 (by omega) hszU hblk)
++          (rdWordAt b baseU 88 (by omega) hszU hblk)
++          (rdWordAt b baseU 96 (by omega) hszU hblk)
++          (rdWordAt b baseU 104 (by omega) hszU hblk)
++          (rdWordAt b baseU 112 (by omega) hszU hblk)
++          (rdWordAt b baseU 120 (by omega) hszU hblk)
++          (rdWordAt b baseU 128 (by omega) hszU hblk)) st
++    else
++      Fin.foldl nFull (fun s i =>
++        let base := startOff + 136 * i.val
++        have hblk : base + 135 < b.size := by
++          have hi : i.val < (b.size - startOff) / 136 := i.isLt
++          omega
++        permuteAbsorb25 s
++          (readWordLEProof b base (by omega))
++          (readWordLEProof b (base + 8) (by omega))
++          (readWordLEProof b (base + 16) (by omega))
++          (readWordLEProof b (base + 24) (by omega))
++          (readWordLEProof b (base + 32) (by omega))
++          (readWordLEProof b (base + 40) (by omega))
++          (readWordLEProof b (base + 48) (by omega))
++          (readWordLEProof b (base + 56) (by omega))
++          (readWordLEProof b (base + 64) (by omega))
++          (readWordLEProof b (base + 72) (by omega))
++          (readWordLEProof b (base + 80) (by omega))
++          (readWordLEProof b (base + 88) (by omega))
++          (readWordLEProof b (base + 96) (by omega))
++          (readWordLEProof b (base + 104) (by omega))
++          (readWordLEProof b (base + 112) (by omega))
++          (readWordLEProof b (base + 120) (by omega))
++          (readWordLEProof b (base + 128) (by omega))) st
++  else st
++
++def absorbChunkCPS (st : State25) (carry : ByteArray) (c : @& ByteArray) : State25 × ByteArray :=
++  if carry.size == 0 then
++    let nFull := c.size / 136
++    let st' := absorbFullBlocksAtCPS st c 0
++    let tailStart := 136 * nFull
++    (st', c.extract tailStart c.size)
++  else if carry.size + c.size < 136 then
++    let b := ByteArray.emptyWithCapacity (carry.size + c.size)
++    let b := Fin.foldl carry.size (fun acc j =>
++      if hj : j.val < carry.size then acc.push carry[j.val] else acc) b
++    let b := Fin.foldl c.size (fun acc j =>
++      if hj : j.val < c.size then acc.push c[j.val] else acc) b
++    (st, b)
++  else
++    let need := 136 - carry.size
++    let blk := ByteArray.emptyWithCapacity 136
++    let blk := Fin.foldl carry.size (fun acc j =>
++      if hj : j.val < carry.size then acc.push carry[j.val] else acc) blk
++    let blk := Fin.foldl need (fun acc j =>
++      if hj : j.val < c.size then acc.push c[j.val] else acc) blk
++    let st1 := absorbFullBlocksAtCPS st blk 0
++    let remLen := c.size - need
++    let nFull := remLen / 136
++    let st2 := absorbFullBlocksAtCPS st1 c need
++    let tailStart := need + 136 * nFull
++    (st2, c.extract tailStart c.size)
++
++def absorbFullBlocksCPS (st : State25) (b : @& ByteArray) : State25 :=
++  absorbFullBlocksAtCPS st b 0
++
++def finalizeKeccak256CPS (st : State25) (tail : @& ByteArray) (tailStart tailLen : Nat) : ByteArray :=
++  let pad := Fin.foldl tailLen (fun blk i =>
++    let idx := tailStart + i.val
++    if h : idx < tail.size then blk.set! i.val tail[idx] else blk) (ByteArray.mk (Array.replicate 136 0))
++  let pad := pad.set! tailLen ((pad[tailLen]?.getD 0) ^^^ 1)
++  let pad := pad.set! 135 ((pad[135]?.getD 0) ^^^ 128)
++  let stFinal :=
++    if hpad : 135 < pad.size then
++      permuteAbsorb25 st
++        (readWordLEProof pad 0 (by omega))
++        (readWordLEProof pad 8 (by omega))
++        (readWordLEProof pad 16 (by omega))
++        (readWordLEProof pad 24 (by omega))
++        (readWordLEProof pad 32 (by omega))
++        (readWordLEProof pad 40 (by omega))
++        (readWordLEProof pad 48 (by omega))
++        (readWordLEProof pad 56 (by omega))
++        (readWordLEProof pad 64 (by omega))
++        (readWordLEProof pad 72 (by omega))
++        (readWordLEProof pad 80 (by omega))
++        (readWordLEProof pad 88 (by omega))
++        (readWordLEProof pad 96 (by omega))
++        (readWordLEProof pad 104 (by omega))
++        (readWordLEProof pad 112 (by omega))
++        (readWordLEProof pad 120 (by omega))
++        (readWordLEProof pad 128 (by omega))
++    else st
++  let out := ByteArray.emptyWithCapacity 32
++  let out := pushU64LE out stFinal.a00
++  let out := pushU64LE out stFinal.a01
++  let out := pushU64LE out stFinal.a02
++  pushU64LE out stFinal.a03
++
++def keccak256CPS (b : @& ByteArray) : ByteArray :=
++  let nFull := b.size / 136
++  let st := absorbFullBlocksCPS zeroState25Fast b
++  let tailStart := 136 * nFull
++  finalizeKeccak256CPS st b tailStart (b.size - tailStart)
++
+ end LeanVmXmss.Model.Keccak
+diff --git a/Model/Xmss/Hints.lean b/Model/Xmss/Hints.lean
+index a64aa94..6a1208d 100644
+--- a/Model/Xmss/Hints.lean
++++ b/Model/Xmss/Hints.lean
+@@ -1,9 +1,427 @@
+ import Spec.Xmss.Hints
++import Model.Vm.Kernel
++import Model.Keccak.Registers
+ 
+ namespace LeanVmXmss.Model.Xmss
+ 
++open Spec.Field (E)
++open Spec.Xmss (HintEntry RawSignature count packCell readLE writeLE claimGroup bigGroups)
++open Model.Keccak (Pair64 State25 zeroState25Fast permuteAbsorb25 keccak1Block16 keccak256CPS
++  readWordLEProof readWordLEFast pushU64LE)
++
+ def signatureHints := Spec.Xmss.signatureHints
+-def workloadHints := Spec.Xmss.workloadHints
+-def statementDigest := Spec.Xmss.statementDigest
++
++@[inline] def gpowFast (n : Nat) : UInt64 :=
++  Fin.foldl n (fun x _ => Model.Vm.scalarGeneratorStep x) (1 : UInt64)
++
++@[inline] def countFastGen (n : Nat) : E := ⟨gpowFast n, 0, 0⟩
++
++def gpow256Table : Array E :=
++  Fin.foldl 256 (fun acc i => acc.push (countFastGen i.val)) (Array.emptyWithCapacity 256)
++
++@[inline] def countFast (n : Nat) : E :=
++  if h : n < gpow256Table.size then gpow256Table[n] else countFastGen n
++
++@[inline] def listSplitFast (n : Nat) : Array E :=
++  #[countFast (n / (claimGroup * bigGroups)),
++    countFast (n % (claimGroup * bigGroups) / claimGroup),
++    countFast (n % claimGroup)]
++
++@[inline] def addressLo (kind layer field index step : Nat) : UInt64 :=
++  (index.toUInt64 &&& (0xffffffff : UInt64)) |||
++  (((field ||| (layer <<< 23)).toUInt64 &&& (0xffffff : UInt64)) <<< 32) |||
++  (((kind ||| (step <<< 5)).toUInt64 &&& (0xff : UInt64)) <<< 56)
++
++@[inline] def packPair64 (p : Pair64) : E := ⟨p.lo, p.hi, 0⟩
++
++@[inline] def readPair64Proof (b : @& ByteArray) (offset : Nat) (_ : offset + 15 < b.size) : Pair64 :=
++  ⟨readWordLEProof b offset (by omega), readWordLEProof b (offset + 8) (by omega)⟩
++
++@[inline] def packCellProof (b : @& ByteArray) (offset : Nat) (h : offset + 15 < b.size) : E :=
++  ⟨readWordLEProof b offset (by omega), readWordLEProof b (offset + 8) (by omega), 0⟩
++
++@[inline] def u64Eq (a b : UInt64) : Bool := decide (a = b)
++@[inline] def u64Ne (a b : UInt64) : Bool := !decide (a = b)
++
++def codeword58 (d : Pair64) : Option (Array Nat) :=
++  let sumAndOk := Fin.foldl 58 (fun acc i =>
++    let bitPos := (i.val * 2).toUInt64
++    let word := if i.val < 32 then d.lo else d.hi
++    let shift := if i.val < 32 then bitPos else bitPos - 64
++    let digit := ((word >>> shift) &&& 3).toNat
++    (acc.1.push digit, acc.2 + digit)) (Array.emptyWithCapacity 58, 0)
++  let tailHigh := d.hi >>> 52
++  if u64Ne tailHigh 0 || sumAndOk.2 != 106 then
++    none
++  else
++    some sumAndOk.1
++
++@[inline] def chainFast (pp : Pair64) (layer index i start : Nat) (val : Pair64) : Pair64 :=
++  let steps := 3 - start
++  let iLo := i.toUInt64
++  Fin.foldl steps (fun cur k =>
++    let addr0 := addressLo 1 layer 0 index (start + k.val)
++    keccak1Block16 pp.lo pp.hi addr0 0 cur.lo cur.hi iLo 0 0x01) val
++
++def hashLeafEnds (pp : Pair64) (layer e : Nat) (ends : @& Array Pair64) : Pair64 :=
++  if hends : ends.size = 58 then
++    let addr0 := addressLo 2 layer 0 e 0
++    let s := zeroState25Fast
++    let p0 := ends[0]
++    let p1 := ends[1]
++    let p2 := ends[2]
++    let p3 := ends[3]
++    let p4 := ends[4]
++    let p5 := ends[5]
++    let p6 := ends[6]
++    let s := permuteAbsorb25 s pp.lo pp.hi addr0 0
++      p0.lo p0.hi p1.lo p1.hi p2.lo p2.hi p3.lo p3.hi p4.lo p4.hi p5.lo p5.hi p6.lo
++    let p7 := ends[7]
++    let p8 := ends[8]
++    let p9 := ends[9]
++    let p10 := ends[10]
++    let p11 := ends[11]
++    let p12 := ends[12]
++    let p13 := ends[13]
++    let p14 := ends[14]
++    let s := permuteAbsorb25 s p6.hi p7.lo p7.hi p8.lo p8.hi p9.lo p9.hi p10.lo p10.hi
++      p11.lo p11.hi p12.lo p12.hi p13.lo p13.hi p14.lo p14.hi
++    let p15 := ends[15]
++    let p16 := ends[16]
++    let p17 := ends[17]
++    let p18 := ends[18]
++    let p19 := ends[19]
++    let p20 := ends[20]
++    let p21 := ends[21]
++    let p22 := ends[22]
++    let p23 := ends[23]
++    let s := permuteAbsorb25 s p15.lo p15.hi p16.lo p16.hi p17.lo p17.hi p18.lo p18.hi
++      p19.lo p19.hi p20.lo p20.hi p21.lo p21.hi p22.lo p22.hi p23.lo
++    let p24 := ends[24]
++    let p25 := ends[25]
++    let p26 := ends[26]
++    let p27 := ends[27]
++    let p28 := ends[28]
++    let p29 := ends[29]
++    let p30 := ends[30]
++    let p31 := ends[31]
++    let s := permuteAbsorb25 s p23.hi p24.lo p24.hi p25.lo p25.hi p26.lo p26.hi p27.lo p27.hi
++      p28.lo p28.hi p29.lo p29.hi p30.lo p30.hi p31.lo p31.hi
++    let p32 := ends[32]
++    let p33 := ends[33]
++    let p34 := ends[34]
++    let p35 := ends[35]
++    let p36 := ends[36]
++    let p37 := ends[37]
++    let p38 := ends[38]
++    let p39 := ends[39]
++    let p40 := ends[40]
++    let s := permuteAbsorb25 s p32.lo p32.hi p33.lo p33.hi p34.lo p34.hi p35.lo p35.hi
++      p36.lo p36.hi p37.lo p37.hi p38.lo p38.hi p39.lo p39.hi p40.lo
++    let p41 := ends[41]
++    let p42 := ends[42]
++    let p43 := ends[43]
++    let p44 := ends[44]
++    let p45 := ends[45]
++    let p46 := ends[46]
++    let p47 := ends[47]
++    let p48 := ends[48]
++    let s := permuteAbsorb25 s p40.hi p41.lo p41.hi p42.lo p42.hi p43.lo p43.hi p44.lo p44.hi
++      p45.lo p45.hi p46.lo p46.hi p47.lo p47.hi p48.lo p48.hi
++    let p49 := ends[49]
++    let p50 := ends[50]
++    let p51 := ends[51]
++    let p52 := ends[52]
++    let p53 := ends[53]
++    let p54 := ends[54]
++    let p55 := ends[55]
++    let p56 := ends[56]
++    let p57 := ends[57]
++    let s := permuteAbsorb25 s p49.lo p49.hi p50.lo p50.hi p51.lo p51.hi p52.lo p52.hi
++      p53.lo p53.hi p54.lo p54.hi p55.lo p55.hi p56.lo p56.hi p57.lo
++    let sFinal := permuteAbsorb25 s p57.hi 0x01 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0x8000000000000000
++    ⟨sFinal.a00, sFinal.a01⟩
++  else ⟨0, 0⟩
++
++def signatureLayerStep (pp : Pair64) (sig : @& ByteArray) (hsig : sig.size = 2404)
++    (index layer : Nat) (hlayer : layer < 2)
++    (hints : Array HintEntry) (rootLo rootHi root2 root3 : UInt64) :
++    Except String (Array HintEntry × Pair64) :=
++  let offset := 4 + layer * 1200
++  let e := index >>> (layer * 16)
++  let rand := readPair64Proof sig offset (by omega)
++  let addrMsg := addressLo 12 layer 0 e 0
++  let digest : Pair64 :=
++    if layer == 0 then
++      let s0 := permuteAbsorb25 zeroState25Fast pp.lo pp.hi addrMsg 0
++        rootLo rootHi root2 root3 rand.lo rand.hi 0x01 0 0 0 0 0 0x8000000000000000
++      ⟨s0.a00, s0.a01⟩
++    else
++      keccak1Block16 pp.lo pp.hi addrMsg 0 rootLo rootHi rand.lo rand.hi 0x01
++  match codeword58 digest with
++  | none => .error "invalid WOTS+C codeword"
++  | some digits =>
++    let ends := Fin.foldl 58 (fun acc i =>
++      let stOff := offset + 16 + i.val * 16
++      let startVal := readPair64Proof sig stOff (by omega)
++      let dig := digits[i.val]?.getD 0
++      acc.push (chainFast pp layer e i.val dig startVal)) (Array.emptyWithCapacity 58)
++    let leafRoot := hashLeafEnds pp layer e ends
++    let (hintsAfterPath, climbedRoot) := Fin.foldl 16 (fun st lv =>
++      let level := lv.val
++      let sibOff := offset + 944 + level * 16
++      let sib := readPair64Proof sig sibOff (by omega)
++      let h1 := st.1.push ⟨"lx_path", #[packPair64 sib]⟩
++      let cur := st.2
++      let addrTree := addressLo 3 layer (level + 1) (e >>> (level + 1)) 0
++      let nextRoot :=
++        if ((e >>> level) &&& 1) == 0 then
++          keccak1Block16 pp.lo pp.hi addrTree 0 cur.lo cur.hi sib.lo sib.hi 0x01
++        else
++          keccak1Block16 pp.lo pp.hi addrTree 0 sib.lo sib.hi cur.lo cur.hi 0x01
++      (h1, nextRoot)) (hints, leafRoot)
++    let hints := hintsAfterPath.push ⟨"randomizer", #[packPair64 rand]⟩
++    let lxDigits := Fin.foldl 15 (fun acc g =>
++      let grp := g.val
++      let cnt := min 4 (58 - grp * 4)
++      let val := Fin.foldl cnt (fun n j =>
++        let d := digits[grp * 4 + j.val]?.getD 0
++        n + d * (1 <<< (2 * j.val))) 0
++      acc.push (countFast val)) (Array.emptyWithCapacity 15)
++    let hints := hints.push ⟨"lx_digits", lxDigits⟩
++    let hints := Fin.foldl 58 (fun acc i =>
++      let stOff := offset + 16 + i.val * 16
++      let startCell := packCellProof sig stOff (by omega)
++      acc.push ⟨"chain_starts", #[startCell]⟩) hints
++    .ok (hints, climbedRoot)
++
++def signatureHintsInto (raw : @& RawSignature) (hints : Array HintEntry) :
++    Except String (Array HintEntry × Pair64 × Pair64) :=
++  if hpk : raw.publicKey.size = 32 then
++    if hmsg : raw.message.size = 32 then
++      if hsig : raw.signature.size = 2404 then
++        let pkRoot := readPair64Proof raw.publicKey 0 (by omega)
++        let pp := readPair64Proof raw.publicKey 16 (by omega)
++        let index : Nat :=
++          (raw.signature[0]).toNat |||
++          ((raw.signature[1]).toNat <<< 8) |||
++          ((raw.signature[2]).toNat <<< 16) |||
++          ((raw.signature[3]).toNat <<< 24)
++        let s0 := index
++        let s1 := index >>> 8
++        let s2 := index >>> 16
++        let s3 := index >>> 24
++        let initHints : Array HintEntry :=
++          hints
++            |>.push ⟨"lx_index", #[⟨s0.toUInt64, 0, 0⟩, ⟨s1.toUInt64, 0, 0⟩, ⟨s2.toUInt64, 0, 0⟩, ⟨s3.toUInt64, 0, 0⟩]⟩
++            |>.push ⟨"lx_windows", #[countFast (s0 &&& 255), countFast (s1 &&& 255), countFast (s2 &&& 255), countFast (s3 &&& 255)]⟩
++        let m0 := readWordLEProof raw.message 0 (by omega)
++        let m1 := readWordLEProof raw.message 8 (by omega)
++        let m2 := readWordLEProof raw.message 16 (by omega)
++        let m3 := readWordLEProof raw.message 24 (by omega)
++        match signatureLayerStep pp raw.signature hsig index 0 (by omega) initHints m0 m1 m2 m3 with
++        | .error e => .error e
++        | .ok (hLayer0, r0) =>
++          match signatureLayerStep pp raw.signature hsig index 1 (by omega) hLayer0 r0.lo r0.hi 0 0 with
++          | .error e => .error e
++          | .ok (hLayer1, r1) => .ok (hLayer1, r1, pkRoot)
++      else .error "invalid XMSS record dimensions"
++    else .error "invalid XMSS record dimensions"
++  else .error "invalid XMSS record dimensions"
++
++def signatureHintsFast (raw : @& RawSignature) : Except String (Array HintEntry × Pair64 × Pair64) :=
++  signatureHintsInto raw (Array.emptyWithCapacity 154)
++
++def verifySignatureFast (raw : @& RawSignature) : Bool :=
++  match signatureHintsFast raw with
++  | .error _ => false
++  | .ok (_, root, pkRoot) => u64Eq root.lo pkRoot.lo && u64Eq root.hi pkRoot.hi
++
++@[inline] def byteCmpLT (a b : @& ByteArray) (len : Nat) : Bool :=
++  let res := Fin.foldl len (fun (st : Nat) i =>
++    if st != 0 then st
++    else
++      let x := a[i.val]?.getD 0
++      let y := b[i.val]?.getD 0
++      if x < y then 1 else if x > y then 2 else 0) 0
++  res == 1
++
++@[inline] def claimLT (a b : @& RawSignature) : Bool :=
++  if a.publicKey.size == 32 && b.publicKey.size == 32 && a.message.size == 32 && b.message.size == 32 then
++    let pkCmp := Fin.foldl 32 (fun (st : Nat) i =>
++      if st != 0 then st
++      else
++        let x := a.publicKey[i.val]?.getD 0
++        let y := b.publicKey[i.val]?.getD 0
++        if x < y then 1 else if x > y then 2 else 0) 0
++    if pkCmp == 1 then true
++    else if pkCmp == 2 then false
++    else byteCmpLT a.message b.message 32
++  else
++    Spec.Xmss.bytesLT (Spec.Xmss.claimBytes a) (Spec.Xmss.claimBytes b)
++
++@[inline] def claimEqFast (a b : @& RawSignature) : Bool :=
++  a.publicKey == b.publicKey && a.message == b.message
++
++def sortedUniqueFast (raw : Array RawSignature) : Array RawSignature :=
++  let sorted := raw.qsort claimLT
++  Fin.foldl sorted.size (fun out i =>
++    if h : i.val < sorted.size then
++      let x := sorted[i.val]
++      if hne : out.size > 0 then
++        let prev := out[out.size - 1]
++        if claimEqFast prev x then out else out.push x
++      else out.push x
++    else out) (Array.emptyWithCapacity sorted.size)
++
++def numWorkers : Nat := 16
++
++def buildCountArray (n : Nat) : Array E :=
++  let arr := Array.emptyWithCapacity n
++  if n == 0 then arr
++  else
++    let arr := arr.push ⟨1, 0, 0⟩
++    let (_, arr) := Fin.foldl (n - 1) (fun (cur, a) _ =>
++      let nxt := Model.Vm.scalarGeneratorStep cur
++      (nxt, a.push ⟨nxt, 0, 0⟩)) ((1 : UInt64), arr)
++    arr
++
++def parallelSignerHints (signers : Array RawSignature) (rawIdxTable : Array E) (checkRoot : Bool) :
++    Except String (Array (Array HintEntry)) :=
++  let n := signers.size
++  if n == 0 then .ok #[]
++  else if n <= 2 then
++    Fin.foldl n (fun acc i =>
++      match acc with
++      | .error e => .error e
++      | .ok arr =>
++        if h : i.val < signers.size then
++          let rawIdxVal := if hr : i.val < rawIdxTable.size then rawIdxTable[i.val] else countFast i.val
++          let initH := (Array.emptyWithCapacity 155).push ⟨"raw_index", #[rawIdxVal]⟩
++          match signatureHintsInto signers[i.val] initH with
++          | .error e => .error e
++          | .ok (sub, root, pkRoot) =>
++            if checkRoot && (u64Ne root.lo pkRoot.lo || u64Ne root.hi pkRoot.hi) then
++              .error "Lean signature verification failed"
++            else
++              .ok (arr.push sub)
++        else .ok arr) (.ok (Array.emptyWithCapacity 1))
++  else
++    let wCount := min numWorkers n
++    let tasks := Fin.foldl wCount (fun ts w =>
++      let start := (w.val * n) / wCount
++      let stop := ((w.val + 1) * n) / wCount
++      let len := stop - start
++      let t : Task (Except String (Array HintEntry)) := Task.spawn fun () =>
++        Fin.foldl len (fun (acc : Except String (Array HintEntry)) k =>
++          match acc with
++          | .error e => .error e
++          | .ok chunk =>
++            let idx := start + k.val
++            if h : idx < signers.size then
++              let rawIdxVal := if hr : idx < rawIdxTable.size then rawIdxTable[idx] else countFast idx
++              let chunk := chunk.push ⟨"raw_index", #[rawIdxVal]⟩
++              match signatureHintsInto signers[idx] chunk with
++              | .error e => .error e
++              | .ok (chunk', root, pkRoot) =>
++                if checkRoot && (u64Ne root.lo pkRoot.lo || u64Ne root.hi pkRoot.hi) then
++                  .error "Lean signature verification failed"
++                else
++                  .ok chunk'
++            else .ok chunk) (.ok (Array.emptyWithCapacity (len * 155)))
++      ts.push t) (Array.emptyWithCapacity wCount : Array (Task (Except String (Array HintEntry))))
++    Fin.foldl tasks.size (fun (acc : Except String (Array (Array HintEntry))) w =>
++      match acc with
++      | .error e => .error e
++      | .ok out =>
++        if h : w.val < tasks.size then
++          match tasks[w.val].get with
++          | .error e => .error e
++          | .ok chunk => .ok (out.push chunk)
++        else .ok out) (.ok (Array.emptyWithCapacity wCount))
++
++def buildWorkloadHintsFromSigners (seed : Array E) (signers : Array RawSignature)
++    (bytecodeValue : E) (checkRoot : Bool) : Except String (Array HintEntry) := do
++  let n := signers.size
++  let rawIdxTable := buildCountArray n
++  let chunks ← parallelSignerHints signers rawIdxTable checkRoot
++  let totalCap := 5 + n + n * 155
++  let hints := Array.emptyWithCapacity totalCap
++  let zeroCount := countFast 0
++  let nCount := if hn : n < rawIdxTable.size then rawIdxTable[n] else countFast n
++  let hints := hints.push ⟨"meta", #[nCount, zeroCount, nCount, zeroCount, zeroCount, zeroCount, zeroCount, zeroCount]⟩
++  let hints := hints.push ⟨"fs_seed", seed⟩
++  let hints := if n > 0 then hints.push ⟨"signers_split", listSplitFast n⟩ else hints
++  let hints := Fin.foldl n (fun acc i =>
++    if h : i.val < signers.size then
++      let x := signers[i.val]
++      if hpk : x.publicKey.size = 32 then
++        if hmsg : x.message.size = 32 then
++          acc.push ⟨"claims", #[
++            packCellProof x.publicKey 0 (by omega),
++            packCellProof x.publicKey 16 (by omega),
++            packCellProof x.message 0 (by omega),
++            packCellProof x.message 16 (by omega)]⟩
++        else
++          acc.push ⟨"claims", #[packCell x.publicKey, packCell x.publicKey 16, packCell x.message, packCell x.message 16]⟩
++      else
++        acc.push ⟨"claims", #[packCell x.publicKey, packCell x.publicKey 16, packCell x.message, packCell x.message 16]⟩
++    else acc) hints
++  let hints := Fin.foldl chunks.size (fun acc w =>
++    if hw : w.val < chunks.size then
++      acc.append chunks[w.val]
++    else acc) hints
++  let hints := hints.push ⟨"leaf_defer", #[bytecodeValue]⟩
++  let hints := hints.push ⟨"da_pick", #[zeroCount]⟩
++  .ok hints
++
++def workloadHints (seed : Array E) (raw : Array RawSignature) (bytecodeValue : E) :
++    Except String (Array HintEntry) :=
++  buildWorkloadHintsFromSigners seed (sortedUniqueFast raw) bytecodeValue false
++
++def workloadHintsVerified (seed : Array E) (raw : Array RawSignature) (bytecodeValue : E) :
++    Except String (Array HintEntry) :=
++  let signers := sortedUniqueFast raw
++  match buildWorkloadHintsFromSigners seed signers bytecodeValue true with
++  | .error e => .error e
++  | .ok hints =>
++    if signers.size == raw.size then
++      .ok hints
++    else
++      let allOk := Fin.foldl raw.size (fun ok i =>
++        if !ok then false
++        else if h : i.val < raw.size then verifySignatureFast raw[i.val]
++        else true) true
++      if allOk then .ok hints else .error "Lean signature verification failed"
++
++def emptyKeccak256 : ByteArray := keccak256CPS ByteArray.empty
++
++def claimListDigestFast (signers : @& Array RawSignature) : ByteArray :=
++  let total := signers.size * 64
++  let buf := Fin.foldl signers.size (fun b i =>
++    if h : i.val < signers.size then
++      let x := signers[i.val]
++      let b := ByteArray.copySlice x.publicKey 0 b b.size x.publicKey.size false
++      ByteArray.copySlice x.message 0 b b.size x.message.size false
++    else b) (ByteArray.emptyWithCapacity total)
++  keccak256CPS buf
++
++def statementDigest (seed : ByteArray) (raw : Array RawSignature) (bytecodeValue : E)
++    (bytecodeVars : Nat := 23) : ByteArray :=
++  let claimsHash := claimListDigestFast raw
++  let emptyHash := emptyKeccak256
++  let nCells := bytecodeVars + 1 + (if (bytecodeVars + 1) % 2 == 1 then 1 else 0)
++  let cap := seed.size + 96 + nCells * 24
++  let buf := ByteArray.emptyWithCapacity cap
++  let buf := ByteArray.copySlice seed 0 buf buf.size seed.size false
++  let buf := ByteArray.copySlice claimsHash 0 buf buf.size claimsHash.size false
++  let buf := ByteArray.copySlice emptyHash 0 buf buf.size emptyHash.size false
++  let buf := Fin.foldl 32 (fun acc _ => acc.push 0) buf
++  let buf := Fin.foldl (bytecodeVars * 24) (fun acc _ => acc.push 0) buf
++  let buf := pushU64LE (pushU64LE (pushU64LE buf bytecodeValue.c0) bytecodeValue.c1) bytecodeValue.c2
++  let buf := if (bytecodeVars + 1) % 2 == 1 then
++    Fin.foldl 24 (fun acc _ => acc.push 0) buf
++  else buf
++  keccak256CPS buf
+ 
+ end LeanVmXmss.Model.Xmss
+diff --git a/Tests/Cli/Check.lean b/Tests/Cli/Check.lean
+index fef16ec..3fa7ae6 100644
+--- a/Tests/Cli/Check.lean
++++ b/Tests/Cli/Check.lean
+@@ -112,10 +112,14 @@ def parityCheck (dir : System.FilePath) : IO (Nat × ByteArray) := do
+   let raw ← loadRawInputs (childPath dir "xmss-inputs.bin")
+   let seed ← loadSeed (childPath dir "seed.bin")
+   let bytecodeValue ← loadBytecodeValue (childPath dir "bytecode-value.bin")
+-  for x in raw do
+-    unless verifySignature x do throw (IO.userError "Lean signature verification failed")
+-  let hints ← liftText (hintsOf seed raw bytecodeValue)
+-  let encoded := encodeHints hints
++  let encoded ← if raw.size > 500 then
++      liftText (encodedHintsOfVerified seed raw bytecodeValue)
++    else do
++      let hints ← liftText (hintsOfVerified seed raw bytecodeValue)
++      let enc := encodeHints hints
++      let encDirect ← liftText (encodedHintsOfVerified seed raw bytecodeValue)
++      unless enc == encDirect do throw (IO.userError "direct/boxed hint byte mismatch")
++      pure enc
+   let expectedHints ← IO.FS.readBinFile (childPath dir "hints.bin")
+   unless encoded == expectedHints do throw (IO.userError "Lean/Rust hint byte mismatch")
+   let statement := statementOf seed raw bytecodeValue
