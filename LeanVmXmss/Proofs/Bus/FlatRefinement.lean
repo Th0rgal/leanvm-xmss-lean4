@@ -322,10 +322,6 @@ private theorem shrinkEqLowFlat_eq (eqr : Array E) :
     (fun i => Spec.Field.eadd (eqr[2 * i]?.getD zero) (eqr[2 * i + 1]?.getD zero))
     4 2048 0 (eqr.size / 2)
 
-private theorem shiftLeft_one_pos (i : Nat) : 0 < 1 <<< i := by
-  rw [Nat.shiftLeft_eq, Nat.one_mul]
-  exact Nat.pow_pos (by omega)
-
 private theorem shiftLeft_succ_two (i : Nat) : 1 <<< (i + 1) = 2 * (1 <<< i) := by
   rw [Nat.shiftLeft_eq, Nat.shiftLeft_eq, Nat.one_mul, Nat.one_mul, Nat.pow_succ]
   omega

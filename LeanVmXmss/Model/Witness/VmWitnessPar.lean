@@ -22,6 +22,11 @@ implementation (`W3-K4-ZMM-PAR-A`):
 
 namespace LeanVmXmss.Model.Witness
 
+local instance : BEq UInt8 := ⟨fun a b => decide (a = b)⟩
+local instance : BEq UInt64 := ⟨fun a b => decide (a = b)⟩
+local instance : BEq UInt32 := ⟨fun a b => decide (a = b)⟩
+local instance : BEq USize := ⟨fun a b => decide (a = b)⟩
+
 open Spec.Field (K E)
 open Spec.Vm
 open Spec.Witness
@@ -263,14 +268,14 @@ def repeatU64BytesExact (n : Nat) (val : UInt64) : ByteArray :=
 @[inline] def gpowSlotOf (key : UInt64) (mask : USize) : USize :=
   ((key * 0x9E3779B97F4A7C15) >>> 32).toUSize &&& mask
 
-def gpowTableInsertLoop (tbl : ByteArray) (mask slot : USize) (key : UInt64) (k1 : UInt32) :
-    Nat → ByteArray
-  | 0 => tbl
-  | fuel + 1 =>
+def gpowTableInsertLoop (tbl : ByteArray) (mask slot : USize) (k1 : UInt32)
+    (fuel : Nat) : ByteArray := Id.run do
+  let mut slot := slot
+  for _ in [:fuel] do
     if getU32Fast tbl slot == 0 then
-      setU32Fast tbl slot k1
-    else
-      gpowTableInsertLoop tbl mask ((slot + 1) &&& mask) key k1 fuel
+      return setU32Fast tbl slot k1
+    slot := (slot + 1) &&& mask
+  return tbl
 
 /-- Insert `(key = pow[k], k)` into an open-addressed `u32` table (`k + 1` stored, `0` empty). -/
 @[inline] def gpowTableInsert (tbl : ByteArray) (mask : USize) (key : UInt64) (k : UInt32) :
@@ -279,19 +284,19 @@ def gpowTableInsertLoop (tbl : ByteArray) (mask slot : USize) (key : UInt64) (k1
   if getU32Fast tbl slot == 0 then
     setU32Fast tbl slot (k + 1)
   else
-    gpowTableInsertLoop tbl mask ((slot + 1) &&& mask) key (k + 1) mask.toNat
+    gpowTableInsertLoop tbl mask ((slot + 1) &&& mask) (k + 1) mask.toNat
 
 /-- Slow fallback linear probe for `gpowTableFind` (`0 = not found`, `k + 1` = found `k`). -/
 @[noinline] def gpowTableFindSlow (tbl : @& ByteArray) (pows : @& ByteArray) (mask slot : USize)
-    (key : UInt64) : Nat → UInt64
-  | 0 => 0
-  | fuel + 1 =>
+    (key : UInt64) (fuel : Nat) : UInt64 := Id.run do
+  let mut slot := slot
+  for _ in [:fuel] do
     let entry := getU32Fast tbl slot
-    if entry == 0 then 0
-    else
-      let k := (entry - 1).toUSize
-      if getU64Fast pows k == key then entry.toUInt64
-      else gpowTableFindSlow tbl pows mask ((slot + 1) &&& mask) key fuel
+    if entry == 0 then return 0
+    let k := (entry - 1).toUSize
+    if getU64Fast pows k == key then return entry.toUInt64
+    slot := (slot + 1) &&& mask
+  return 0
 
 /-- Unboxed open-addressed probe (`0 = not found`, `k + 1` = found `k`). -/
 @[inline] def gpowTableFindRaw (tbl : @& ByteArray) (pows : @& ByteArray) (mask : USize)
@@ -2046,25 +2051,23 @@ set_option maxHeartbeats 1600000 in
   return cur
 
 def executeFastLoop (nProgU : UInt64) (opWords : @& ByteArray) (hintAt : @& ByteArray)
-    (hintLists : @& Array (Array FastRHint)) (streamNames : @& Array String) :
-    Nat → FastVm → Except Fault FastVm
-  | 0, vm =>
-    if vm.pc + 1 == nProgU && vm.fp == 0 then .ok vm
-    else .error .stepLimit
-  | fuel + 1, vm =>
+    (hintLists : @& Array (Array FastRHint)) (streamNames : @& Array String)
+    (fuel : Nat) (initial : FastVm) : Except Fault FastVm := Id.run do
+  let mut vm := initial
+  for _ in [:fuel] do
     let pc0 := vm.pc
     let fp0 := vm.fp
     if pc0 + 1 == nProgU && fp0 == 0 then
-      .ok vm
+      return .ok vm
     else if pc0 >= nProgU then
-      .error .badProgram
+      return .error .badProgram
     else
       let hIdx := getU32Fast hintAt pc0.toUSize
       let vmRes : Except Fault FastVm :=
         if hIdx == 0 then .ok vm
         else applyHintsAtPc streamNames hintLists hIdx.toNat vm
       match vmRes with
-      | .error e => .error e
+      | .error e => return .error e
       | .ok vmReady =>
         let ⟨mc0, mc1, mc2, mState, mAccess, bcCounts, tXor, tMul, tSet, tDeref, tJump, tKeccak,
              links, unconstrained, g, streamsCur,
@@ -2093,9 +2096,9 @@ def executeFastLoop (nProgU : UInt64) (opWords : @& ByteArray) (hintAt : @& Byte
           else if tag == 4 then stepJumpFast opWords opBase pcU fpU bcRead vmStep
           else stepKeccakFast opWords opBase pcU fpU bcRead vmStep
         match stepRes with
-        | .error e => .error e
-        | .ok vmNext =>
-          executeFastLoop nProgU opWords hintAt hintLists streamNames fuel vmNext
+        | .error e => return .error e
+        | .ok vmNext => vm := vmNext
+  return if vm.pc + 1 == nProgU && vm.fp == 0 then .ok vm else .error .stepLimit
 
 def executeFastWith (fuel : Nat) (fprog : @& FastProg) (gInit : FastGPow)
     (frame : Nat) (publicInput : @& Array E) (streams : FastStreams) :
@@ -2976,36 +2979,43 @@ def precomputeCosetTwiddles (table : @& Array K) (logRows logInvRate coset : Nat
         tw := setU64Fast tw (stepBase + bLen + k).toUSize (prev ^^^ delta)
   return tw
 
-def nttButterflyZeroLoop (topIdx botIdx : USize) : Nat → ByteArray → ByteArray
-  | 0, data => data
-  | rem + 1, data =>
-    let topV := getU64Fast data topIdx
-    let botV := getU64Fast data botIdx
-    let data' := setU64Fast data botIdx (botV ^^^ topV)
-    nttButterflyZeroLoop (topIdx + 1) (botIdx + 1) rem data'
+def nttButterflyZeroLoop (topIdx botIdx : USize) (rem : Nat) (data : ByteArray) :
+    ByteArray := Id.run do
+  let mut data := data
+  for i in [:rem] do
+    let top := topIdx + i.toUSize
+    let bot := botIdx + i.toUSize
+    let topV := getU64Fast data top
+    let botV := getU64Fast data bot
+    data := setU64Fast data bot (botV ^^^ topV)
+  return data
 
-def nttButterflyMulLoop (t : UInt64) (topIdx botIdx : USize) : Nat → ByteArray → ByteArray
-  | 0, data => data
-  | rem + 1, data =>
-    let topV := getU64Fast data topIdx
-    let botV := getU64Fast data botIdx
+def nttButterflyMulLoop (t : UInt64) (topIdx botIdx : USize) (rem : Nat) (data : ByteArray) :
+    ByteArray := Id.run do
+  let mut data := data
+  for i in [:rem] do
+    let top := topIdx + i.toUSize
+    let bot := botIdx + i.toUSize
+    let topV := getU64Fast data top
+    let botV := getU64Fast data bot
     let uV := topV ^^^ Model.Field.nativeMul botV t
     let vV := botV ^^^ uV
-    let data1 := setU64Fast data topIdx uV
-    let data2 := setU64Fast data botIdx vV
-    nttButterflyMulLoop t (topIdx + 1) (botIdx + 1) rem data2
+    data := setU64Fast data top uV
+    data := setU64Fast data bot vV
+  return data
 
-def nttBlocksLoop (tw : @& ByteArray) (half : Nat) (halfU strideU twIdx blockRowBase : USize) :
-    Nat → ByteArray → ByteArray
-  | 0, data => data
-  | rem + 1, data =>
-    let t := getU64Fast tw twIdx
-    let data' :=
+def nttBlocksLoop (tw : @& ByteArray) (half : Nat) (halfU strideU twIdx blockRowBase : USize)
+    (rem : Nat) (data : ByteArray) : ByteArray := Id.run do
+  let mut data := data
+  for i in [:rem] do
+    let block := blockRowBase + strideU * i.toUSize
+    let t := getU64Fast tw (twIdx + i.toUSize)
+    data :=
       if t == 0 then
-        nttButterflyZeroLoop blockRowBase (blockRowBase + halfU) half data
+        nttButterflyZeroLoop block (block + halfU) half data
       else
-        nttButterflyMulLoop t blockRowBase (blockRowBase + halfU) half data
-    nttBlocksLoop tw half halfU strideU (twIdx + 1) (blockRowBase + strideU) rem data'
+        nttButterflyMulLoop t block (block + halfU) half data
+  return data
 
 /-- In-place 1D coset additive NTT on a single `8 * (1 <<< logRows)`-byte lane buffer
 using precomputed flat coset twiddles `tw`. -/
@@ -3203,15 +3213,14 @@ def hashLeaf64Full (encodedLanes : @& Array ByteArray) (rIdx : USize) : Model.Me
     (getU64Fast (encodedLanes[0]?.getD ByteArray.empty) rIdx)
 
 def subtreeRootRec (st1 st2 st3 : State25) (encodedLanes : @& Array ByteArray)
-    (lanes nVecs baseRow : Nat) : Nat → Model.Merkle.Digest32
-  | 0 =>
-    if lanes == 64 then hashLeaf64Full encodedLanes baseRow.toUSize
-    else hashLeafFromEncodedLanes st1 st2 st3 encodedLanes lanes nVecs baseRow
-  | lv + 1 =>
-    let half := 1 <<< lv
-    let l := subtreeRootRec st1 st2 st3 encodedLanes lanes nVecs baseRow lv
-    let r := subtreeRootRec st1 st2 st3 encodedLanes lanes nVecs (baseRow + half) lv
-    hashPair25Fast l r
+    (lanes nVecs baseRow level : Nat) : Model.Merkle.Digest32 :=
+  Nat.rec (motive := fun _ => Nat → Model.Merkle.Digest32)
+    (fun row =>
+      if lanes == 64 then hashLeaf64Full encodedLanes row.toUSize
+      else hashLeafFromEncodedLanes st1 st2 st3 encodedLanes lanes nVecs row)
+    (fun lv recurse row =>
+      let half := 1 <<< lv
+      hashPair25Fast (recurse row) (recurse (row + half))) level baseRow
 
 def subtreeRootFromLanesChunk (st1 st2 st3 : State25)
     (encodedLanes : @& Array ByteArray) (lanes nVecs baseRow subLog : Nat) :

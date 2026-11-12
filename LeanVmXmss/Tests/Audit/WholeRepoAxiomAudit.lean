@@ -136,6 +136,10 @@ import Native.Kernels.Keccak8x
 import Native.Kernels.KeccakGkr
 import Native.Kernels.Ntt
 import Native.Kernels.VmWitness
+import Native.Kernels
+import Proofs.Bus.FlatRefinement
+import Proofs.Prim.Slice64Refinement
+import Proofs.Witness.FlatRefinement
 
 open Lean Elab Command
 

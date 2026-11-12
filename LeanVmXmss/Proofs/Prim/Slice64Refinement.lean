@@ -123,22 +123,27 @@ theorem usize_mul_eight_mod8 (w : USize) : (w * 8).toNat % 8 = 0 := by
   · rw [hbits]
     omega
 
-theorem usize_add_seven_toNat (base : USize) (h : base ≤ base + 7) :
-    (base + 7).toNat = base.toNat + 7 := by
-  have hle : base.toNat ≤ (base + 7).toNat := USize.le_iff_toNat_le.mp h
-  have h7 : (7 : USize).toNat = 7 := usize_ofNat_small 7 (by decide)
-  rw [USize.toNat_add, h7] at hle ⊢
-  have hlt := base.toNat_lt_two_pow_numBits
-  rcases System.Platform.numBits_eq with hbits | hbits
-  · rw [hbits] at hle hlt ⊢
+theorem usize_add_seven_toNat (base : USize) :
+    (base + 7).toNat = base.toNat + 7 ↔ base ≤ base + 7 := by
+  constructor
+  · intro h
+    rw [USize.le_iff_toNat_le, h]
     omega
-  · rw [hbits] at hle hlt ⊢
-    omega
+  · intro h
+    have hle : base.toNat ≤ (base + 7).toNat := USize.le_iff_toNat_le.mp h
+    have h7 : (7 : USize).toNat = 7 := usize_ofNat_small 7 (by decide)
+    rw [USize.toNat_add, h7] at hle ⊢
+    have hlt := base.toNat_lt_two_pow_numBits
+    rcases System.Platform.numBits_eq with hbits | hbits
+    · rw [hbits] at hle hlt ⊢
+      omega
+    · rw [hbits] at hle hlt ⊢
+      omega
 
 theorem usize_add_offset_toNat (base : USize) (h : base ≤ base + 7)
     (k : Nat) (hk : k ≤ 7) :
     (base + OfNat.ofNat k).toNat = base.toNat + k := by
-  have h7 := usize_add_seven_toNat base h
+  have h7 := (usize_add_seven_toNat base).mpr h
   have hk_lt : k < 2 ^ 32 := by omega
   have hk_val : (OfNat.ofNat k : USize).toNat = k := usize_ofNat_small k hk_lt
   rw [USize.toNat_add, hk_val]
@@ -151,7 +156,7 @@ theorem usize_offset_lt (base n : USize) (h1 : base + 7 < n) (h2 : base ≤ base
     base + OfNat.ofNat k < n := by
   rw [USize.lt_iff_toNat_lt]
   have h1' : (base + 7).toNat < n.toNat := USize.lt_iff_toNat_lt.mp h1
-  have h7 := usize_add_seven_toNat base h2
+  have h7 := (usize_add_seven_toNat base).mpr h2
   have hk' := usize_add_offset_toNat base h2 k hk
   omega
 
