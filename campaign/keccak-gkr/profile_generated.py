@@ -23,6 +23,15 @@ timed = {'buildMaskRangeFlat', 'loadWordBitplanes', 'linearBitplanes',
          'fillInitialTableFlat', 'pairSumsRangeFlat', 'foldRowsFlat',
          'localRoundFlat', 'fold1InPlace', 'linearTransposePlanar',
          'packEvalRangePacks', 'outputWordsRangePacks', 'proveReductionFlat'}
+# Read-only next-wave profiling: these names only instrument generated C copies.
+timed.update({'buildSideLeavesFlat', 'nextLevelFlat', 'buildLayersFlat',
+              'treeRoundMessageFlat', 'foldTreeFlat', 'proveProductTripleFlat',
+              'decomposeNoneCoordsFlat', 'decomposeSideFoldFlat',
+              'computeTableSigmasFlat', 'proveBalanceFlat', 'tableMessageKFlat',
+              'joinTableStateFlat', 'tableMessageEFlat', 'foldTableFlat',
+              'constraintsRoundMsgsFlat', 'constraintsUpdateTablesFlat',
+              'constraintsRoundsFoldFlat', 'proveConstraintsFlat',
+              'buildColumnsFlatWq', 'proveBusAndConstraintsWqWithBcCols'})
 for number, line in enumerate(source.splitlines(), 1):
     match = re.match(r'(?:LEAN_EXPORT |static )?[^;{}]*?\b(\w+)\([^;]*\)\{', line)
     if match:
