@@ -1,0 +1,12 @@
+UTC: 2026-11-13T12:38:20.018939+00:00
+INDIVIDUAL THOMAS OPERATOR POLICY ACK: explicitly acknowledged.
+Incident reference:9f5869b acknowledged as the operator's preservation incident/policy reference; no claim to have read unavailable incident details.
+Last coordinator-confirmed remote campaign/pcs-opening:2788f6be7df5f5ac9b35381b2de1f1de9f4775fc.
+Last confirmed OFF-VM evidence archive SHA256:e88062b8906b5efd8579b4eea0ac64de12be721131e172ebfef1dde0c48acef0.
+Newer local WIP44bfe43d283bd46d7776c191677e629a1b441f56 is exported but NOT yet confirmed pushed/harvested.
+Export paths:/var/lib/orb-node/work/pcs-opening-campaign.bundle; /var/lib/orb-node/work/pcs-opening-campaign.patch; /var/lib/orb-node/work/pcs-opening-HARVEST.sha256.
+All completed benchmark proof/timing/RSS/verification chunks:/var/lib/orb-node/work/pcs-benchmark-harvest/manifest.json (18 proofs, chunks<=20MiB).
+Next WIP publish deadline:2026-11-13T12:40:00Z; then at least every30min and before ANY VM TTL/cap/stop/destruction. VM extended to13:40UTC; coordinator manages TTL.
+Commit AND push WIP required. No VM credentials: coordinator harvests bundle+patch+SHA and performs authenticated push.
+Checkpoint NOT complete until coordinator confirms exact remote ref AND OFF-VM harvest. No VM cleanup/stop/destruction before confirmed retained refs and evidence.
+Propagate this policy and incident reference to all future children.
