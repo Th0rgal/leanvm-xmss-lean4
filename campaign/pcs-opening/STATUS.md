@@ -1,6 +1,6 @@
 # PCS opening campaign checkpoint — 2026-11-13
 
-Status: BLOCKED BEFORE MATCHED BASELINE; no application optimization made.
+Status: NATIVE 4.35 BOOTSTRAP IN PROGRESS; no application optimization made.
 
 Starting revision: 299c689373ef3e98e0f150ff4bec21ca5e3aaea1.
 Anonymous HTTPS clone: /var/lib/orb-node/work/pcs-opening.
@@ -137,3 +137,22 @@ PCS ownership alone cannot certify the overall <1 s gate. Other phase owners
 must resolve the remainder, while this branch still needs a matched baseline
 before any PCS candidate edit. Peak RSS must be measured across the full process,
 not inferred from PCS-end resident memory.
+
+
+## Authorized bootstrap resume
+
+Coordinator/user explicitly authorized rebuilding the pinned public compiler
+on this same fresh Boat xlarge; coordinator owns TTL. No separate VM or Boat
+API is needed. The prior toolchain prerequisite is now active local work, not
+a reason to stop the campaign. See BOOTSTRAP.md and TEST_DESIGN.md.
+
+Pinned public source clone completed; committed P0 patch applied with exact
+expected LLVM/BuildExe hashes. Sequential turbo-lean lean-native build is active
+with LEAN_NUM_THREADS=1 and TURBO_LEAN_MAX_MEMORY_MB=6144. Public fixture export
+helpers were rebuilt outside app sources with path relocation only; deterministic
+XMSS1400 inputs are being regenerated into pcs-restored-oracle. All fixture
+hashes must match before their use as the unchanged baseline.
+
+The cgroup reset to its original cap at the new turn; controls were re-raised
+via Python /proc/self/cgroup to 24/22 GiB for feasibility only. No memory-gate
+success is claimed. Coordinator can harvest the updated checkpoint immediately.
