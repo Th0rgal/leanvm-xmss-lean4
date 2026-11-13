@@ -92,19 +92,18 @@ def decodePlanarE (p : PlanarE) : Array E :=
   let mask := 0 - ((poly >>> bit) &&& 1)
   ⟨acc.c0 ^^^ (w.c0 &&& mask), acc.c1 ^^^ (w.c1 &&& mask), acc.c2 ^^^ (w.c2 &&& mask)⟩
 
-/-- Read the weight limbs directly so the compiler can reuse the accumulator
-object instead of allocating a temporary planar field element per position. -/
-@[inline] def maskedAddPlanar (acc : E) (weights : PlanarE) (pos : Nat)
-    (poly bit : UInt64) : E :=
-  let mask := 0 - ((poly >>> bit) &&& 1)
-  ⟨acc.c0 ^^^ (readWordLE weights.c0 pos &&& mask),
-   acc.c1 ^^^ (readWordLE weights.c1 pos &&& mask),
-   acc.c2 ^^^ (readWordLE weights.c2 pos &&& mask)⟩
+/-- Keep the owned accumulator live across planar buffer reads. The small
+non-inlined boundary lets the compiler reuse it instead of allocating per bit. -/
+@[noinline] def accumulateProductLimbs (w0 w1 w2 mask : UInt64) (acc : E) : E :=
+  ⟨acc.c0 ^^^ (w0 &&& mask), acc.c1 ^^^ (w1 &&& mask), acc.c2 ^^^ (w2 &&& mask)⟩
 
 @[noinline] def productBucketLoop (weights : PlanarE) (polys : ByteArray) (bit : UInt64)
     (remaining idx : Nat) (a0 a1 a2 : UInt64) : E :=
   foldRangeLoop
-    (fun acc pos => maskedAddPlanar acc weights pos (readWordLE polys pos) bit)
+    (fun acc pos =>
+      let mask := 0 - ((readWordLE polys pos >>> bit) &&& 1)
+      accumulateProductLimbs (readWordLE weights.c0 pos) (readWordLE weights.c1 pos)
+        (readWordLE weights.c2 pos) mask acc)
     remaining idx ⟨a0, a1, a2⟩
 
 /-- Pure total carryless product (low 64 bits) via structural `Fin.foldl` (no `BEq UInt64`). -/
