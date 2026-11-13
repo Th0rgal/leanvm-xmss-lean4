@@ -113,3 +113,31 @@ The original 248 MiB static executable is separately preserved at
 This establishes compiler/toolchain compatibility only, not C1a correctness or
 XMSS1400 acceptance. Bootstrap worktree is now detached at `3e3b2dc` and rebuilding
 lean-native + lean-native-core incrementally for reconstruction validation.
+
+## Reconstructed compiler checkpoint ba5b99b
+
+The rebuilt compiler and core executable pass the full Lean 4.35 build through
+turbo-lean. Required suites were run from the detached compiler build worktree:
+
+- `scripts/test_build_exe_p0.py`: PASS, 2 tests, 10.994 seconds.
+- `scripts/test_p0_trust_boundary.py`: PASS, 20 tests, 38.530 seconds, plus
+  12 embedded runner tests, all passing.
+
+P0 covers 262 scalar field pairs, 131 extension-field pairs, UInt64 boxing,
+33 borrowed ByteArray boundary/alias cases, 9 slice sizes with separate and
+aliased destinations, fault injection, and imported-module native-c fallback.
+The imported cache object is unchanged; the private link copy has a weak
+replacement symbol and the final executable has one strong optimized owner.
+Final `p0_zmm_slice_kernel` objdump contains ZMM VPCLMULQDQ, GFNI, VPTERNLOGQ,
+and VMOVDQU64. Raw commands, symbols, disassembly and result JSON are under
+`/var/lib/orb-node/work/c1a-evidence/p0-r4`; trust log is under `.../trust`.
+
+Runtime diagnostics found and fixed internal ByteArray return rejection,
+redundant impure Bool case guards around qualified loops, retention of source
+self edges after loop conversion, and residual-heap filtering of typed
+ByteArray RC. Untyped heap/object operations and unresolved cycles remain
+rejected. Previous failing logs remain under the evidence directories.
+
+Real Field/Bus/Hub/Keccak module builds are now running. These suite results
+are not an application purity/axiom audit, real-app acceptance certificate,
+or matched XMSS1400 performance result.
