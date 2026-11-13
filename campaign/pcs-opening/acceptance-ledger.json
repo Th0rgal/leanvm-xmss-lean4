@@ -1,6 +1,6 @@
 {
-  "status": "fastpack_complete_not_promoted_no_e2e_win",
-  "updated_utc": "2026-11-13T12:04:10.230791+00:00",
+  "status": "two_fastpack_pairs_complete_not_certified_no_repeatable_e2e_gain",
+  "updated_utc": "2026-11-13T12:30:26.813970+00:00",
   "authoritative_quote": "under 1s and 4gb is the goal",
   "workload": {
     "xmss": 1400,
@@ -134,6 +134,8 @@
     "pcs_mean_seconds": 140.814156462,
     "time_gap_seconds": 354.881942075,
     "rss_gap_bytes": 12413808640,
-    "candidate_full1400_pairs": 1
+    "candidate_full1400_pairs": 2,
+    "two_pair_pooled_mean_seconds": 352.96032036583335,
+    "additional_pair_mean_seconds": 350.03869865666667
   }
 }

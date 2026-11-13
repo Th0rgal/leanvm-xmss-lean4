@@ -1,0 +1,20 @@
+{
+  "utc": "2026-11-13T12:30:26.813970+00:00",
+  "same_candidate_full1400_pairs": 2,
+  "measured_passes_seconds": [
+    350.444615351,
+    368.279666582,
+    348.921544292,
+    342.943689158,
+    344.756919342,
+    362.41548747
+  ],
+  "pooled_mean_seconds": 352.96032036583335,
+  "peak_rss_bytes": 16708775936,
+  "mean_time_gap_to_1s_boundary": 351.96032036583335,
+  "rss_gap_to_4gib_boundary": 12413808640,
+  "time_gate": false,
+  "memory_gate": false,
+  "certified": false,
+  "note": "Two sequential fresh Rust/Lean full1400 pairs; fewer than five. Baseline comparison is not five alternating unchanged/candidate pairs. No repeatable E2E gain established. Source and binaries unchanged."
+}

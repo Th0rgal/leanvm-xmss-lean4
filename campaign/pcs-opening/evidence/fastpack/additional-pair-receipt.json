@@ -1,0 +1,150 @@
+{
+  "status": "COMPLETE",
+  "pid": 337183,
+  "start": 1794571570.4193265,
+  "records": [
+    {
+      "label": "p0-xmss1400-rust-bench",
+      "argv": [
+        "/var/lib/orb-node/work/pcs-opening-evidence/rust-native-target/release/e2e-oracle",
+        "benchmark",
+        "/var/lib/orb-node/work/pcs-restored-oracle/xmss1400",
+        "--repeat",
+        "3",
+        "--cooldown-ms",
+        "2000",
+        "--log-inv-rate",
+        "1"
+      ],
+      "start": 1794571570.522278,
+      "cgroup_before": {
+        "memory.max": "25769803776\n",
+        "memory.high": "23622320128\n",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+      },
+      "pid": 337185,
+      "exit_code": 0,
+      "wall_seconds": 15.624154329299927,
+      "cgroup_after": {
+        "memory.max": "25769803776\n",
+        "memory.high": "23622320128\n",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+      },
+      "passes_nanos": [
+        1920799290,
+        1966166356,
+        2073829342
+      ],
+      "warmup_nanos": 2194918990,
+      "peak_rss_bytes": 3950256128,
+      "mean_seconds": 1.9869316626666667,
+      "time_gate": false,
+      "mean_time_gate": false,
+      "min_seconds": 1.92079929,
+      "max_seconds": 2.073829342,
+      "memory_gate": true,
+      "proof_size": 358656,
+      "proof_bytes": 359217
+    },
+    {
+      "label": "p0-xmss1400-lean-bench",
+      "argv": [
+        "/var/lib/orb-node/work/pcs-opening-evidence/candidate-fastpack-e2e",
+        "--xmss",
+        "1400",
+        "--inputs",
+        "/var/lib/orb-node/work/pcs-restored-oracle/xmss1400",
+        "--prover",
+        "e2e",
+        "--repeat",
+        "3",
+        "--cooldown-ms",
+        "2000",
+        "--log-inv-rate",
+        "1",
+        "--phase-timings",
+        "/var/lib/orb-node/work/pcs-opening-evidence/candidate-fastpack-additional-pair/p0-xmss1400-phases.json",
+        "--out-proof",
+        "/var/lib/orb-node/work/pcs-opening-evidence/candidate-fastpack-additional-pair/p0-xmss1400-lean.ethproof"
+      ],
+      "start": 1794571586.1473818,
+      "cgroup_before": {
+        "memory.max": "25769803776\n",
+        "memory.high": "23622320128\n",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+      },
+      "pid": 337448,
+      "exit_code": 0,
+      "wall_seconds": 1401.7027659416199,
+      "cgroup_after": {
+        "memory.max": "25769803776\n",
+        "memory.high": "23622320128\n",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+      },
+      "passes_nanos": [
+        342943689158,
+        344756919342,
+        362415487470
+      ],
+      "warmup_nanos": 336157928189,
+      "peak_rss_bytes": 16549629952,
+      "mean_seconds": 350.03869865666667,
+      "time_gate": false,
+      "mean_time_gate": false,
+      "min_seconds": 342.943689158,
+      "max_seconds": 362.41548747,
+      "memory_gate": false,
+      "proof_size": 358656,
+      "proof_bytes": 359217
+    },
+    {
+      "label": "p0-xmss1400-verify",
+      "argv": [
+        "/var/lib/orb-node/work/pcs-opening-evidence/rust-native-target/release/e2e-oracle",
+        "verify-eth",
+        "/var/lib/orb-node/work/pcs-restored-oracle/xmss1400/xmss-inputs.bin",
+        "/var/lib/orb-node/work/pcs-opening-evidence/candidate-fastpack-additional-pair/p0-xmss1400-lean.ethproof",
+        "1400",
+        "1"
+      ],
+      "start": 1794572987.8925674,
+      "cgroup_before": {
+        "memory.max": "25769803776\n",
+        "memory.high": "23622320128\n",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+      },
+      "pid": 389756,
+      "exit_code": 0,
+      "wall_seconds": 3.3963546752929688,
+      "cgroup_after": {
+        "memory.max": "25769803776\n",
+        "memory.high": "23622320128\n",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+      },
+      "passes_nanos": [],
+      "warmup_nanos": null,
+      "peak_rss_bytes": 405819392,
+      "verification_passes": 3,
+      "signers_match": true,
+      "proof_size": 358656,
+      "wire_bytes": 359217
+    }
+  ],
+  "acceptance": {
+    "seconds_strict_lt": 1,
+    "rss_bytes_strict_lt": 4294967296
+  },
+  "binaries": {
+    "/var/lib/orb-node/work/pcs-opening-evidence/candidate-fastpack-e2e": "fe2d2054d38f089ce75efab0a1a4850860ecd177b401578e239abae74024248d",
+    "/var/lib/orb-node/work/pcs-opening-evidence/rust-native-target/release/e2e-oracle": "a026e789520f1fcbee7214f43e7e315d582b5d5ad82c2de58b6b1ba62bdc47f1"
+  },
+  "proofs": [
+    {
+      "path": "/var/lib/orb-node/work/pcs-opening-evidence/candidate-fastpack-additional-pair/p0-xmss1400-lean.ethproof",
+      "bytes": 359217,
+      "sha256": "9fcdb0ac8e76b81bbbb6cd42827aca27ef918c02d1f42e93865321b0b8d638a6",
+      "wire_equal_unchanged_parent": true
+    }
+  ],
+  "finish": 1794572991.303829
+}

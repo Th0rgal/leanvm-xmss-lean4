@@ -338,3 +338,15 @@ PCS-only improvement cannot remove the >200s remainder; coordinate phase owners.
 No further source change is pending. Exported bundle/patch and evidence archive
 are ready for harvest. Keep VM until coordinator acknowledges; TTL owned by
 coordinator, no destruction requested.
+
+## Additional same-candidate full1400 pair COMPLETE
+
+No source/binary changes. Fresh Rust control then Lean warmup336.157928189s;
+passes342.943689158,344.756919342,362.415487470s; mean350.038698657s.
+Wall1401.703s, peak16549629952B. Wire359217B / VM358656B, exact unchanged
+baseline; independent Rust verification3x PASS. Memory-limit/OOM events zero.
+Together with prior pair this is two full1400 candidate pairs, six measured
+passes, fewer than required five pairs: no certification. Pair means straddle
+baseline; no repeatable E2E win established, both strict gates fail.
+Previous export filenames remain frozen. New immutable milestone exports
+use pcs-opening-milestone2-* names for harvest before coordinator-owned TTL.
