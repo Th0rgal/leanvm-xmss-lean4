@@ -1,0 +1,395 @@
+{
+  "acceptance": {
+    "seconds_strict_lt": 1,
+    "rss_bytes_strict_lt": 4294967296
+  },
+  "certified": false,
+  "certification_note": "One fresh Rust/Lean pair per workload per revision; fewer than five candidate full1400 alternating pairs. No certification regardless of means.",
+  "workloads": {
+    "4": {
+      "baseline": {
+        "lean": {
+          "passes_seconds": [
+            4.596694365,
+            4.816400271,
+            5.221491267
+          ],
+          "mean_seconds": 4.878195301,
+          "sample_stdev_seconds": 0.3169491465309933,
+          "min_seconds": 4.596694365,
+          "max_seconds": 5.221491267,
+          "warmup_seconds": 4.580117968,
+          "peak_rss_bytes": 1516535808,
+          "wall_seconds": 27.95696473121643,
+          "wire_bytes": 241473,
+          "vm_proof_bytes": 240912,
+          "every_measured_pass_under_1s": false,
+          "memory_under_4gib": true,
+          "mean_phases_seconds": {
+            "0b_statement_hints": 0.001832694,
+            "1_execute_witness": 0.241564162,
+            "2_commit_ntt_merkle": 0.098769929,
+            "3_bus_constraints": 0.770038089,
+            "4_keccak_gkr": 0.984714635,
+            "5_pcs_open": 2.781275791,
+            "6_wire_encode": 0.008745381
+          }
+        },
+        "rust": {
+          "passes_seconds": [
+            0.13005382,
+            0.09985131,
+            0.102242058
+          ],
+          "mean_seconds": 0.11071572933333333,
+          "sample_stdev_seconds": 0.01678988481122015,
+          "min_seconds": 0.09985131,
+          "max_seconds": 0.13005382,
+          "warmup_seconds": 0.089962584,
+          "peak_rss_bytes": 472412160,
+          "wall_seconds": 7.984003067016602,
+          "wire_bytes": 270681,
+          "vm_proof_bytes": 270120,
+          "every_measured_pass_under_1s": true,
+          "memory_under_4gib": true
+        },
+        "verification": {
+          "passes_ms": [
+            412,
+            10,
+            9
+          ],
+          "process_wall_seconds": 1.5355074405670166,
+          "peak_rss_bytes": 402210816,
+          "passes": 3
+        }
+      },
+      "candidate": {
+        "lean": {
+          "passes_seconds": [
+            4.715265722,
+            5.001722387,
+            4.914394798
+          ],
+          "mean_seconds": 4.877127635666667,
+          "sample_stdev_seconds": 0.14681957046666105,
+          "min_seconds": 4.715265722,
+          "max_seconds": 5.001722387,
+          "warmup_seconds": 4.846519874,
+          "peak_rss_bytes": 1484107776,
+          "wall_seconds": 27.9612135887146,
+          "wire_bytes": 241473,
+          "vm_proof_bytes": 240912,
+          "every_measured_pass_under_1s": false,
+          "memory_under_4gib": true,
+          "mean_phases_seconds": {
+            "0b_statement_hints": 0.002315991,
+            "1_execute_witness": 0.241364891,
+            "2_commit_ntt_merkle": 0.104962731,
+            "3_bus_constraints": 0.627908444,
+            "4_keccak_gkr": 1.042188502,
+            "5_pcs_open": 2.858387075,
+            "6_wire_encode": 0.008930593
+          }
+        },
+        "rust": {
+          "passes_seconds": [
+            0.113335059,
+            0.124313902,
+            0.112112502
+          ],
+          "mean_seconds": 0.11658715433333333,
+          "sample_stdev_seconds": 0.006719422113010638,
+          "min_seconds": 0.112112502,
+          "max_seconds": 0.124313902,
+          "warmup_seconds": 0.120190225,
+          "peak_rss_bytes": 471080960,
+          "wall_seconds": 8.047240972518921,
+          "wire_bytes": 270681,
+          "vm_proof_bytes": 270120,
+          "every_measured_pass_under_1s": true,
+          "memory_under_4gib": true
+        },
+        "verification": {
+          "passes_ms": [
+            424,
+            10,
+            9
+          ],
+          "process_wall_seconds": 1.6083271503448486,
+          "peak_rss_bytes": 401465344,
+          "passes": 3
+        }
+      },
+      "comparison": {
+        "aggregation_seconds_saved": 0.0010676653333332453,
+        "aggregation_fraction_saved": 0.00021886481935529112,
+        "pcs_seconds_saved": -0.07711128399999989,
+        "pcs_fraction_saved": -0.027725148383172193,
+        "rss_bytes_saved": 32428032,
+        "time_gap_to_1s_boundary": 3.8771276356666666,
+        "rss_gap_to_4gib_boundary_bytes": -2810859520,
+        "time_threshold_ratio": 4.877127635666667,
+        "rss_threshold_ratio": 0.34554576873779297
+      },
+      "full_wire_equal_unchanged": true
+    },
+    "16": {
+      "baseline": {
+        "lean": {
+          "passes_seconds": [
+            7.172253923,
+            7.194364614,
+            8.494822939
+          ],
+          "mean_seconds": 7.620480492,
+          "sample_stdev_seconds": 0.7572834717815947,
+          "min_seconds": 7.172253923,
+          "max_seconds": 8.494822939,
+          "warmup_seconds": 7.064794702,
+          "peak_rss_bytes": 1680027648,
+          "wall_seconds": 38.24460220336914,
+          "wire_bytes": 279625,
+          "vm_proof_bytes": 279064,
+          "every_measured_pass_under_1s": false,
+          "memory_under_4gib": true,
+          "mean_phases_seconds": {
+            "0b_statement_hints": 0.002572143,
+            "1_execute_witness": 0.316655158,
+            "2_commit_ntt_merkle": 0.124847105,
+            "3_bus_constraints": 0.874855917,
+            "4_keccak_gkr": 3.184672524,
+            "5_pcs_open": 3.116877643,
+            "6_wire_encode": 0.010166888
+          }
+        },
+        "rust": {
+          "passes_seconds": [
+            0.127869648,
+            0.106222628,
+            0.104672771
+          ],
+          "mean_seconds": 0.11292168233333333,
+          "sample_stdev_seconds": 0.012968491522108359,
+          "min_seconds": 0.104672771,
+          "max_seconds": 0.127869648,
+          "warmup_seconds": 0.09666361,
+          "peak_rss_bytes": 453124096,
+          "wall_seconds": 7.960911989212036,
+          "wire_bytes": 256105,
+          "vm_proof_bytes": 255544,
+          "every_measured_pass_under_1s": true,
+          "memory_under_4gib": true
+        },
+        "verification": {
+          "passes_ms": [
+            451,
+            13,
+            13
+          ],
+          "process_wall_seconds": 1.6821320056915283,
+          "peak_rss_bytes": 402096128,
+          "passes": 3
+        }
+      },
+      "candidate": {
+        "lean": {
+          "passes_seconds": [
+            6.635964655,
+            6.564278144,
+            7.16924528
+          ],
+          "mean_seconds": 6.789829359666667,
+          "sample_stdev_seconds": 0.3305330080591513,
+          "min_seconds": 6.564278144,
+          "max_seconds": 7.16924528,
+          "warmup_seconds": 6.857061013,
+          "peak_rss_bytes": 1584660480,
+          "wall_seconds": 35.644012689590454,
+          "wire_bytes": 279625,
+          "vm_proof_bytes": 279064,
+          "every_measured_pass_under_1s": false,
+          "memory_under_4gib": true,
+          "mean_phases_seconds": {
+            "0b_statement_hints": 0.00292249,
+            "1_execute_witness": 0.272905399,
+            "2_commit_ntt_merkle": 0.101944802,
+            "3_bus_constraints": 0.85920826,
+            "4_keccak_gkr": 2.79447413,
+            "5_pcs_open": 2.758374276,
+            "6_wire_encode": 0.011829896
+          }
+        },
+        "rust": {
+          "passes_seconds": [
+            0.136649389,
+            0.105332219,
+            0.105972075
+          ],
+          "mean_seconds": 0.115984561,
+          "sample_stdev_seconds": 0.017899125429120054,
+          "min_seconds": 0.105332219,
+          "max_seconds": 0.136649389,
+          "warmup_seconds": 0.130150356,
+          "peak_rss_bytes": 451055616,
+          "wall_seconds": 8.048972845077515,
+          "wire_bytes": 256105,
+          "vm_proof_bytes": 255544,
+          "every_measured_pass_under_1s": true,
+          "memory_under_4gib": true
+        },
+        "verification": {
+          "passes_ms": [
+            387,
+            9,
+            8
+          ],
+          "process_wall_seconds": 1.4300096035003662,
+          "peak_rss_bytes": 402284544,
+          "passes": 3
+        }
+      },
+      "comparison": {
+        "aggregation_seconds_saved": 0.8306511323333332,
+        "aggregation_fraction_saved": 0.10900246161713201,
+        "pcs_seconds_saved": 0.35850336699999996,
+        "pcs_fraction_saved": 0.1150200322444932,
+        "rss_bytes_saved": 95367168,
+        "time_gap_to_1s_boundary": 5.789829359666667,
+        "rss_gap_to_4gib_boundary_bytes": -2710306816,
+        "time_threshold_ratio": 6.789829359666667,
+        "rss_threshold_ratio": 0.36895751953125
+      },
+      "full_wire_equal_unchanged": true
+    },
+    "1400": {
+      "baseline": {
+        "lean": {
+          "passes_seconds": [
+            356.959524611,
+            355.062736964,
+            342.662656722
+          ],
+          "mean_seconds": 351.5616394323333,
+          "sample_stdev_seconds": 7.764880604591525,
+          "min_seconds": 342.662656722,
+          "max_seconds": 356.959524611,
+          "warmup_seconds": 364.511610148,
+          "peak_rss_bytes": 17001930752,
+          "wall_seconds": 1431.818044424057,
+          "wire_bytes": 359217,
+          "vm_proof_bytes": 358656,
+          "every_measured_pass_under_1s": false,
+          "memory_under_4gib": false,
+          "mean_phases_seconds": {
+            "0b_statement_hints": 0.044304068,
+            "1_execute_witness": 15.147633129,
+            "2_commit_ntt_merkle": 7.806533656,
+            "3_bus_constraints": 26.475193367,
+            "4_keccak_gkr": 153.402019851,
+            "5_pcs_open": 148.68595536,
+            "6_wire_encode": 0.010358795
+          }
+        },
+        "rust": {
+          "passes_seconds": [
+            2.848247992,
+            2.118680141,
+            2.133473398
+          ],
+          "mean_seconds": 2.3668005103333334,
+          "sample_stdev_seconds": 0.4170113527418031,
+          "min_seconds": 2.118680141,
+          "max_seconds": 2.848247992,
+          "warmup_seconds": 3.920773236,
+          "peak_rss_bytes": 3953496064,
+          "wall_seconds": 18.616174697875977,
+          "wire_bytes": 359217,
+          "vm_proof_bytes": 358656,
+          "every_measured_pass_under_1s": false,
+          "memory_under_4gib": true
+        },
+        "verification": {
+          "passes_ms": [
+            416,
+            12,
+            12
+          ],
+          "process_wall_seconds": 1.6038126945495605,
+          "peak_rss_bytes": 405725184,
+          "passes": 3
+        }
+      },
+      "candidate": {
+        "lean": {
+          "passes_seconds": [
+            337.303694192,
+            352.895667494,
+            349.816974303
+          ],
+          "mean_seconds": 346.67211199633334,
+          "sample_stdev_seconds": 8.258028036915933,
+          "min_seconds": 337.303694192,
+          "max_seconds": 352.895667494,
+          "warmup_seconds": 333.078648364,
+          "peak_rss_bytes": 16594870272,
+          "wall_seconds": 1388.5178043842316,
+          "wire_bytes": 359217,
+          "vm_proof_bytes": 358656,
+          "every_measured_pass_under_1s": false,
+          "memory_under_4gib": false,
+          "mean_phases_seconds": {
+            "0b_statement_hints": 0.047893223,
+            "1_execute_witness": 19.804358101,
+            "2_commit_ntt_merkle": 6.88712011,
+            "3_bus_constraints": 30.126760922,
+            "4_keccak_gkr": 154.837591143,
+            "5_pcs_open": 134.968388496,
+            "6_wire_encode": 0.010187886
+          }
+        },
+        "rust": {
+          "passes_seconds": [
+            2.078936888,
+            1.898251279,
+            1.96070804
+          ],
+          "mean_seconds": 1.9792987356666667,
+          "sample_stdev_seconds": 0.09176618548764669,
+          "min_seconds": 1.898251279,
+          "max_seconds": 2.078936888,
+          "warmup_seconds": 4.231004949,
+          "peak_rss_bytes": 3960688640,
+          "wall_seconds": 17.68382716178894,
+          "wire_bytes": 359217,
+          "vm_proof_bytes": 358656,
+          "every_measured_pass_under_1s": false,
+          "memory_under_4gib": true
+        },
+        "verification": {
+          "passes_ms": [
+            462,
+            11,
+            10
+          ],
+          "process_wall_seconds": 1.7274436950683594,
+          "peak_rss_bytes": 404910080,
+          "passes": 3
+        }
+      },
+      "comparison": {
+        "aggregation_seconds_saved": 4.88952743599998,
+        "aggregation_fraction_saved": 0.013908023195861485,
+        "pcs_seconds_saved": 13.71756686400002,
+        "pcs_fraction_saved": 0.09225865906962705,
+        "rss_bytes_saved": 407060480,
+        "time_gap_to_1s_boundary": 345.67211199633334,
+        "rss_gap_to_4gib_boundary_bytes": 12299902976,
+        "time_threshold_ratio": 346.67211199633334,
+        "rss_threshold_ratio": 3.8637943267822266
+      },
+      "full_wire_equal_unchanged": true
+    }
+  },
+  "unchanged_rust_binary_sha256": "a026e789520f1fcbee7214f43e7e315d582b5d5ad82c2de58b6b1ba62bdc47f1"
+}

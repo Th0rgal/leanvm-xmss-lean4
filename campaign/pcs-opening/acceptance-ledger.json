@@ -1,6 +1,6 @@
 {
-  "status": "ext48_gates_pass_matched_launching",
-  "updated_utc": "2026-11-13T13:01:15.625019+00:00",
+  "status": "ext48_one_matched_pair_complete_provisional_not_promoted",
+  "updated_utc": "2026-11-13T13:27:19.316618+00:00",
   "authoritative_quote": "under 1s and 4gb is the goal",
   "workload": {
     "xmss": 1400,
@@ -141,7 +141,14 @@
   "ext48": {
     "binary_sha256": "3493787c99528a879d3db27668d33f07b98e74dbb8528ca49d3b74aec2204a4f",
     "correctness_gates": "PASS",
-    "matched": "PENDING",
-    "certified": false
+    "matched": "COMPLETE_ONE_PAIR",
+    "certified": false,
+    "full1400_mean_seconds": 346.67211199633334,
+    "full1400_peak_rss_bytes": 16594870272,
+    "pcs_mean_seconds": 134.968388496,
+    "promoted": false,
+    "repeatable_e2e_gain_established": false,
+    "time_gap_seconds": 345.67211199633334,
+    "rss_gap_bytes": 12299902976
   }
 }

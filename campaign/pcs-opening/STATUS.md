@@ -401,3 +401,27 @@ PASS; both Lean/Rust accept34 baseline/reject34 mutations.
 These are execution refinement tests, not universal Keccak refinement theorem.
 Matched fresh4/16/1400 warmup+repeat3 is launching; no speedup claim yet.
 Incorrect initial test-target invocation retained; corrected full build PASS.
+
+## Ext48 full matched matrix COMPLETE — provisional, not promoted
+
+Full1400 warmup333.078648364s; passes337.303694192,352.895667494,349.816974303s;
+mean346.672111996s, wall1388.518s. PCS134.968388496s.
+Against unchanged:mean4.889527436s lower(1.391%);PCS13.717566864s lower(9.226%).
+Against fastpack first pair:mean9.209830079s lower;PCS5.845767966s lower.
+Timing ranges overlap prior measurements; only one ext48 pair. No repeatable
+E2E speedup or causal improvement established, no promotion or certification.
+Peak16594870272B,407060480B below unchanged. Both strict gates FAIL:
+time346.672x threshold/gap345.672111996s;RSS3.863794x/gap12299902976B.
+Wire359217B/VM358656B exact unchanged bytes, independent Rust verification3x.
+All memory-limit/OOM events zero. No build or competing benchmark during matrix.
+Small cases:XMSS4 mean4.877127636s/RSS1484107776B;
+XMSS16 mean6.789829360s/RSS1584660480B; exact wires and Rust3x each.
+Rust full control mean1.979298736s/RSS3960688640B, same native binary
+built with target-cpu=native; reference59c2984 unchanged.
+
+Remaining:>=5 alternating fresh same-host Rust/Lean candidate pairs; strict
+<1s/<4294967296B total process acceptance is still far open. Further extension
+commitment batching is unimplemented and requires its own gates and matrix.
+No time remains for another full candidate before coordinator-owned13:40TTL.
+Stable all-artifact chunk export and latest source bundle must be harvested
+and pushed with exact remote-ref confirmation before checkpoint is complete.

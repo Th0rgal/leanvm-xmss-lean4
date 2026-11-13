@@ -10,3 +10,6 @@ Next WIP publish deadline:2026-11-13T12:40:00Z; then at least every30min and bef
 Commit AND push WIP required. No VM credentials: coordinator harvests bundle+patch+SHA and performs authenticated push.
 Checkpoint NOT complete until coordinator confirms exact remote ref AND OFF-VM harvest. No VM cleanup/stop/destruction before confirmed retained refs and evidence.
 Propagate this policy and incident reference to all future children.
+
+UTC update:2026-11-13T13:27:19.317115+00:00
+Ext48 full matrix and gates complete, provisional/not certified. Latest coordinator-confirmed remote remains2788f6b; newer heads require confirmation. Next checkpoint deadline:2026-11-13T13:40:00Z (VM cap), earlier on any stop/cap/destruction. All exports freeze pending harvest.
