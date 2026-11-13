@@ -184,3 +184,20 @@ The stricter fixture-inclusive audit failed on pre-existing generated
 recursive fixture). Therefore no claim of zero unsafe auxiliaries across all
 Tests is made. The original fixture and application remain untouched. Static
 purity and production-module audit passes must not conceal this scope gap.
+
+## Reconstructed Lean 4.35 delivery
+
+Harvest `/var/lib/orb-node/work/c1a-reconstructed-lean435.tar.gz`, SHA-256
+`4ac1830ca553463b1e93bc767fd7b90c03a2eec9759f36941ea3ba2a7d9c3a06`.
+This is distinct from the earlier clean-bootstrap package. Contains dynamic
+lean-native and lean-native-core, matching-runtime launchers, compiler source
+bundle/patch, reproduction instructions, exact source/runtime/binary manifests,
+command receipts, required-suite logs and selected final disassembly/audits.
+Compiler source is ba5b99b221e25c2d95d81ca09879015bf2ff3ed1.
+
+Both dynamic binaries passed source ingestion and evaluated 7+5=12. Both
+required suites were rerun against the actual delivery binaries: P0 PASS
+(2 tests,13.278s), trust boundary PASS (20 tests,39.954s), plus 12 embedded
+runner tests PASS. No C1a/XMSS1400 performance certificate is asserted.
+The source bundle and application journal bundle are refreshed for coordinator
+harvest; unauthenticated push remains unavailable. No credentials were used.
