@@ -23,7 +23,7 @@ open Model.Pcs.Ntt (foldRange foldRangeLoop)
     |>.push (w >>> 48).toUInt8
     |>.push (w >>> 56).toUInt8
 
-@[inline] def readWordLE (bytes : ByteArray) (index : Nat) : UInt64 :=
+@[noinline] def readWordLEReference (bytes : ByteArray) (index : Nat) : UInt64 :=
   let off := 8 * index
   if h : off + 7 < bytes.size then
     (bytes[off]'(by omega)).toUInt64 |||
@@ -35,6 +35,34 @@ open Model.Pcs.Ntt (foldRange foldRangeLoop)
       ((bytes[off + 6]'(by omega)).toUInt64 <<< 48) |||
       ((bytes[off + 7]'(by omega)).toUInt64 <<< 56)
   else 0
+
+
+theorem wordOffsetNatEq (off k : Nat) (h : off + k < USize.size) :
+    (USize.ofNat off + USize.ofNat k).toNat = off + k := by
+  have ho : off < USize.size := by omega
+  have hk : k < USize.size := by omega
+  rw [USize.toNat_add, USize.toNat_ofNat', USize.toNat_ofNat']
+  rw [Nat.mod_eq_of_lt ho, Nat.mod_eq_of_lt hk]
+  exact Nat.mod_eq_of_lt h
+
+
+@[inline] def readWordLE (bytes : ByteArray) (index : Nat) : UInt64 :=
+  let off := 8 * index
+  if hb : off + 7 < bytes.size then
+    if hs : bytes.size < USize.size then
+      let base := USize.ofNat off
+      let getByte := fun (k : Nat) (hk : k ≤ 7) =>
+        (bytes.uget (base + USize.ofNat k) (by
+          dsimp only [base]
+          rw [wordOffsetNatEq off k (by omega)]
+          omega)).toUInt64
+      getByte 0 (by decide) ||| (getByte 1 (by decide) <<< 8) |||
+        (getByte 2 (by decide) <<< 16) ||| (getByte 3 (by decide) <<< 24) |||
+        (getByte 4 (by decide) <<< 32) ||| (getByte 5 (by decide) <<< 40) |||
+        (getByte 6 (by decide) <<< 48) ||| (getByte 7 (by decide) <<< 56)
+    else readWordLEReference bytes index
+  else 0
+
 
 @[inline] def writeWordLE (bytes : ByteArray) (index : Nat) (w : UInt64) : ByteArray :=
   let off := 8 * index
