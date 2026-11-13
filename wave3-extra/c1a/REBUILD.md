@@ -201,3 +201,25 @@ required suites were rerun against the actual delivery binaries: P0 PASS
 runner tests PASS. No C1a/XMSS1400 performance certificate is asserted.
 The source bundle and application journal bundle are refreshed for coordinator
 harvest; unauthenticated push remains unavailable. No credentials were used.
+
+## Production caller acceleration correction
+
+Additional external harnesses (outside application sources) exposed a gap in
+ba5b99b: canonical exported CLMUL roots accelerated, but persisted LCNF for
+production nativeMul/Bus callers already contained the expanded bitwise body.
+The earlier archive remains a valid checkpoint with this limitation.
+
+Compiler 48d1ee2 adds a restricted UInt64 source frontend preserving typed
+helper calls, and discovers source dependencies alongside LCNF dependencies.
+Complete canonical graph validation still admits crypto intrinsics; unsupported
+source forms fall back to the LCNF bridge. This extension has Tested assurance,
+not the RealLCNFBridge refinement theorem. RealLCNFBridge proofs are unchanged.
+
+Updated real production nativeMul final objdump has one VPCLMULQDQ; Bus
+planarEmul0 has four VPCLMULQDQ and no calls. Independent oracle validation
+passed 48 production Bus/Field cases and 48 ShardAHw cases. Earlier disassembly
+showing expanded arithmetic is retained beside the corrected `*-r2.asm` files.
+P0 regression now calls the actual [inline] masked canonical helper family:
+262 additional arithmetic pairs and final call-free VPCLMULQDQ checks pass.
+Expanded P0 suite PASS (2 tests,20.102s). Trust suite and all real executables
+are being revalidated before an updated delivery archive is certified.
