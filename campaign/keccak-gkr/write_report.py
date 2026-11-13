@@ -67,6 +67,12 @@ inner = sum(r['calls'] for r in rows if r['kind'] == 'lean_alloc_ctor'
             and ('productBucketLoop_spec__' in r['function']
                  or 'accumulateProductLimbs' in r['function']))
 boxes = sum(r['calls'] for r in rows if r['kind'] == 'lean_box_uint64')
+initial = sum(r['calls'] for r in rows if r['kind'] == 'lean_alloc_ctor'
+              and r['function'].endswith('_productBucketLoop'))
+pair_objects = sum(r['calls'] for r in rows if r['kind'] == 'lean_alloc_ctor'
+                   and 'pairSumsRangeFlat_spec__0' in r['function'])
+row_objects = sum(r['calls'] for r in rows if r['kind'] == 'lean_alloc_ctor'
+                  and 'foldRowsFlat_spec__0' in r['function'])
 cow = sum(r['bytes_or_nanos'] for r in rows if r['kind'] == 'lean_byte_array_set'
           and 'foldRowsFlat' in r['function'])
 f = final['paired']['1400']
@@ -166,11 +172,13 @@ lines += ['', f'Historical total370.612s: final delta {f["lean_mean_seconds"]-37
     'before returning a tagged Nat. The selected guard uses2^32−1, which emits an immediate '
     'comparison. No compiler source was edited.', '',
     '## Full-size allocation diagnostic', '',
-    f'Actual XMSS1400 instrumented product-loop constructors:29569843200→{inner}; '
+    f'Actual XMSS1400 instrumented product-loop constructors (candidate2→{winner}):'
+    f'29569843200→{inner}; '
     'the prior inner constructors requested946234982400 cumulative bytes including headers '
-    'but excluding allocator rounding. Initial bucket objects remain. '
+    f'but excluding allocator rounding. Initial bucket objects remaining:{initial}. '
     f'Instrumented UInt64 boxing calls:{boxes}. Row-fold potential shared-input COW '
-    f'payload:226492416000→{cow}B. Pair sums and row folds still allocate heavily.', '',
+    f'payload:226492416000→{cow}B. Instrumented pair-sum loop objects:{pair_objects}; '
+    f'row-fold loop objects:{row_objects}.', '',
     'These are selective generated-C counters, not total runtime allocations, peak RSS or '
     'DRAM traffic. Timers are nested aggregate thread CPU, not native wall time. '
     'Instrumentation may change inlining. The full diagnostic proof is byte-identical '
