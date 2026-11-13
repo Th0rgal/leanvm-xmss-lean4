@@ -233,3 +233,29 @@ outputs; 48 production Bus/Field and 48 refreshed ShardAHw oracle cases passed.
 P0 final masked caller and extension kernels are call-free VPCLMULQDQ; its
 slice kernel retains all four required ZMM instruction families. Updated dynamic
 compiler delivery is being linked; old archive still identifies ba5b99b only.
+
+## Final corrected compiler harvest checkpoint
+
+Updated delivery: `/var/lib/orb-node/work/c1a-reconstructed-lean435-r2.tar.gz`,
+15,423,346 bytes, SHA-256
+`cb48ac065b29338d5e451d5688721be2fb81727b8a2db8a6b59aaf44cf8978e7`.
+Compiler source: 48d1ee2e4432d9991945b8d14782e2b993848969.
+Both actual dynamic binaries passed source ingestion; both copied runtime
+launchers independently evaluated bootstrap_add(7,5)=12. Final delivery P0
+PASS (2 tests,19.168s); trust boundary PASS (20 tests,86.832s), plus all
+12 embedded runner tests PASS. This supersedes the earlier ba5b99b compiler
+archive for production-caller acceleration. Earlier artifacts remain preserved.
+
+Both source bundles/patches and `/var/lib/orb-node/work/c1a-harvest-manifest.json`
+are refreshed for coordinator harvest. No credentials, snapshots, application
+or oracle workaround edits, or duplicate-definition linker flags were used.
+Worker A archive has not arrived; reconstruction did not depend on recovering
+or waiting for lost machines. All build processes have completed.
+
+Outstanding: fixture-inclusive audit still rejects the pre-existing generated
+Tests.Field.Intrinsic clmul64.go._unsafe_rec; production-module audit passes.
+No matched XMSS1400 <1s/<4294967296B measurement exists for this rebuild.
+The coordinator's 370.6123s/15038140416B result remains a failed measurement,
+not certification of this compiler. No acceptance target was relaxed.
+Coordinator should harvest the durable archives/bundles/evidence before VM
+cleanup; TTL and release remain coordinator-owned.
