@@ -141,3 +141,28 @@ rejected. Previous failing logs remain under the evidence directories.
 Real Field/Bus/Hub/Keccak module builds are now running. These suite results
 are not an application purity/axiom audit, real-app acceptance certificate,
 or matched XMSS1400 performance result.
+
+## Real application executable checkpoint
+
+All seven requested Field/Bus/Hub/Keccak modules compiled (48 jobs, 36.211s).
+All 40 imported-module native objects were generated (81 jobs, 12.334s).
+The reconstructed compiler then built real `Tests.Field.NativeMulProbe`,
+`Tests.Field.Native`, `Tests.Keccak.ImportedRunner`, and
+`Tests.Keccak.LaneRunner` executables without application source changes.
+
+Independent deterministic polynomial validation passed 48 field/extension
+cases (products, inverses, squares) and 48 imported multiplication probes.
+`shard_a_test_mul` final objdump contains VPCLMULQDQ and no calls.
+The imported Keccak runner passed five comparisons with the pure permutation;
+the lane/transcript runner output matched Lean interpreter output byte for byte.
+The existing static purity checker passed 129 Spec/Model/Native/Proofs files,
+with no forbidden declarations or non-Lean FFI files. Transitive axiom audit
+is still running; these results do not certify its outcome.
+
+Evidence and external validation script are preserved under
+`/var/lib/orb-node/work/c1a-evidence/app`. All work remains compiler-only:
+this journal is the sole application-repository change from the recovery base.
+Reconstructed dynamic compiler packaging is underway, separate from the clean
+bootstrap archive. Neither compiler correctness checks nor application tests
+constitute matched XMSS1400 performance acceptance. Strict goal remains
+wall time <1 second and peak RSS <4294967296 bytes; no passing measurement.
