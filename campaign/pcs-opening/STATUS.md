@@ -1,6 +1,6 @@
 # PCS opening campaign checkpoint — 2026-11-13
 
-Status: first candidate completed without E2E gain; bounded fast-packing revision undergoing full gates.
+Status: second candidate gates and full matched matrix COMPLETE; no E2E win; NOT certified.
 See latest dated checkpoint below; earlier sections are chronological evidence.
 Compatible compiler and fixtures are restored; initial blockers below are archived.
 One L0 opening callback and a new bounded helper are changed. Strict <1 second / <4294967296-byte gate.
@@ -314,3 +314,27 @@ mutation/strict-proof gate is active; fresh matched4/16/1400 follows.
 Exact comprehensive gate PASS: purity130 files, clean Rust reference,
 10321 declarations / allowed axioms only, strict specs1102/1102,
 Lean and Rust each34 baseline accepts and34 mutation rejects.
+
+## Fast-packing full matched result — not promoted
+
+Warmup335.350313040s; passes350.444615351,368.279666582,348.921544292s.
+Mean355.881942075s (sample stdev10.763717577s), wall1416.209074259s.
+PCS140.814156462s:7.871798898s /5.294% below unchanged148.685955360s.
+Total mean is4.320302643s slower than baseline351.561639432s; no E2E win.
+Other phase variation prevents a causal whole-process speedup claim.
+Peak16708775936B,293154816B below unchanged, still3.890315x memory threshold.
+Strict time/memory gates FAIL: gaps354.881942075s and12413808640B.
+Wire359217B / VM358656B, exact baseline bytes. Rust verifies3x (517,12,12ms).
+Rust control mean2.074603905s, peak3951775744B. Memory-limit/OOM events zero.
+Small matched means:XMSS4 4.377816103s/RSS1556328448B;
+XMSS16 7.310990630s/RSS1729232896B; exact wires and Rust verification3x.
+One candidate pair per workload only; >=5 alternating full1400 certification
+pairs remain unperformed. No acceptance, promotion or completion claim.
+
+Next work should profile extension 48-word hashing and boxed NTT/allocation
+with full-path diagnostics before another production edit. Existing64-word
+Keccak8x leaf kernel must not be passed48 as a purported equivalent kernel.
+PCS-only improvement cannot remove the >200s remainder; coordinate phase owners.
+No further source change is pending. Exported bundle/patch and evidence archive
+are ready for harvest. Keep VM until coordinator acknowledges; TTL owned by
+coordinator, no destruction requested.
