@@ -1,6 +1,6 @@
 {
-  "status": "unchanged_native_matched_baseline_running",
-  "updated_utc": "2026-11-13T10:20:47.209186+00:00",
+  "status": "unchanged_native_matched_baseline_complete_diagnostics_started",
+  "updated_utc": "2026-11-13T10:30:56.946719+00:00",
   "authoritative_quote": "under 1s and 4gb is the goal",
   "workload": {
     "xmss": 1400,
@@ -26,7 +26,7 @@
   },
   "blocker": null,
   "application_changes": false,
-  "fresh_proofs_generated": 2,
+  "fresh_proofs_generated": 3,
   "certification_pairs_completed": 0,
   "bootstrap": {
     "source": "https://github.com/Th0rgal/turbo-lean.git",
@@ -39,5 +39,56 @@
     "p0_canary": "PASS"
   },
   "fixtures_sha256": "all_committed_full1400_omitted_files_match",
-  "baseline_pid": 68935
+  "baseline_pid": 68935,
+  "baseline1400": {
+    "label": "p0-xmss1400-lean-bench",
+    "argv": [
+      "/var/lib/orb-node/work/pcs-opening-evidence/baseline-native435-e2e",
+      "--xmss",
+      "1400",
+      "--inputs",
+      "/var/lib/orb-node/work/pcs-restored-oracle/xmss1400",
+      "--prover",
+      "e2e",
+      "--repeat",
+      "3",
+      "--cooldown-ms",
+      "2000",
+      "--log-inv-rate",
+      "1",
+      "--phase-timings",
+      "/var/lib/orb-node/work/pcs-opening-evidence/unchanged-native-matched/p0-xmss1400-phases.json",
+      "--out-proof",
+      "/var/lib/orb-node/work/pcs-opening-evidence/unchanged-native-matched/p0-xmss1400-lean.ethproof"
+    ],
+    "start": 1794564355.1520548,
+    "cgroup_before": {
+      "memory.max": "25769803776\n",
+      "memory.high": "23622320128\n",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+    },
+    "pid": 78969,
+    "exit_code": 0,
+    "wall_seconds": 1431.818044424057,
+    "cgroup_after": {
+      "memory.max": "25769803776\n",
+      "memory.high": "23622320128\n",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+    },
+    "passes_nanos": [
+      356959524611,
+      355062736964,
+      342662656722
+    ],
+    "warmup_nanos": 364511610148,
+    "peak_rss_bytes": 17001930752,
+    "mean_seconds": 351.5616394323333,
+    "time_gate": false,
+    "memory_gate": false,
+    "proof_size": 358656,
+    "proof_bytes": 359217,
+    "rss_threshold_ratio": 3.9585704803466797,
+    "time_gap_seconds": 350.5616394323333,
+    "rss_gap_bytes": 12706963456
+  }
 }

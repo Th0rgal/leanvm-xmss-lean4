@@ -1,0 +1,85 @@
+{
+  "caveat": "Generated C emitted call-site counts, NOT dynamic allocation counts or timing attribution. LLVM may eliminate or inline these sites.",
+  "functions": {
+    "lp_LeanVmXmss_LeanVmXmss_Model_Pcs_Ntt_vecPairLoop___lam__0": {
+      "lean_alloc_ctor": 2,
+      "lean_alloc_closure": 0,
+      "lean_box_uint64": 0,
+      "lean_inc_ref": 0,
+      "lean_dec_ref": 4,
+      "lean_is_exclusive": 1
+    },
+    "lp_LeanVmXmss_LeanVmXmss_Model_Pcs_Ntt_vecPairLoop___lam__0___boxed": {
+      "lean_alloc_ctor": 0,
+      "lean_alloc_closure": 0,
+      "lean_box_uint64": 0,
+      "lean_inc_ref": 0,
+      "lean_dec_ref": 1,
+      "lean_is_exclusive": 0
+    },
+    "lp_LeanVmXmss_LeanVmXmss_Model_Pcs_Ntt_vecPairLoop": {
+      "lean_alloc_ctor": 0,
+      "lean_alloc_closure": 1,
+      "lean_box_uint64": 1,
+      "lean_inc_ref": 0,
+      "lean_dec_ref": 0,
+      "lean_is_exclusive": 0
+    },
+    "lp_LeanVmXmss_LeanVmXmss_Model_Pcs_Ntt_vecPairLoop___boxed": {
+      "lean_alloc_ctor": 0,
+      "lean_alloc_closure": 0,
+      "lean_box_uint64": 0,
+      "lean_inc_ref": 0,
+      "lean_dec_ref": 1,
+      "lean_is_exclusive": 0
+    },
+    "lp_LeanVmXmss_Fin_foldl_loop___at___00LeanVmXmss_Model_Pcs_FlatWhir_foldPlanar_spec__0": {
+      "lean_alloc_ctor": 5,
+      "lean_alloc_closure": 0,
+      "lean_box_uint64": 0,
+      "lean_inc_ref": 0,
+      "lean_dec_ref": 2,
+      "lean_is_exclusive": 1
+    },
+    "lp_LeanVmXmss_Fin_foldl_loop___at___00LeanVmXmss_Model_Pcs_FlatWhir_foldPlanar_spec__0___boxed": {
+      "lean_alloc_ctor": 0,
+      "lean_alloc_closure": 0,
+      "lean_box_uint64": 0,
+      "lean_inc_ref": 0,
+      "lean_dec_ref": 2,
+      "lean_is_exclusive": 0
+    },
+    "lp_LeanVmXmss_LeanVmXmss_Model_Pcs_FlatWhir_foldPlanar___boxed": {
+      "lean_alloc_ctor": 0,
+      "lean_alloc_closure": 0,
+      "lean_box_uint64": 0,
+      "lean_inc_ref": 0,
+      "lean_dec_ref": 2,
+      "lean_is_exclusive": 0
+    },
+    "lp_LeanVmXmss_Fin_foldl_loop___at___00LeanVmXmss_Model_Pcs_FlatWhir_msgPlanar_spec__0": {
+      "lean_alloc_ctor": 9,
+      "lean_alloc_closure": 0,
+      "lean_box_uint64": 0,
+      "lean_inc_ref": 1,
+      "lean_dec_ref": 3,
+      "lean_is_exclusive": 1
+    },
+    "lp_LeanVmXmss_Fin_foldl_loop___at___00LeanVmXmss_Model_Pcs_FlatWhir_msgPlanar_spec__0___boxed": {
+      "lean_alloc_ctor": 1,
+      "lean_alloc_closure": 0,
+      "lean_box_uint64": 0,
+      "lean_inc_ref": 0,
+      "lean_dec_ref": 2,
+      "lean_is_exclusive": 0
+    },
+    "lp_LeanVmXmss_LeanVmXmss_Model_Pcs_FlatWhir_msgPlanar___boxed": {
+      "lean_alloc_ctor": 0,
+      "lean_alloc_closure": 0,
+      "lean_box_uint64": 0,
+      "lean_inc_ref": 0,
+      "lean_dec_ref": 2,
+      "lean_is_exclusive": 0
+    }
+  }
+}

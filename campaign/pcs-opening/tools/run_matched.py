@@ -52,7 +52,10 @@ def run(label, args, expect_signers=None):
     row['peak_rss_bytes'] = int(peak[1]) * 1024 if peak else None
     if row['passes_nanos']:
         row['mean_seconds'] = sum(row['passes_nanos']) / len(row['passes_nanos']) / 1e9
-        row['time_gate'] = row['mean_seconds'] < 1
+        row['time_gate'] = all(ns < 1_000_000_000 for ns in row['passes_nanos'])
+        row['mean_time_gate'] = row['mean_seconds'] < 1
+        row['min_seconds'] = min(row['passes_nanos']) / 1e9
+        row['max_seconds'] = max(row['passes_nanos']) / 1e9
         row['memory_gate'] = row['peak_rss_bytes'] is not None and row['peak_rss_bytes'] < 4294967296
     if 'verify' in label:
         row['verification_passes'] = len(re.findall(r'VERIFY_ETH\|PASS', text))

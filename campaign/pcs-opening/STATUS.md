@@ -1,9 +1,9 @@
 # PCS opening campaign checkpoint — 2026-11-13
 
-Status: UNCHANGED NATIVE MATCHED BASELINE RUNNING (durable PID 68935).
+Status: UNCHANGED NATIVE MATCHED BASELINE COMPLETE; DIAGNOSTIC REPLAY PREPARING.
 Compatible compiler and fixtures are restored; initial blockers below are archived.
 No application Lean source has changed. Strict <1 second / <4294967296-byte gate.
-The active full1400 warmup+repeat3 must finish before optimization edits.
+The unchanged full1400 warmup+repeat3 finished before any optimization edits.
 
 Starting revision: 299c689373ef3e98e0f150ff4bec21ca5e3aaea1.
 Anonymous HTTPS clone: /var/lib/orb-node/work/pcs-opening.
@@ -193,3 +193,23 @@ support is implemented and validated. Existing unit tests cover leafWords=64 onl
 Full1400 process HWM so far 15899238400 B; not a final measurement. cgroup
 24/22 GiB controls remain in effect, all throttle/max/OOM events zero. Two fresh
 small Lean proofs have independently verified; no full1400 Lean proof yet.
+
+## Completed unchanged matched baseline
+
+Full1400: warmup 364.511610148 s; measured 356.959524611,
+355.062736964, 342.662656722 s; mean 351.5616394323333 s.
+PCS phase mean 148.685955360 s. Process peak RSS 17001930752 B,
+wall 1431.818044424057 s. Wire 359217 B, VM proof 358656 B.
+Fresh proof independently Rust verified three times at expected 1400 signers.
+All cgroup throttle/max/OOM counters stayed zero. Rust matched mean
+2.3668005103333334 s, peak 3953496064 B. No source optimization implemented.
+
+Time gate fails by 350.5616394323333 s to the 1 s boundary (351.56x).
+Memory gate fails by 12706963456 B to the 4 GiB boundary (3.95857x).
+Even deleting the entire measured PCS phase leaves about 202.875684 s;
+this branch alone cannot certify whole-aggregation acceptance. This is arithmetic,
+not an achieved optimization. Final >=5 alternating pairs remain outstanding.
+
+The diagnostic generator is now executed, after full baseline completion.
+It creates Tests/Hub/PcsOpeningDiagnostics.lean; this isolated replay is not a
+production code edit. Native compilation and byte-identical proof checks follow.

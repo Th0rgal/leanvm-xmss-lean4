@@ -1,0 +1,8 @@
+BENCH|impl=lean-cli|prover=e2e|xmss=16|records=16|signers=16|log_inv_rate=1|repeat=3|cooldown_ms=2000
+WARMUP|nanos=7064794702
+PASS|i=1|nanos=7172253923
+PASS|i=2|nanos=7194364614
+PASS|i=3|nanos=8494822939
+LAST|statement=919bb576b61c8209abd656d974df9cc2f3b8cb3276c9f5938257fe8e4e23109d|hints_keccak256=none|proof_bytes=279625|proof_size=279064|cycles=31140|memory_cells_used=117322|memory_keccak256=none|vm_hwm_bytes=1680027648
+STATS|passes=3|mean_nanos=7620480492
+ARTIFACT|path=/var/lib/orb-node/work/pcs-opening-evidence/unchanged-native-matched/p0-xmss16-lean.ethproof|bytes=279625

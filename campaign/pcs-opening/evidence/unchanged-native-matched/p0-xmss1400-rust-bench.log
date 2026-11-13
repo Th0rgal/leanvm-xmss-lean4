@@ -1,0 +1,8 @@
+BENCH|impl=rust-e2e|prover=aggregate|records=1400|log_inv_rate=1|repeat=3|cooldown_ms=2000
+WARMUP|nanos=3920773236
+PASS|i=1|nanos=2848247992
+PASS|i=2|nanos=2118680141
+PASS|i=3|nanos=2133473398
+LAST|statement=ded8679e548f3d7c810a3c50e1c69b4fed50773b35189e3a67d7728accafe423|proof_bytes=359217|proof_size=358656|cycles=1146537|mem_used=8668972|committed=106037248
+STATS|passes=3|mean_nanos=2366800510
+VERIFY|status=ok
