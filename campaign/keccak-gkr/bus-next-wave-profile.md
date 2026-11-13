@@ -37,3 +37,12 @@ Read-only follow-up should inspect E temporary materialization and ownership in 
 For comparison, this diagnostic measured 29,569,843,200 GKR product-loop constructors (946,234,982,400 requested bytes) and 226,492,416,000 bytes of potential shared-buffer copy payload in foldRowsFlat. These are actual full-size instrumentation counts, not extrapolated small cases. They motivate separate GKR ownership changes; they do not certify E2E gains.
 
 Evidence root: `/var/lib/orb-node/work/keccak-gkr-evidence/`. Files: `candidate2-full-profile-status.json`, `candidate2-profile-xmss1400-verify.log`, `candidate2-profile-xmss1400-{gkr,bus}.csv`, corresponding `-summary.json`, `candidate2-profile-link.json`, and `candidate2-full-profile-resources.jsonl`. Site maps: `candidate2-profile-gkr.sites.json` and `candidate1-profile-bus.sites.json`.
+
+
+Read-only source map for the next worker (base/campaign bus source unchanged):
+- `LeanVmXmss/Model/Bus/Flat.lean:35`: `eqTableExpandArray` builds two arrays; both branches multiply the same source entry by the challenge, and the low branch also adds it. Investigate shared work with exact table-order refinement.
+- `:70`, `:99`, `:121`: side leaves and retained product-tree layers use `Array E` and parallel chunk concatenation. Inspect temporary E ownership separately from retained tree storage; counts alone do not establish peak-RSS benefit.
+- `:195`: `foldTreeFlat` borrows its input and constructs a new interpolated array with four outputs per chunk. Determine actual lifetime/aliasing before attempting reuse.
+- `:613`, `:632`, `:653`: constraint message, table update, and round fold functions retain transcript sequencing. Measure any candidate against the native full pipeline, including required equality-table shrink/update work.
+
+None of these hypotheses authorizes a bus edit in this campaign.
