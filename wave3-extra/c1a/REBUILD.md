@@ -306,3 +306,10 @@ Final archive c1a-reconstructed-lean435-r3.tar.gz is being assembled with
 binaries, wrappers, pinned reproduction recipe, source bundle/patch and PCS
 evidence. Earlier archives remain preserved. Full1400 performance and the
 pre-existing fixture-inclusive unsafe auxiliary gap remain unresolved.
+
+Final r3 archive ready for harvest: 15748517 bytes, SHA-256
+`26edba6e9714bb71a3a95760c386854527f91f68f6d4f73a1095cd15d46229c7`. Both packaged runtime wrappers independently pass7+5=12.
+Source refs and artifacts are preserved under /var/lib/orb-node/work;
+anonymous push was unavailable, so coordinator must harvest/push bundles.
+Request coordinator cleanup only after confirming harvest; no local builds
+remain running. TTL and release remain coordinator-owned.
