@@ -1,0 +1,34 @@
+REBUILT Spec.Field.Basic
+REBUILT Model.Field.Scalar
+REBUILT Spec.Xmss.Encoding
+REBUILT Model.Vm.Kernel
+REBUILT Spec.Vm.KeccakInternal
+REBUILT Spec.Xmss.Hints
+REBUILT Spec.Keccak.Basic
+REBUILT Spec.Vm.Equality
+REBUILT Spec.Vm.Basic
+REBUILT Spec.Layout.Basic
+REBUILT Model.Keccak.Registers
+REBUILT Spec.Field.Operations
+REBUILT Spec.Pcs.Ntt
+REBUILT Model.Field.Operations
+REBUILT Tests.Field.Intrinsic
+REBUILT Tests.Hub.ShardAHw
+Traceback (most recent call last):
+  File "/var/lib/orb-node/work/pcs-opening/LeanVmXmss/Tests/Hub/cache_manager.py", line 173, in <module>
+    build(target)
+  File "/var/lib/orb-node/work/pcs-opening/LeanVmXmss/Tests/Hub/cache_manager.py", line 90, in build
+    build(dependency)
+  File "/var/lib/orb-node/work/pcs-opening/LeanVmXmss/Tests/Hub/cache_manager.py", line 90, in build
+    build(dependency)
+  File "/var/lib/orb-node/work/pcs-opening/LeanVmXmss/Tests/Hub/cache_manager.py", line 90, in build
+    build(dependency)
+  [Previous line repeated 3 more times]
+  File "/var/lib/orb-node/work/pcs-opening/LeanVmXmss/Tests/Hub/cache_manager.py", line 134, in build
+    run(['lean-native', 'compile-llvm', '--input', str(hw_source), '-o', str(lnir_ll)])
+  File "/var/lib/orb-node/work/pcs-opening/LeanVmXmss/Tests/Hub/cache_manager.py", line 29, in run
+    raise RuntimeError(' '.join(args) + '\n' + result.stdout + result.stderr)
+RuntimeError: lean-native compile-llvm --input /var/lib/orb-node/work/pcs-opening/LeanVmXmss/Tests/Hub/ShardAHw.lean -o /var/lib/orb-node/work/pcs-opening/LeanVmXmss/.lake/build/native-c/Model/Field/NativeKernel.hw.lnir.ll
+/var/lib/orb-node/work/pcs-opening/LeanVmXmss/Tests/Hub/ShardAHw.lean:1:0: error: failed to read file '/opt/orb/elan/toolchains/leanprover--lean4---v4.35.0/lib/lean/Init.olean', incompatible header
+Elaboration failed for /var/lib/orb-node/work/pcs-opening/LeanVmXmss/Tests/Hub/ShardAHw.lean
+

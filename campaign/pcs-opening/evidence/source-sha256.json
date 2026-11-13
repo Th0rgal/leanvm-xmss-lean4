@@ -1,0 +1,13 @@
+{
+  "plan.md": "2ce50257a40973b4d9ed3708d7427f54096cbb7516f16ebb2aa25c8fddaf4bde",
+  "wave3-extra/k3-prep/k3-final-report.md": "c2c2f6f18b3c8fe46459e3b80f8148f7b554850a492eadec080c6277a5ea8439",
+  "LeanVmXmss/Model/Cli/E2E.lean": "124d5dfdd6e1f7f11bdb51df732f49caa47f33e2d81eba8e7327e7fe2b854cf8",
+  "LeanVmXmss/Model/Pcs/FlatWhir.lean": "29d46464d497cbf063e32b5d6a9ab10ac90fa2e984c89188054ff9732bb20890",
+  "LeanVmXmss/Model/Pcs/Ntt.lean": "812c34ddc9e3a10a7377a19bba22badf88a7e65f489c5638d66fab0275bad6a8",
+  "LeanVmXmss/Model/Pcs/Commit.lean": "8aa4377f639447b8b3baa73a34744635f350db5ef49132f065590f2668018663",
+  "LeanVmXmss/Native/Kernels/Ntt.lean": "8608c70647b6f38e00bc87913f28608d597634cbb28fd76ea16b56e1382f46c9",
+  "LeanVmXmss/Native/Kernels/Keccak8x.lean": "5940ff76561aca5f78c637d558d5da031c8f267cf00085f242eef19a413d1722",
+  "LeanVmXmss/Tests/Unit/NativePcsMerkleKernelTest.lean": "787303d10b73661a71530c712cd88572392ac8f73c5a152fa07fc6c78ff4cab5",
+  "LeanVmXmss/Tests/Hub/cache_manager.py": "5bb9645afa656798c989825399ecd4aa7445b30c9945e57ae4015860478c1b13",
+  "LeanVmXmss/Tests/Cli/Rust/src/main.rs": "e207d1418e0ec1796fcc94a66616084dfeaf4837b84f3faad6e06251ee64874c"
+}

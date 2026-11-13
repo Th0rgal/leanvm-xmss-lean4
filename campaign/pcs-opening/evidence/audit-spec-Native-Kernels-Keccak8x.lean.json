@@ -1,0 +1,21 @@
+{
+  "decl": "file",
+  "elapsed_ms": 0.374,
+  "file": "Native/Kernels/Keccak8x.lean",
+  "horizontal_packing_warnings": [],
+  "ms": 0.374,
+  "ok": true,
+  "shadowed_constants": [],
+  "specs": [],
+  "status": "ok",
+  "tight_specs": 0,
+  "total_specs_audited": 0,
+  "trivial_spec_names": [],
+  "trivial_specs": 0,
+  "unused_private_decls": [],
+  "vacuous": false,
+  "vacuous_spec_names": [],
+  "vacuous_specs": 0,
+  "verdict": "specs_audited",
+  "warnings": []
+}

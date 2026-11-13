@@ -1,0 +1,145 @@
+    Updating crates.io index
+     Locking 37 packages to latest Rust 1.97.1 compatible versions
+      Adding bincode v1.3.3 (available: v3.0.0)
+ Downloading crates ...
+  Downloaded tracing v0.1.44
+  Downloaded tracing-attributes v0.1.31
+  Downloaded getrandom v0.3.4
+  Downloaded rand_core v0.9.5
+  Downloaded quote v1.0.47
+  Downloaded ppv-lite86 v0.2.21
+  Downloaded bincode v1.3.3
+  Downloaded pin-project-lite v0.2.17
+  Downloaded rand_chacha v0.9.0
+  Downloaded serde v1.0.229
+  Downloaded rand v0.9.5
+  Downloaded syn v2.0.119
+  Downloaded serde_derive v1.0.229
+  Downloaded zerocopy v0.8.63
+  Downloaded tracing-core v0.1.36
+  Downloaded proc-macro2 v1.0.107
+  Downloaded syn v3.0.10
+  Downloaded cfg-if v1.0.5
+  Downloaded once_cell v1.21.4
+  Downloaded unicode-ident v1.0.27
+  Downloaded serde_core v1.0.229
+  Downloaded libc v0.2.191
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.27
+   Compiling serde_core v1.0.229
+   Compiling syn v3.0.10
+   Compiling serde v1.0.229
+   Compiling serde_derive v1.0.229
+   Compiling parallel v0.1.0 (/var/lib/orb-node/work/pcs-opening/references/leanVM/crates/parallel)
+   Compiling primitives v0.1.0 (/var/lib/orb-node/work/pcs-opening/references/leanVM/crates/primitives)
+   Compiling syn v2.0.119
+   Compiling libc v0.2.191
+   Compiling once_cell v1.21.4
+   Compiling tracing-core v0.1.36
+   Compiling tracing-attributes v0.1.31
+   Compiling getrandom v0.3.4
+   Compiling zerocopy v0.8.63
+   Compiling pin-project-lite v0.2.17
+   Compiling tracing v0.1.44
+   Compiling fiat_shamir v0.1.0 (/var/lib/orb-node/work/pcs-opening/references/leanVM/crates/fiat_shamir)
+   Compiling cfg-if v1.0.5
+   Compiling pcs v0.1.0 (/var/lib/orb-node/work/pcs-opening/references/leanVM/crates/pcs)
+   Compiling ppv-lite86 v0.2.21
+   Compiling rand_core v0.9.5
+   Compiling rand_chacha v0.9.0
+   Compiling keccak_gkr v0.1.0 (/var/lib/orb-node/work/pcs-opening/references/leanVM/crates/keccak_gkr)
+   Compiling verifier v0.1.0 (/var/lib/orb-node/work/pcs-opening/references/leanVM/crates/verifier)
+   Compiling leanvm_core v0.1.0 (/var/lib/orb-node/work/pcs-opening/references/leanVM/crates/leanvm_core)
+   Compiling rand v0.9.5
+   Compiling signatures v0.1.0 (/var/lib/orb-node/work/pcs-opening/references/leanVM/crates/signatures)
+   Compiling lean_compiler v0.1.0 (/var/lib/orb-node/work/pcs-opening/references/leanVM/crates/lean_compiler)
+   Compiling lean_da v0.1.0 (/var/lib/orb-node/work/pcs-opening/references/leanVM/crates/lean_da)
+   Compiling bincode v1.3.3
+   Compiling rec_aggregation v0.1.0 (/var/lib/orb-node/work/pcs-opening/references/leanVM/crates/rec_aggregation)
+   Compiling e2e-oracle v0.1.0 (/var/lib/orb-node/work/pcs-opening/LeanVmXmss/Tests/Cli/Rust)
+warning: unused import: `QKECCAK`
+ --> src/main.rs:7:42
+  |
+7 |     KeccakLane, MEM_HI, MEM_LO, MEM_TOP, QKECCAK, keccak_value, layout, schema,
+  |                                          ^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `primitives::hash::STATE_LANES`
+  --> src/main.rs:12:5
+   |
+12 | use primitives::hash::STATE_LANES;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `primitives::multilinear::interp_k`
+  --> src/main.rs:13:5
+   |
+13 | use primitives::multilinear::interp_k;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused variable: `announce`
+   --> src/main.rs:379:9
+    |
+379 |     let announce = reader.next_scalars(2 + tables::N_TABLES);
+    |         ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_announce`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `hash_e` is never used
+   --> src/main.rs:347:4
+    |
+347 | fn hash_e(words: &[F192]) -> String {
+    |    ^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `exponent_bytes` is never used
+  --> /var/lib/orb-node/work/caches/xmss-hub-v3/references/leanVM/crates/rec_aggregation/src/aggregation/cells.rs:12:15
+   |
+12 | pub(super) fn exponent_bytes(value: u64, bits: usize) -> Vec<F192> {
+   |               ^^^^^^^^^^^^^^
+
+warning: function `dsl_u128` is never used
+  --> /var/lib/orb-node/work/caches/xmss-hub-v3/references/leanVM/crates/rec_aggregation/src/aggregation/cells.rs:19:15
+   |
+19 | pub(super) fn dsl_u128(value: F192) -> u128 {
+   |               ^^^^^^^^
+
+warning: function `f192_literal` is never used
+  --> /var/lib/orb-node/work/caches/xmss-hub-v3/references/leanVM/crates/rec_aggregation/src/aggregation/cells.rs:24:15
+   |
+24 | pub(super) fn f192_literal(f: F192) -> String {
+   |               ^^^^^^^^^^^^
+
+warning: function `cell_bytes` is never used
+  --> /var/lib/orb-node/work/caches/xmss-hub-v3/references/leanVM/crates/rec_aggregation/src/aggregation/cells.rs:37:15
+   |
+37 | pub(super) fn cell_bytes(cells: impl IntoIterator<Item = F192>) -> Vec<u8> {
+   |               ^^^^^^^^^^
+
+warning: struct `Hints` is never constructed
+  --> /var/lib/orb-node/work/caches/xmss-hub-v3/references/leanVM/crates/rec_aggregation/src/aggregation/hints.rs:56:19
+   |
+56 | pub(super) struct Hints(Vec<(String, Vec<Vec<F192>>)>);
+   |                   ^^^^^
+
+warning: methods `push` and `install` are never used
+  --> /var/lib/orb-node/work/caches/xmss-hub-v3/references/leanVM/crates/rec_aggregation/src/aggregation/hints.rs:59:19
+   |
+58 | impl Hints {
+   | ---------- methods in this implementation
+59 |     pub(super) fn push(&mut self, name: &str, entry: Vec<F192>) {
+   |                   ^^^^
+...
+73 |     pub(super) fn install(self, guest: &mut Program) {
+   |                   ^^^^^^^
+
+warning: function `lean_sphincs_hints` is never used
+   --> /var/lib/orb-node/work/caches/xmss-hub-v3/references/leanVM/crates/rec_aggregation/src/aggregation/hints.rs:143:15
+    |
+143 | pub(super) fn lean_sphincs_hints(
+    |               ^^^^^^^^^^^^^^^^^^
+
+warning: `e2e-oracle` (bin "e2e-oracle") generated 12 warnings (run `cargo fix --bin "e2e-oracle" -p e2e-oracle` to apply 4 suggestions)
+    Finished `release` profile [optimized] target(s) in 1m 03s

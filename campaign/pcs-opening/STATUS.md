@@ -39,7 +39,7 @@ have not been regenerated or verified. No fresh proof was generated or reused.
 ## Actual call graph and hypotheses
 
 Read committed plan.md and wave3-extra/k3-prep/k3-final-report.md. Current
-E2E uses Model.Cli.E2E.proveLeafEthereumPhasedWithBcCols (and related runners)
+E2E uses Model.Cli.E2E.proveLeafEthereumTimedPass (and related runners)
 -> Model.Pcs.FlatWhir.provePcsOpenFlat -> proveLevelPlanar.
 
 L0 opening: openL0Cosets -> firstCosetFromBytes -> encodeCosetVec8 ->
@@ -90,3 +90,20 @@ No TTL/lease or coordinator messaging API is exposed here. Checkpoint is durable
 no VM deletion has been requested. No credential-free push capability was
 provisioned (origin is public HTTPS). Export bundle/patch/hashes for coordinator
 harvest, then request destruction after harvest acknowledgement.
+
+## Current static gates
+
+Targeted transitive purity audit of FlatWhir, Model Ntt/Commit, and both native
+kernels: 595 declarations, zero rejections; permitted axioms only propext and
+Quot.sound, no unsafe or extern declarations. This is an elaboration/kernel gate,
+not native execution or a performance result. A source token scan on these files
+and Model/Merkle/Flat.lean found no extern/unsafe/sorry/native_decide tokens.
+
+turbo-lean audit-spec reports ok=true, no warnings/vacuous/trivial specs for all
+three inspected modules: Ntt has 4 theorem specs; Keccak8x and FlatWhir have zero.
+Zero recognized theorem specs is explicitly not evidence of algorithm refinement.
+The committed kernel differential test builds successfully, but was not executed natively.
+The broader WHIR/RingSwitch/StackOpen/Wire strict audit also passes: 1072
+declarations, zero rejections. The 66-target gate build completed in 208.711 s;
+this is build time, not prover time. Final cgroup high/max/OOM event counts
+remain zero.

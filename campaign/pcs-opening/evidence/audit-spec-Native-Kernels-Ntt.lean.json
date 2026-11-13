@@ -1,0 +1,50 @@
+{
+  "decl": "file",
+  "elapsed_ms": 0.483,
+  "file": "Native/Kernels/Ntt.lean",
+  "horizontal_packing_warnings": [],
+  "ms": 0.483,
+  "ok": true,
+  "shadowed_constants": [],
+  "specs": [
+    {
+      "assessment": "non_vacuous_and_tight",
+      "decl": "usize_lt_size",
+      "tight": true,
+      "trivial": false,
+      "vacuous": false
+    },
+    {
+      "assessment": "non_vacuous_and_tight",
+      "decl": "usize_uset_size",
+      "tight": true,
+      "trivial": false,
+      "vacuous": false
+    },
+    {
+      "assessment": "non_vacuous_and_tight",
+      "decl": "usize_ofNat_le_seven",
+      "tight": true,
+      "trivial": false,
+      "vacuous": false
+    },
+    {
+      "assessment": "non_vacuous_and_tight",
+      "decl": "usize_add_lt_size",
+      "tight": true,
+      "trivial": false,
+      "vacuous": false
+    }
+  ],
+  "status": "ok",
+  "tight_specs": 4,
+  "total_specs_audited": 4,
+  "trivial_spec_names": [],
+  "trivial_specs": 0,
+  "unused_private_decls": [],
+  "vacuous": false,
+  "vacuous_spec_names": [],
+  "vacuous_specs": 0,
+  "verdict": "specs_audited",
+  "warnings": []
+}
