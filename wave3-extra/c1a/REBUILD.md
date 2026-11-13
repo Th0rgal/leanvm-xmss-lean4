@@ -293,3 +293,16 @@ shard_a_mul is call-free. All130 original cached object hashes are unchanged.
 Evidence: c1a-evidence/pcs-compat/receipt.json, commands.json and disassembly.
 Main/core Lean builds pass; final dynamic packaging and rerun are in progress.
 This is compatibility evidence, not a full XMSS1400 performance certificate.
+
+## Final bd58dbe dynamic validation
+
+Actual final dynamic main/core binaries both pass source ingestion and7+5=12.
+Main SHA-256 efc484547ec9995945a9da53807a44377d3c8092f52afc4b4e0884f024c2d5c4;
+core SHA-256 255bf6494e8dc65f33d3f6fd1a20fa842419cf4b8b11d1bfbb95810f931c8296.
+P0 PASS2 tests28.920s; trust boundary PASS20 tests35.107s, plus12 embedded
+runner tests. Logs: c1a-evidence/{p0,trust}-r3-delivery-suite.log.
+Inventory check and changed Python syntax checks pass. No Rust changes.
+Final archive c1a-reconstructed-lean435-r3.tar.gz is being assembled with
+binaries, wrappers, pinned reproduction recipe, source bundle/patch and PCS
+evidence. Earlier archives remain preserved. Full1400 performance and the
+pre-existing fixture-inclusive unsafe auxiliary gap remain unresolved.
