@@ -33,10 +33,10 @@ Next checkpoint deadline 2026-11-13T16:41:22.826062+00:00
 
 Current commit e7c4156ba638ed6c8a58879424a0950eeb28bc28
 
-PERIODIC UPDATE 2026-11-13T17:16:37.663329+00:00
-final-campaign-status.json False final-five-pairs-runner 3769 running
-final/status.json False xmss1400-pair3-lean 496 running
+PERIODIC UPDATE 2026-11-13T17:36:37.815820+00:00
+final-campaign-status.json False final-five-pairs-runner 4969 running
+final/status.json False xmss1400-pair4-lean 375 running
 finalize-status.json False complete final campaign  running
 
 EXPLICIT ACK for me AND ALL FUTURE CHILDREN: commit AND push WIP every <=30min and before ANY VM TTL/cap/stop/destruction. No VM credentials; coordinator performs authenticated push. Benchmark archive transport chunks MUST be <=10MiB. Checkpoint incomplete until coordinator confirms authenticated remote ref AND off-VM evidence harvest. NO VM cleanup before harvest confirmation.
-Next checkpoint deadline 2026-11-13T17:41:37.663329+00:00
+Next checkpoint deadline 2026-11-13T18:01:37.815820+00:00
