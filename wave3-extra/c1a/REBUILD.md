@@ -24,8 +24,15 @@ module builds/execution, final linked symbol/disassembly evidence, and
 available prescribed lint/typechecking. Application purity and axiom gates
 remain required. All gates are pending.
 
-Performance contracts remain unresolved: committed <1.15s/<8.633GiB,
-later <3s/4GiB and <920ms/5.5GiB. No threshold is relaxed or claimed passed.
+Authoritative superseding contract (Thomas, verbatim): "under 1s and 4gb is the goal".
+Acceptance requires matched measured XMSS1400 aggregation passes with wall time
+strictly <1 second and peak RSS strictly <4 GiB = 4,294,967,296 bytes.
+This supersedes all earlier thresholds, including <1.15s/<8.633GiB,
+<3s/4GiB, and <920ms/5.5GiB. No relaxation is authorized.
+Coordinator-reported current result: 370.6123 seconds / 15,038,140,416 bytes,
+approximately 370.6123x the time boundary and 3.5013x the memory boundary.
+That result fails both thresholds and is not matched certification for this
+compiler checkpoint. No acceptance gate is claimed passed.
 No snapshots. Lost machines are not recovery targets.
 
 ## Compiler checkpoint 9d6c297
