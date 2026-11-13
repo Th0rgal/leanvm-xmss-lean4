@@ -49,8 +49,8 @@ theorem wordOffsetNatEq (off k : Nat) (h : off + k < USize.size) :
 @[inline] def readWordLE (bytes : ByteArray) (index : Nat) : UInt64 :=
   let off := 8 * index
   if hb : off + 7 < bytes.size then
-    if hs : bytes.size < 2^32 then
-      have hsize : bytes.size < USize.size := Nat.lt_of_lt_of_le hs USize.le_size
+    if hs : bytes.size < 4294967295 then
+      have hsize : bytes.size < USize.size := Nat.lt_trans hs (Nat.lt_of_lt_of_le (by decide : 4294967295 < 2^32) USize.le_size)
       let base := USize.ofNat off
       let getByte := fun (k : Nat) (hk : k ≤ 7) =>
         (bytes.uget (base + USize.ofNat k) (by
