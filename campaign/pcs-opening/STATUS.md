@@ -213,3 +213,19 @@ not an achieved optimization. Final >=5 alternating pairs remain outstanding.
 The diagnostic generator is now executed, after full baseline completion.
 It creates Tests/Hub/PcsOpeningDiagnostics.lean; this isolated replay is not a
 production code edit. Native compilation and byte-identical proof checks follow.
+
+## Diagnostic replay validated on XMSS4
+
+Native kernel differential executable passed all Keccak8x/NTT/Merkle/WHIR tests
+at existing 2^4/2^12/2^14 sizes. Its microbench output is retained as execution
+evidence only, not E2E improvement. Separate PCS replay generated a byte-identical
+XMSS4 proof (cmp PASS) and unchanged Rust verification passed 3x.
+
+XMSS4 diagnostic attribution: first-coset packing 0.042556663 s, L0 NTT
+0.053344963 s, extension NTT 0.034119466 s, queried leaves 0.627057356 s,
+queried tree builds 0.205548335 s, unqueried Merkle roots 0.246648847 s,
+extension commitments 0.540308820 s, folding 0.179988957 s, query grinding
+1.013366538 s. This is one instrumented pass, not a certified benchmark.
+Full1400 diagnostic is active under durable runner PID 135560; no candidate
+selected based solely on small-case behavior. Whole-source purity scan passes:
+129 Lean files, zero forbidden tokens/non-Lean FFI files in Spec/Model/Native/Proofs.

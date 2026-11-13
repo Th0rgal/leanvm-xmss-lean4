@@ -19,6 +19,7 @@ open Spec.Vm
 open Model.Merkle (Digest32)
 open Model.Pcs.Ntt (Vec8 foldRange)
 open Model.Pcs.Whir
+open Model.Pcs
 open Model.Pcs.FlatWhir
 open Model.Cli
 
@@ -26,18 +27,21 @@ open Model.Cli
 -- This module is diagnostics only and is excluded from matched certification.
 @[noinline] def forceResult (x : α) : IO α := pure x
 
-def measured (name : String) (f : Unit → α) : IO α := do
+def measuredIO (name : String) (f : Unit → α) : IO α := do
   let start ← IO.monoNanosNow
   let value ← forceResult (f ())
   let stop ← IO.monoNanosNow
   IO.println s!"PCS_DIAG|{name}|nanos={stop-start}"
   return value
 
-def need (x : Option α) : OptionT IO α := ⟨pure x⟩
+def measured (name : String) (f : Unit → α) : OptionT IO α :=
+  OptionT.lift (measuredIO name f)
+
+def need (x : Option α) : OptionT IO α := OptionT.mk (pure x)
 
 '''
 stream = section(flat, 'def streamCosetsOpen ', 'def openL0Cosets ')
-stream = replace(stream, '(encodeCoset : Nat → Array Vec8)', '(encodeCoset : Nat → IO (Array Vec8))')
+stream = replace(stream, '(encodeCoset : Nat → Array Vec8)', '(encodeCoset : Nat → OptionT IO (Array Vec8))')
 stream = replace(stream, 'Option Spec.Merkle.PrunedMerklePaths := do', 'OptionT IO Spec.Merkle.PrunedMerklePaths := do')
 stream = replace(stream, 'let encoded := encodeCoset curC', 'let encoded ← encodeCoset curC')
 stream = replace(stream, 'let r := fastSubRoot encoded subK (m <<< subK)', 'let r ← measured s!"unqueried_merkle|coset={curC}|sub={m}|k={subK}" (fun _ => fastSubRoot encoded subK (m <<< subK))')
