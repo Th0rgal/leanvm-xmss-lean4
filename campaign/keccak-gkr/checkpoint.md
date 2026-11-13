@@ -125,3 +125,8 @@ Durable final selector waits complete candidate7 correctness/profile/matched/cod
 Candidate7 all-size matched gates completed warmup+repeat3, fresh RSS, byte parity and positional frozen Rust verification. Small4 total3.627667045s/GKR0.496146481s;16 total8.868967719s/GKR2.156469647s. Full1400 total361.108949069s/GKR102.436216653s/RSS16177577984B/Rust3.459092089s. Full Lean totals363.318915090,308.975826906,411.032105212s show drift; do not attribute raw total differences solely to GKR. Both34-mutant verifiers/native binary audit passed; selected-version app purity/refinement/native gates complete. All absolute time/RSS targets remain unmet.
 
 Source recovery ref campaign/keccak-gkr-measured-c7 points to implementation200b18acaebd31571aa4c9b07838ae079f451a2a and is included with measured-c4 in exports. Final preflight native/frozen-reference audit passed. Durable final controller runs original saved-binary baseline control before5 alternating same-host Rust/Lean pairs at4/16/1400. Baseline full1400 is active. Final paired evidence remains OPEN; no report or target certification is claimed complete. Finalizer/export/harvest workflow remains gated on complete final state.
+
+
+## Final certification complete
+
+Selected candidate7; full report and all raw final/control samples are in final-report.md and final-results.json. Final1400 mean 343.263817980 s; peak RSS 16034304000 B. Every target pair remains unmet. All-size>=5 alternating pairs, warmup+repeat3, fresh RSS, byte parity and independent frozen Rust verification completed. Named strict-proofs CLI policy remains unsupported/unclaimed. Harvest durable refs/evidence before VM cleanup.

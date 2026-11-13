@@ -1,0 +1,1770 @@
+{
+  "base": "299c689373ef3e98e0f150ff4bec21ca5e3aaea1",
+  "winner": "candidate7",
+  "implementation_commit": "200b18acaebd31571aa4c9b07838ae079f451a2a",
+  "final": {
+    "complete": true,
+    "paired": {
+      "4": {
+        "pair_count": 5,
+        "lean_mean_seconds": 5.699337889533333,
+        "rust_mean_seconds": 0.23607231393333333,
+        "lean_peak_rss_bytes": 1408069632,
+        "lean_over_rust_time_ratio": 24.142339245858462,
+        "mean_pair_time_ratio": 25.23253879296418,
+        "pairs": {
+          "1": {
+            "rust": {
+              "passes_nanos": [
+                198220117,
+                205045738,
+                176203383
+              ],
+              "mean_nanos": 193156412.66666666,
+              "peak_rss_bytes": 472322048
+            },
+            "lean": {
+              "passes_nanos": [
+                5131523275,
+                5152419770,
+                5388501673
+              ],
+              "mean_nanos": 5224148239.333333,
+              "peak_rss_bytes": 1387016192,
+              "phase_means_nanos": {
+                "0b_statement_hints": 2842884,
+                "1_execute_witness": 279810803,
+                "2_commit_ntt_merkle": 107283989,
+                "3_bus_constraints": 1292766581,
+                "4_keccak_gkr": 689557342,
+                "5_pcs_open": 2851886638,
+                "6_wire_encode": 11959057
+              }
+            }
+          },
+          "2": {
+            "rust": {
+              "passes_nanos": [
+                129458168,
+                161504677,
+                263112695
+              ],
+              "mean_nanos": 184691846.66666666,
+              "peak_rss_bytes": 472076288
+            },
+            "lean": {
+              "passes_nanos": [
+                5623392538,
+                6928474016,
+                7112504560
+              ],
+              "mean_nanos": 6554790371.333333,
+              "peak_rss_bytes": 1390731264,
+              "phase_means_nanos": {
+                "0b_statement_hints": 3869170,
+                "1_execute_witness": 347093730,
+                "2_commit_ntt_merkle": 165432808,
+                "3_bus_constraints": 1773309089,
+                "4_keccak_gkr": 1045869581,
+                "5_pcs_open": 3219215991,
+                "6_wire_encode": 13774647
+              }
+            }
+          },
+          "3": {
+            "rust": {
+              "passes_nanos": [
+                291649677,
+                298793297,
+                330646982
+              ],
+              "mean_nanos": 307029985.3333333,
+              "peak_rss_bytes": 472080384
+            },
+            "lean": {
+              "passes_nanos": [
+                6267457675,
+                6968497418,
+                6701879971
+              ],
+              "mean_nanos": 6645945021.333333,
+              "peak_rss_bytes": 1361399808,
+              "phase_means_nanos": {
+                "0b_statement_hints": 4054538,
+                "1_execute_witness": 344662324,
+                "2_commit_ntt_merkle": 151470369,
+                "3_bus_constraints": 1934972134,
+                "4_keccak_gkr": 1001258941,
+                "5_pcs_open": 3209526714,
+                "6_wire_encode": 12445665
+              }
+            }
+          },
+          "4": {
+            "rust": {
+              "passes_nanos": [
+                274158339,
+                295354811,
+                356543880
+              ],
+              "mean_nanos": 308685676.6666667,
+              "peak_rss_bytes": 471818240
+            },
+            "lean": {
+              "passes_nanos": [
+                6868880601,
+                5193098058,
+                4880764885
+              ],
+              "mean_nanos": 5647581181.333333,
+              "peak_rss_bytes": 1408069632,
+              "phase_means_nanos": {
+                "0b_statement_hints": 4324875,
+                "1_execute_witness": 322306901,
+                "2_commit_ntt_merkle": 141012957,
+                "3_bus_constraints": 1621819808,
+                "4_keccak_gkr": 816162338,
+                "5_pcs_open": 2741954300,
+                "6_wire_encode": 9309722
+              }
+            }
+          },
+          "5": {
+            "rust": {
+              "passes_nanos": [
+                167059049,
+                208752504,
+                184581392
+              ],
+              "mean_nanos": 186797648.33333334,
+              "peak_rss_bytes": 468652032
+            },
+            "lean": {
+              "passes_nanos": [
+                4249222802,
+                4431967699,
+                4591483402
+              ],
+              "mean_nanos": 4424224634.333333,
+              "peak_rss_bytes": 1376190464,
+              "phase_means_nanos": {
+                "0b_statement_hints": 2974448,
+                "1_execute_witness": 247111741,
+                "2_commit_ntt_merkle": 95785299,
+                "3_bus_constraints": 1117011767,
+                "4_keccak_gkr": 610211400,
+                "5_pcs_open": 2351129978,
+                "6_wire_encode": 8480350
+              }
+            }
+          }
+        },
+        "pair_ratio_ci95_halfwidth": 8.138343814046918
+      },
+      "16": {
+        "pair_count": 5,
+        "lean_mean_seconds": 7.5852362938,
+        "rust_mean_seconds": 0.1421857812,
+        "lean_peak_rss_bytes": 1528025088,
+        "lean_over_rust_time_ratio": 53.34736166853793,
+        "mean_pair_time_ratio": 53.921728972470305,
+        "pairs": {
+          "1": {
+            "rust": {
+              "passes_nanos": [
+                107847627,
+                200720683,
+                151111175
+              ],
+              "mean_nanos": 153226495,
+              "peak_rss_bytes": 451452928
+            },
+            "lean": {
+              "passes_nanos": [
+                7806111969,
+                7924429768,
+                7854981607
+              ],
+              "mean_nanos": 7861841114.666667,
+              "peak_rss_bytes": 1516978176,
+              "phase_means_nanos": {
+                "0b_statement_hints": 4460576,
+                "1_execute_witness": 313898815,
+                "2_commit_ntt_merkle": 120082556,
+                "3_bus_constraints": 1326783242,
+                "4_keccak_gkr": 1745953252,
+                "5_pcs_open": 4350662671,
+                "6_wire_encode": 10633855
+              }
+            }
+          },
+          "2": {
+            "rust": {
+              "passes_nanos": [
+                137690855,
+                203294393,
+                141166849
+              ],
+              "mean_nanos": 160717365.66666666,
+              "peak_rss_bytes": 449536000
+            },
+            "lean": {
+              "passes_nanos": [
+                8146579133,
+                7871627299,
+                7029648885
+              ],
+              "mean_nanos": 7682618439,
+              "peak_rss_bytes": 1505230848,
+              "phase_means_nanos": {
+                "0b_statement_hints": 3821351,
+                "1_execute_witness": 307859341,
+                "2_commit_ntt_merkle": 125254470,
+                "3_bus_constraints": 1347328622,
+                "4_keccak_gkr": 1756900586,
+                "5_pcs_open": 4141454068,
+                "6_wire_encode": 12607361
+              }
+            }
+          },
+          "3": {
+            "rust": {
+              "passes_nanos": [
+                157207907,
+                153998342,
+                166512610
+              ],
+              "mean_nanos": 159239619.66666666,
+              "peak_rss_bytes": 451751936
+            },
+            "lean": {
+              "passes_nanos": [
+                8682466730,
+                7653177950,
+                8839783175
+              ],
+              "mean_nanos": 8391809285,
+              "peak_rss_bytes": 1477939200,
+              "phase_means_nanos": {
+                "0b_statement_hints": 4198135,
+                "1_execute_witness": 349381851,
+                "2_commit_ntt_merkle": 125734521,
+                "3_bus_constraints": 1515352831,
+                "4_keccak_gkr": 1912615064,
+                "5_pcs_open": 4484526881,
+                "6_wire_encode": 10978743
+              }
+            }
+          },
+          "4": {
+            "rust": {
+              "passes_nanos": [
+                137681386,
+                119652251,
+                109899144
+              ],
+              "mean_nanos": 122410927,
+              "peak_rss_bytes": 450490368
+            },
+            "lean": {
+              "passes_nanos": [
+                6701649340,
+                7355707630,
+                6890476306
+              ],
+              "mean_nanos": 6982611092,
+              "peak_rss_bytes": 1475268608,
+              "phase_means_nanos": {
+                "0b_statement_hints": 3913464,
+                "1_execute_witness": 295094103,
+                "2_commit_ntt_merkle": 109607562,
+                "3_bus_constraints": 1095980520,
+                "4_keccak_gkr": 1523962271,
+                "5_pcs_open": 3954053170,
+                "6_wire_encode": 11314715
+              }
+            }
+          },
+          "5": {
+            "rust": {
+              "passes_nanos": [
+                113921696,
+                119583881,
+                112497919
+              ],
+              "mean_nanos": 115334498.66666667,
+              "peak_rss_bytes": 453890048
+            },
+            "lean": {
+              "passes_nanos": [
+                6851513357,
+                7203406816,
+                6966984442
+              ],
+              "mean_nanos": 7007301538.333333,
+              "peak_rss_bytes": 1528025088,
+              "phase_means_nanos": {
+                "0b_statement_hints": 3168757,
+                "1_execute_witness": 280778338,
+                "2_commit_ntt_merkle": 101357900,
+                "3_bus_constraints": 1199710511,
+                "4_keccak_gkr": 1551811094,
+                "5_pcs_open": 3870474937,
+                "6_wire_encode": 9910929
+              }
+            }
+          }
+        },
+        "pair_ratio_ci95_halfwidth": 6.275959465866233
+      },
+      "1400": {
+        "pair_count": 5,
+        "lean_mean_seconds": 343.2638179795333,
+        "rust_mean_seconds": 2.9892546282,
+        "lean_peak_rss_bytes": 16034304000,
+        "lean_over_rust_time_ratio": 114.83257891156364,
+        "mean_pair_time_ratio": 115.21012361529144,
+        "pairs": {
+          "1": {
+            "rust": {
+              "passes_nanos": [
+                3402896365,
+                3394048760,
+                3549103196
+              ],
+              "mean_nanos": 3448682773.6666665,
+              "peak_rss_bytes": 3964735488
+            },
+            "lean": {
+              "passes_nanos": [
+                350623180733,
+                453428465228,
+                373918196061
+              ],
+              "mean_nanos": 392656614007.3333,
+              "peak_rss_bytes": 15934005248,
+              "phase_means_nanos": {
+                "0b_statement_hints": 203645990,
+                "1_execute_witness": 29219452168,
+                "2_commit_ntt_merkle": 11483890898,
+                "3_bus_constraints": 62258908359,
+                "4_keccak_gkr": 110937532100,
+                "5_pcs_open": 178553184489,
+                "6_wire_encode": 11856793
+              }
+            }
+          },
+          "2": {
+            "rust": {
+              "passes_nanos": [
+                3022519396,
+                3002678026,
+                2967081333
+              ],
+              "mean_nanos": 2997426251.6666665,
+              "peak_rss_bytes": 3963133952
+            },
+            "lean": {
+              "passes_nanos": [
+                391027710158,
+                284881058891,
+                290104488316
+              ],
+              "mean_nanos": 322004419121.6667,
+              "peak_rss_bytes": 16020754432,
+              "phase_means_nanos": {
+                "0b_statement_hints": 168024608,
+                "1_execute_witness": 15491918658,
+                "2_commit_ntt_merkle": 9089794871,
+                "3_bus_constraints": 37329711422,
+                "4_keccak_gkr": 89256717222,
+                "5_pcs_open": 170668252339,
+                "6_wire_encode": 12809585
+              }
+            }
+          },
+          "3": {
+            "rust": {
+              "passes_nanos": [
+                2754207858,
+                2496565694,
+                2560732654
+              ],
+              "mean_nanos": 2603835402,
+              "peak_rss_bytes": 3953995776
+            },
+            "lean": {
+              "passes_nanos": [
+                313816683883,
+                303161828187,
+                400122097493
+              ],
+              "mean_nanos": 339033536521,
+              "peak_rss_bytes": 15907106816,
+              "phase_means_nanos": {
+                "0b_statement_hints": 132954572,
+                "1_execute_witness": 14741253617,
+                "2_commit_ntt_merkle": 8875272976,
+                "3_bus_constraints": 35084637295,
+                "4_keccak_gkr": 89141075709,
+                "5_pcs_open": 191058342350,
+                "6_wire_encode": 11115649
+              }
+            }
+          },
+          "4": {
+            "rust": {
+              "passes_nanos": [
+                2939093906,
+                2931790632,
+                2748023714
+              ],
+              "mean_nanos": 2872969417.3333335,
+              "peak_rss_bytes": 3954208768
+            },
+            "lean": {
+              "passes_nanos": [
+                335461436722,
+                324265846542,
+                274704741839
+              ],
+              "mean_nanos": 311477341701,
+              "peak_rss_bytes": 16034304000,
+              "phase_means_nanos": {
+                "0b_statement_hints": 136552548,
+                "1_execute_witness": 14740541612,
+                "2_commit_ntt_merkle": 9048227047,
+                "3_bus_constraints": 39033819367,
+                "4_keccak_gkr": 96753735136,
+                "5_pcs_open": 151764465990,
+                "6_wire_encode": 10254302
+              }
+            }
+          },
+          "5": {
+            "rust": {
+              "passes_nanos": [
+                3170760341,
+                2881010500,
+                3018307048
+              ],
+              "mean_nanos": 3023359296.3333335,
+              "peak_rss_bytes": 3962892288
+            },
+            "lean": {
+              "passes_nanos": [
+                335745315752,
+                362930563321,
+                354765656567
+              ],
+              "mean_nanos": 351147178546.6667,
+              "peak_rss_bytes": 15647727616,
+              "phase_means_nanos": {
+                "0b_statement_hints": 142012074,
+                "1_execute_witness": 20881741973,
+                "2_commit_ntt_merkle": 9642335190,
+                "3_bus_constraints": 48931346914,
+                "4_keccak_gkr": 102730536187,
+                "5_pcs_open": 168819206206,
+                "6_wire_encode": 11130586
+              }
+            }
+          }
+        },
+        "pair_ratio_ci95_halfwidth": 11.349300659453208,
+        "target_gaps": [
+          {
+            "target_seconds": 1.0,
+            "target_gib": 4.0,
+            "time_ratio": 343.2638179795333,
+            "excess_seconds": 342.2638179795333,
+            "excess_rss_bytes": 11739336704.0
+          }
+        ]
+      }
+    }
+  },
+  "baseline_final_control": {
+    "complete": true,
+    "paired": {
+      "4": {
+        "pair_count": 1,
+        "lean_mean_seconds": 4.887572508,
+        "rust_mean_seconds": 0.14873353,
+        "lean_peak_rss_bytes": 1373188096,
+        "lean_over_rust_time_ratio": 32.86126879392965,
+        "mean_pair_time_ratio": 32.86126879392965,
+        "pairs": {
+          "1": {
+            "rust": {
+              "passes_nanos": [
+                166420560,
+                131629587,
+                148150443
+              ],
+              "mean_nanos": 148733530,
+              "peak_rss_bytes": 473075712
+            },
+            "lean": {
+              "passes_nanos": [
+                5004435470,
+                4906874206,
+                4751407848
+              ],
+              "mean_nanos": 4887572508,
+              "peak_rss_bytes": 1373188096,
+              "phase_means_nanos": {
+                "0b_statement_hints": 2504611,
+                "1_execute_witness": 234449823,
+                "2_commit_ntt_merkle": 95709264,
+                "3_bus_constraints": 1068314535,
+                "4_keccak_gkr": 1052182386,
+                "5_pcs_open": 2434411887,
+                "6_wire_encode": 8169127
+              }
+            }
+          }
+        }
+      },
+      "16": {
+        "pair_count": 1,
+        "lean_mean_seconds": 8.739957858,
+        "rust_mean_seconds": 0.19520754933333334,
+        "lean_peak_rss_bytes": 1538142208,
+        "lean_over_rust_time_ratio": 44.77264269670117,
+        "mean_pair_time_ratio": 44.77264269670117,
+        "pairs": {
+          "1": {
+            "rust": {
+              "passes_nanos": [
+                193946839,
+                172529105,
+                219146704
+              ],
+              "mean_nanos": 195207549.33333334,
+              "peak_rss_bytes": 453754880
+            },
+            "lean": {
+              "passes_nanos": [
+                9602738129,
+                8169214627,
+                8447920818
+              ],
+              "mean_nanos": 8739957858,
+              "peak_rss_bytes": 1538142208,
+              "phase_means_nanos": {
+                "0b_statement_hints": 4645510,
+                "1_execute_witness": 310631422,
+                "2_commit_ntt_merkle": 118636289,
+                "3_bus_constraints": 1304675001,
+                "4_keccak_gkr": 3037963610,
+                "5_pcs_open": 3963406023,
+                "6_wire_encode": 10929073
+              }
+            }
+          }
+        }
+      },
+      "1400": {
+        "pair_count": 1,
+        "lean_mean_seconds": 441.760339665,
+        "rust_mean_seconds": 3.3496239,
+        "lean_peak_rss_bytes": 15870304256,
+        "lean_over_rust_time_ratio": 131.88356449958457,
+        "mean_pair_time_ratio": 131.88356449958457,
+        "pairs": {
+          "1": {
+            "rust": {
+              "passes_nanos": [
+                3499466947,
+                3446809883,
+                3102594870
+              ],
+              "mean_nanos": 3349623900,
+              "peak_rss_bytes": 3951833088
+            },
+            "lean": {
+              "passes_nanos": [
+                422935026953,
+                476430114240,
+                425915877802
+              ],
+              "mean_nanos": 441760339665,
+              "peak_rss_bytes": 15870304256,
+              "phase_means_nanos": {
+                "0b_statement_hints": 132080410,
+                "1_execute_witness": 16148098653,
+                "2_commit_ntt_merkle": 10139901388,
+                "3_bus_constraints": 51489984147,
+                "4_keccak_gkr": 200575009024,
+                "5_pcs_open": 163275266041,
+                "6_wire_encode": 10521027
+              }
+            }
+          }
+        },
+        "target_gaps": [
+          {
+            "target_seconds": 1.0,
+            "target_gib": 4.0,
+            "time_ratio": 441.760339665,
+            "excess_seconds": 440.760339665,
+            "excess_rss_bytes": 11575336960.0
+          }
+        ]
+      }
+    }
+  },
+  "original_baseline": {
+    "complete": true,
+    "paired": {
+      "4": {
+        "pair_count": 1,
+        "lean_mean_seconds": 4.886916880666667,
+        "rust_mean_seconds": 0.16973955666666665,
+        "lean_peak_rss_bytes": 1389322240,
+        "lean_over_rust_time_ratio": 28.79067776913993,
+        "mean_pair_time_ratio": 28.79067776913993,
+        "pairs": {
+          "1": {
+            "rust": {
+              "passes_nanos": [
+                161650725,
+                194008280,
+                153559665
+              ],
+              "mean_nanos": 169739556.66666666,
+              "peak_rss_bytes": 473198592
+            },
+            "lean": {
+              "passes_nanos": [
+                5348802755,
+                4685252543,
+                4626695344
+              ],
+              "mean_nanos": 4886916880.666667,
+              "peak_rss_bytes": 1389322240,
+              "phase_means_nanos": {
+                "0b_statement_hints": 3085712,
+                "1_execute_witness": 256601477,
+                "2_commit_ntt_merkle": 96634779,
+                "3_bus_constraints": 1181102633,
+                "4_keccak_gkr": 1027523103,
+                "5_pcs_open": 2321969175,
+                "6_wire_encode": 7798329
+              }
+            }
+          }
+        }
+      },
+      "16": {
+        "pair_count": 1,
+        "lean_mean_seconds": 9.237542754666666,
+        "rust_mean_seconds": 0.177125965,
+        "lean_peak_rss_bytes": 1492295680,
+        "lean_over_rust_time_ratio": 52.15239196956057,
+        "mean_pair_time_ratio": 52.15239196956057,
+        "pairs": {
+          "1": {
+            "rust": {
+              "passes_nanos": [
+                169883491,
+                188498014,
+                172996390
+              ],
+              "mean_nanos": 177125965,
+              "peak_rss_bytes": 450347008
+            },
+            "lean": {
+              "passes_nanos": [
+                9370849698,
+                9017337664,
+                9324440902
+              ],
+              "mean_nanos": 9237542754.666666,
+              "peak_rss_bytes": 1492295680,
+              "phase_means_nanos": {
+                "0b_statement_hints": 3930873,
+                "1_execute_witness": 331255945,
+                "2_commit_ntt_merkle": 137207919,
+                "3_bus_constraints": 1633509242,
+                "4_keccak_gkr": 3174856353,
+                "5_pcs_open": 3956782420,
+                "6_wire_encode": 9480650
+              }
+            }
+          }
+        }
+      },
+      "1400": {
+        "pair_count": 1,
+        "lean_mean_seconds": 495.299500202,
+        "rust_mean_seconds": 3.4846908616666665,
+        "lean_peak_rss_bytes": 15736782848,
+        "lean_over_rust_time_ratio": 142.13585074376064,
+        "mean_pair_time_ratio": 142.13585074376064,
+        "pairs": {
+          "1": {
+            "rust": {
+              "passes_nanos": [
+                3603853668,
+                3447828034,
+                3402390883
+              ],
+              "mean_nanos": 3484690861.6666665,
+              "peak_rss_bytes": 3960254464
+            },
+            "lean": {
+              "passes_nanos": [
+                442641455299,
+                481114033886,
+                562143011421
+              ],
+              "mean_nanos": 495299500202,
+              "peak_rss_bytes": 15736782848,
+              "phase_means_nanos": {
+                "0b_statement_hints": 150946058,
+                "1_execute_witness": 16740108326,
+                "2_commit_ntt_merkle": 10354039682,
+                "3_bus_constraints": 51329203183,
+                "4_keccak_gkr": 213445628139,
+                "5_pcs_open": 203279574811,
+                "6_wire_encode": 10110374
+              }
+            }
+          }
+        },
+        "target_gaps": [
+          {
+            "target_seconds": 1.0,
+            "target_gib": 4.0,
+            "time_ratio": 495.299500202,
+            "excess_seconds": 494.299500202,
+            "excess_rss_bytes": 11441815552.0
+          }
+        ]
+      }
+    }
+  },
+  "candidate_matched_attempts": {
+    "candidate1": {
+      "complete": true,
+      "paired": {
+        "4": {
+          "pair_count": 1,
+          "lean_mean_seconds": 6.995035144,
+          "rust_mean_seconds": 0.28028718166666666,
+          "lean_peak_rss_bytes": 1404891136,
+          "lean_over_rust_time_ratio": 24.956671590921665,
+          "mean_pair_time_ratio": 24.956671590921665,
+          "pairs": {
+            "1": {
+              "rust": {
+                "passes_nanos": [
+                  279091437,
+                  313587989,
+                  248182119
+                ],
+                "mean_nanos": 280287181.6666667,
+                "peak_rss_bytes": 473223168
+              },
+              "lean": {
+                "passes_nanos": [
+                  7190336862,
+                  6680278428,
+                  7114490142
+                ],
+                "mean_nanos": 6995035144,
+                "peak_rss_bytes": 1404891136,
+                "phase_means_nanos": {
+                  "0b_statement_hints": 4033294,
+                  "1_execute_witness": 334453755,
+                  "2_commit_ntt_merkle": 142049883,
+                  "3_bus_constraints": 2027480555,
+                  "4_keccak_gkr": 1567517924,
+                  "5_pcs_open": 2919499731,
+                  "6_wire_encode": 11971452
+                }
+              }
+            }
+          }
+        },
+        "16": {
+          "pair_count": 1,
+          "lean_mean_seconds": 14.053597079,
+          "rust_mean_seconds": 0.24191594633333335,
+          "lean_peak_rss_bytes": 1438613504,
+          "lean_over_rust_time_ratio": 58.09289256044205,
+          "mean_pair_time_ratio": 58.09289256044205,
+          "pairs": {
+            "1": {
+              "rust": {
+                "passes_nanos": [
+                  297854971,
+                  229889624,
+                  198003244
+                ],
+                "mean_nanos": 241915946.33333334,
+                "peak_rss_bytes": 452337664
+              },
+              "lean": {
+                "passes_nanos": [
+                  15826261546,
+                  14180369103,
+                  12154160588
+                ],
+                "mean_nanos": 14053597079,
+                "peak_rss_bytes": 1438613504,
+                "phase_means_nanos": {
+                  "0b_statement_hints": 6967417,
+                  "1_execute_witness": 532731806,
+                  "2_commit_ntt_merkle": 190469821,
+                  "3_bus_constraints": 3114310769,
+                  "4_keccak_gkr": 5038667009,
+                  "5_pcs_open": 5170450255,
+                  "6_wire_encode": 15001257
+                }
+              }
+            }
+          }
+        },
+        "1400": {
+          "pair_count": 1,
+          "lean_mean_seconds": 364.0163442063333,
+          "rust_mean_seconds": 4.103612655,
+          "lean_peak_rss_bytes": 16061480960,
+          "lean_over_rust_time_ratio": 88.70631192805241,
+          "mean_pair_time_ratio": 88.70631192805241,
+          "pairs": {
+            "1": {
+              "rust": {
+                "passes_nanos": [
+                  3970121301,
+                  4480570543,
+                  3860146121
+                ],
+                "mean_nanos": 4103612655,
+                "peak_rss_bytes": 3953319936
+              },
+              "lean": {
+                "passes_nanos": [
+                  341468262232,
+                  370277927356,
+                  380302843031
+                ],
+                "mean_nanos": 364016344206.3333,
+                "peak_rss_bytes": 16061480960,
+                "phase_means_nanos": {
+                  "0b_statement_hints": 127689662,
+                  "1_execute_witness": 12544122042,
+                  "2_commit_ntt_merkle": 8286367025,
+                  "3_bus_constraints": 33883932168,
+                  "4_keccak_gkr": 164780370001,
+                  "5_pcs_open": 144393863307,
+                  "6_wire_encode": 8353392
+                }
+              }
+            }
+          },
+          "target_gaps": [
+            {
+              "target_seconds": 1.0,
+              "target_gib": 4.0,
+              "time_ratio": 364.0163442063333,
+              "excess_seconds": 363.0163442063333,
+              "excess_rss_bytes": 11766513664.0
+            }
+          ]
+        }
+      }
+    },
+    "candidate2": {
+      "complete": true,
+      "paired": {
+        "4": {
+          "pair_count": 1,
+          "lean_mean_seconds": 8.281762623,
+          "rust_mean_seconds": 0.5795826103333334,
+          "lean_peak_rss_bytes": 1378656256,
+          "lean_over_rust_time_ratio": 14.289184104811113,
+          "mean_pair_time_ratio": 14.289184104811113,
+          "pairs": {
+            "1": {
+              "rust": {
+                "passes_nanos": [
+                  473553915,
+                  602555933,
+                  662637983
+                ],
+                "mean_nanos": 579582610.3333334,
+                "peak_rss_bytes": 475557888
+              },
+              "lean": {
+                "passes_nanos": [
+                  8585525754,
+                  8400635356,
+                  7859126759
+                ],
+                "mean_nanos": 8281762623,
+                "peak_rss_bytes": 1378656256,
+                "phase_means_nanos": {
+                  "0b_statement_hints": 6082538,
+                  "1_execute_witness": 387110576,
+                  "2_commit_ntt_merkle": 245750873,
+                  "3_bus_constraints": 2298706499,
+                  "4_keccak_gkr": 2014337841,
+                  "5_pcs_open": 3329774294,
+                  "6_wire_encode": 12253102
+                }
+              }
+            }
+          }
+        },
+        "16": {
+          "pair_count": 1,
+          "lean_mean_seconds": 9.394578602,
+          "rust_mean_seconds": 0.35127821366666667,
+          "lean_peak_rss_bytes": 1502998528,
+          "lean_over_rust_time_ratio": 26.74398307808141,
+          "mean_pair_time_ratio": 26.74398307808141,
+          "pairs": {
+            "1": {
+              "rust": {
+                "passes_nanos": [
+                  422665098,
+                  343043724,
+                  288125819
+                ],
+                "mean_nanos": 351278213.6666667,
+                "peak_rss_bytes": 449003520
+              },
+              "lean": {
+                "passes_nanos": [
+                  10724574334,
+                  9082086515,
+                  8377074957
+                ],
+                "mean_nanos": 9394578602,
+                "peak_rss_bytes": 1502998528,
+                "phase_means_nanos": {
+                  "0b_statement_hints": 4629587,
+                  "1_execute_witness": 337159663,
+                  "2_commit_ntt_merkle": 119282026,
+                  "3_bus_constraints": 1439457465,
+                  "4_keccak_gkr": 3381979848,
+                  "5_pcs_open": 4112070012,
+                  "6_wire_encode": 10472725
+                }
+              }
+            }
+          }
+        },
+        "1400": {
+          "pair_count": 1,
+          "lean_mean_seconds": 362.538436913,
+          "rust_mean_seconds": 3.963599142,
+          "lean_peak_rss_bytes": 15837421568,
+          "lean_over_rust_time_ratio": 91.46697835091014,
+          "mean_pair_time_ratio": 91.46697835091014,
+          "pairs": {
+            "1": {
+              "rust": {
+                "passes_nanos": [
+                  3865978650,
+                  3914900722,
+                  4109918054
+                ],
+                "mean_nanos": 3963599142,
+                "peak_rss_bytes": 3958390784
+              },
+              "lean": {
+                "passes_nanos": [
+                  403225864558,
+                  332753928659,
+                  351635517522
+                ],
+                "mean_nanos": 362538436913,
+                "peak_rss_bytes": 15837421568,
+                "phase_means_nanos": {
+                  "0b_statement_hints": 143769086,
+                  "1_execute_witness": 16057302093,
+                  "2_commit_ntt_merkle": 10388268390,
+                  "3_bus_constraints": 46366909494,
+                  "4_keccak_gkr": 149734391740,
+                  "5_pcs_open": 139847796107,
+                  "6_wire_encode": 11471920
+                }
+              }
+            }
+          },
+          "target_gaps": [
+            {
+              "target_seconds": 1.0,
+              "target_gib": 4.0,
+              "time_ratio": 362.538436913,
+              "excess_seconds": 361.538436913,
+              "excess_rss_bytes": 11542454272.0
+            }
+          ]
+        }
+      }
+    },
+    "candidate3": {
+      "complete": true,
+      "paired": {
+        "4": {
+          "pair_count": 1,
+          "lean_mean_seconds": 4.083326181333334,
+          "rust_mean_seconds": 0.112033939,
+          "lean_peak_rss_bytes": 1377771520,
+          "lean_over_rust_time_ratio": 36.44722499075333,
+          "mean_pair_time_ratio": 36.44722499075333,
+          "pairs": {
+            "1": {
+              "rust": {
+                "passes_nanos": [
+                  111167158,
+                  112036725,
+                  112897934
+                ],
+                "mean_nanos": 112033939,
+                "peak_rss_bytes": 474005504
+              },
+              "lean": {
+                "passes_nanos": [
+                  3968248011,
+                  4085398612,
+                  4196331921
+                ],
+                "mean_nanos": 4083326181.3333335,
+                "peak_rss_bytes": 1377771520,
+                "phase_means_nanos": {
+                  "0b_statement_hints": 2606896,
+                  "1_execute_witness": 199716856,
+                  "2_commit_ntt_merkle": 78981545,
+                  "3_bus_constraints": 833870197,
+                  "4_keccak_gkr": 829594721,
+                  "5_pcs_open": 2138555963,
+                  "6_wire_encode": 7627471
+                }
+              }
+            }
+          }
+        },
+        "16": {
+          "pair_count": 1,
+          "lean_mean_seconds": 7.335661399333333,
+          "rust_mean_seconds": 0.12373143533333333,
+          "lean_peak_rss_bytes": 1488908288,
+          "lean_over_rust_time_ratio": 59.28696599672517,
+          "mean_pair_time_ratio": 59.28696599672518,
+          "pairs": {
+            "1": {
+              "rust": {
+                "passes_nanos": [
+                  131522173,
+                  119468951,
+                  120203182
+                ],
+                "mean_nanos": 123731435.33333333,
+                "peak_rss_bytes": 452448256
+              },
+              "lean": {
+                "passes_nanos": [
+                  7269730534,
+                  7247374497,
+                  7489879167
+                ],
+                "mean_nanos": 7335661399.333333,
+                "peak_rss_bytes": 1488908288,
+                "phase_means_nanos": {
+                  "0b_statement_hints": 3208350,
+                  "1_execute_witness": 256457692,
+                  "2_commit_ntt_merkle": 89384434,
+                  "3_bus_constraints": 974591362,
+                  "4_keccak_gkr": 2420916090,
+                  "5_pcs_open": 3591103469,
+                  "6_wire_encode": 9738338
+                }
+              }
+            }
+          }
+        },
+        "1400": {
+          "pair_count": 1,
+          "lean_mean_seconds": 357.8829540236667,
+          "rust_mean_seconds": 3.5743802616666667,
+          "lean_peak_rss_bytes": 16046379008,
+          "lean_over_rust_time_ratio": 100.12447692311073,
+          "mean_pair_time_ratio": 100.12447692311075,
+          "pairs": {
+            "1": {
+              "rust": {
+                "passes_nanos": [
+                  2978687885,
+                  4174865773,
+                  3569587127
+                ],
+                "mean_nanos": 3574380261.6666665,
+                "peak_rss_bytes": 3955736576
+              },
+              "lean": {
+                "passes_nanos": [
+                  369613708331,
+                  344720422848,
+                  359314730892
+                ],
+                "mean_nanos": 357882954023.6667,
+                "peak_rss_bytes": 16046379008,
+                "phase_means_nanos": {
+                  "0b_statement_hints": 134427498,
+                  "1_execute_witness": 13206317092,
+                  "2_commit_ntt_merkle": 8218108062,
+                  "3_bus_constraints": 32891975923,
+                  "4_keccak_gkr": 146516819662,
+                  "5_pcs_open": 156915305786,
+                  "6_wire_encode": 9871042
+                }
+              }
+            }
+          },
+          "target_gaps": [
+            {
+              "target_seconds": 1.0,
+              "target_gib": 4.0,
+              "time_ratio": 357.8829540236667,
+              "excess_seconds": 356.8829540236667,
+              "excess_rss_bytes": 11751411712.0
+            }
+          ]
+        }
+      }
+    },
+    "candidate4": {
+      "complete": true,
+      "paired": {
+        "4": {
+          "pair_count": 1,
+          "lean_mean_seconds": 4.662134705,
+          "rust_mean_seconds": 0.12382448966666668,
+          "lean_peak_rss_bytes": 1386893312,
+          "lean_over_rust_time_ratio": 37.651152187668075,
+          "mean_pair_time_ratio": 37.651152187668075,
+          "pairs": {
+            "1": {
+              "rust": {
+                "passes_nanos": [
+                  121198824,
+                  120470445,
+                  129804200
+                ],
+                "mean_nanos": 123824489.66666667,
+                "peak_rss_bytes": 473538560
+              },
+              "lean": {
+                "passes_nanos": [
+                  4588255942,
+                  4368164564,
+                  5029983609
+                ],
+                "mean_nanos": 4662134705,
+                "peak_rss_bytes": 1386893312,
+                "phase_means_nanos": {
+                  "0b_statement_hints": 3233184,
+                  "1_execute_witness": 237342061,
+                  "2_commit_ntt_merkle": 94442963,
+                  "3_bus_constraints": 1043949648,
+                  "4_keccak_gkr": 928347762,
+                  "5_pcs_open": 2354819085,
+                  "6_wire_encode": 8465140
+                }
+              }
+            }
+          }
+        },
+        "16": {
+          "pair_count": 1,
+          "lean_mean_seconds": 9.497801980666665,
+          "rust_mean_seconds": 0.18242585366666667,
+          "lean_peak_rss_bytes": 1542049792,
+          "lean_over_rust_time_ratio": 52.0639031681403,
+          "mean_pair_time_ratio": 52.06390316814031,
+          "pairs": {
+            "1": {
+              "rust": {
+                "passes_nanos": [
+                  223868681,
+                  164444588,
+                  158964292
+                ],
+                "mean_nanos": 182425853.66666666,
+                "peak_rss_bytes": 453595136
+              },
+              "lean": {
+                "passes_nanos": [
+                  9145981610,
+                  9650585526,
+                  9696838806
+                ],
+                "mean_nanos": 9497801980.666666,
+                "peak_rss_bytes": 1542049792,
+                "phase_means_nanos": {
+                  "0b_statement_hints": 4576230,
+                  "1_execute_witness": 311487459,
+                  "2_commit_ntt_merkle": 113555847,
+                  "3_bus_constraints": 1415012444,
+                  "4_keccak_gkr": 3071979648,
+                  "5_pcs_open": 4581190352,
+                  "6_wire_encode": 13279228
+                }
+              }
+            }
+          }
+        },
+        "1400": {
+          "pair_count": 1,
+          "lean_mean_seconds": 322.1392228493333,
+          "rust_mean_seconds": 3.4667077966666664,
+          "lean_peak_rss_bytes": 15936102400,
+          "lean_over_rust_time_ratio": 92.92367333614875,
+          "mean_pair_time_ratio": 92.92367333614875,
+          "pairs": {
+            "1": {
+              "rust": {
+                "passes_nanos": [
+                  3536717691,
+                  3439212950,
+                  3424192749
+                ],
+                "mean_nanos": 3466707796.6666665,
+                "peak_rss_bytes": 3962982400
+              },
+              "lean": {
+                "passes_nanos": [
+                  311227186836,
+                  307352454777,
+                  347838026935
+                ],
+                "mean_nanos": 322139222849.3333,
+                "peak_rss_bytes": 15936102400,
+                "phase_means_nanos": {
+                  "0b_statement_hints": 117644099,
+                  "1_execute_witness": 11608975901,
+                  "2_commit_ntt_merkle": 7369437400,
+                  "3_bus_constraints": 30179857638,
+                  "4_keccak_gkr": 131888088399,
+                  "5_pcs_open": 140975219411,
+                  "6_wire_encode": 9343452
+                }
+              }
+            }
+          },
+          "target_gaps": [
+            {
+              "target_seconds": 1.15,
+              "target_gib": 8.633,
+              "time_ratio": 280.1210633472464,
+              "excess_seconds": 320.9892228493333,
+              "excess_rss_bytes": 6666489233.408001
+            },
+            {
+              "target_seconds": 3.0,
+              "target_gib": 4.0,
+              "time_ratio": 107.37974094977777,
+              "excess_seconds": 319.1392228493333,
+              "excess_rss_bytes": 11641135104.0
+            },
+            {
+              "target_seconds": 0.92,
+              "target_gib": 5.5,
+              "time_ratio": 350.1513291840579,
+              "excess_seconds": 321.2192228493333,
+              "excess_rss_bytes": 10030522368.0
+            }
+          ]
+        }
+      },
+      "small_measurements_source": "candidate4-small-clean; first small sequence excluded per candidate4-small-contamination.json"
+    },
+    "candidate5": {
+      "complete": true,
+      "paired": {
+        "4": {
+          "pair_count": 1,
+          "lean_mean_seconds": 3.996550737,
+          "rust_mean_seconds": 0.203055566,
+          "lean_peak_rss_bytes": 1367179264,
+          "lean_over_rust_time_ratio": 19.68205460075889,
+          "mean_pair_time_ratio": 19.68205460075889,
+          "pairs": {
+            "1": {
+              "rust": {
+                "passes_nanos": [
+                  277486122,
+                  170323806,
+                  161356770
+                ],
+                "mean_nanos": 203055566,
+                "peak_rss_bytes": 474226688
+              },
+              "lean": {
+                "passes_nanos": [
+                  3860115510,
+                  4159895110,
+                  3969641591
+                ],
+                "mean_nanos": 3996550737,
+                "peak_rss_bytes": 1367179264,
+                "phase_means_nanos": {
+                  "0b_statement_hints": 1943295,
+                  "1_execute_witness": 209817122,
+                  "2_commit_ntt_merkle": 83076768,
+                  "3_bus_constraints": 927930973,
+                  "4_keccak_gkr": 633455364,
+                  "5_pcs_open": 2140327213,
+                  "6_wire_encode": 9142932
+                }
+              }
+            }
+          }
+        },
+        "16": {
+          "pair_count": 1,
+          "lean_mean_seconds": 7.404789608666667,
+          "rust_mean_seconds": 0.13164607566666667,
+          "lean_peak_rss_bytes": 1466208256,
+          "lean_over_rust_time_ratio": 56.24770484929534,
+          "mean_pair_time_ratio": 56.24770484929533,
+          "pairs": {
+            "1": {
+              "rust": {
+                "passes_nanos": [
+                  130932030,
+                  133001792,
+                  131004405
+                ],
+                "mean_nanos": 131646075.66666667,
+                "peak_rss_bytes": 453283840
+              },
+              "lean": {
+                "passes_nanos": [
+                  7917876793,
+                  7056220073,
+                  7240271960
+                ],
+                "mean_nanos": 7404789608.666667,
+                "peak_rss_bytes": 1466208256,
+                "phase_means_nanos": {
+                  "0b_statement_hints": 3895213,
+                  "1_execute_witness": 291545156,
+                  "2_commit_ntt_merkle": 115839101,
+                  "3_bus_constraints": 1182307483,
+                  "4_keccak_gkr": 2034147939,
+                  "5_pcs_open": 3777054714,
+                  "6_wire_encode": 9209674
+                }
+              }
+            }
+          }
+        },
+        "1400": {
+          "pair_count": 1,
+          "lean_mean_seconds": 487.2098182003333,
+          "rust_mean_seconds": 3.8806870136666665,
+          "lean_peak_rss_bytes": 15725670400,
+          "lean_over_rust_time_ratio": 125.5473106912565,
+          "mean_pair_time_ratio": 125.5473106912565,
+          "pairs": {
+            "1": {
+              "rust": {
+                "passes_nanos": [
+                  3990618225,
+                  3531612367,
+                  4119830449
+                ],
+                "mean_nanos": 3880687013.6666665,
+                "peak_rss_bytes": 3960340480
+              },
+              "lean": {
+                "passes_nanos": [
+                  350160280121,
+                  557905122722,
+                  553564051758
+                ],
+                "mean_nanos": 487209818200.3333,
+                "peak_rss_bytes": 15725670400,
+                "phase_means_nanos": {
+                  "0b_statement_hints": 159939626,
+                  "1_execute_witness": 21376496964,
+                  "2_commit_ntt_merkle": 11985324007,
+                  "3_bus_constraints": 72254799324,
+                  "4_keccak_gkr": 173545396888,
+                  "5_pcs_open": 207887861390,
+                  "6_wire_encode": 10536622
+                }
+              }
+            }
+          },
+          "target_gaps": [
+            {
+              "target_seconds": 1.0,
+              "target_gib": 4.0,
+              "time_ratio": 487.2098182003333,
+              "excess_seconds": 486.2098182003333,
+              "excess_rss_bytes": 11430703104.0
+            }
+          ]
+        }
+      }
+    },
+    "candidate6": {
+      "complete": true,
+      "paired": {
+        "4": {
+          "pair_count": 1,
+          "lean_mean_seconds": 8.103415104666666,
+          "rust_mean_seconds": 0.209742912,
+          "lean_peak_rss_bytes": 1377730560,
+          "lean_over_rust_time_ratio": 38.63498903203302,
+          "mean_pair_time_ratio": 38.63498903203302,
+          "pairs": {
+            "1": {
+              "rust": {
+                "passes_nanos": [
+                  262545686,
+                  165025442,
+                  201657608
+                ],
+                "mean_nanos": 209742912,
+                "peak_rss_bytes": 473206784
+              },
+              "lean": {
+                "passes_nanos": [
+                  9137044614,
+                  7116113002,
+                  8057087698
+                ],
+                "mean_nanos": 8103415104.666667,
+                "peak_rss_bytes": 1377730560,
+                "phase_means_nanos": {
+                  "0b_statement_hints": 3279058,
+                  "1_execute_witness": 292217823,
+                  "2_commit_ntt_merkle": 113539351,
+                  "3_bus_constraints": 1507670346,
+                  "4_keccak_gkr": 3720874364,
+                  "5_pcs_open": 2465834161,
+                  "6_wire_encode": 8175338
+                }
+              }
+            }
+          }
+        },
+        "16": {
+          "pair_count": 1,
+          "lean_mean_seconds": 16.998953777333334,
+          "rust_mean_seconds": 0.23430903433333333,
+          "lean_peak_rss_bytes": 1452027904,
+          "lean_over_rust_time_ratio": 72.54928870198934,
+          "mean_pair_time_ratio": 72.54928870198934,
+          "pairs": {
+            "1": {
+              "rust": {
+                "passes_nanos": [
+                  223802532,
+                  241994349,
+                  237130222
+                ],
+                "mean_nanos": 234309034.33333334,
+                "peak_rss_bytes": 450105344
+              },
+              "lean": {
+                "passes_nanos": [
+                  17132245483,
+                  17929581159,
+                  15935034690
+                ],
+                "mean_nanos": 16998953777.333334,
+                "peak_rss_bytes": 1452027904,
+                "phase_means_nanos": {
+                  "0b_statement_hints": 5204894,
+                  "1_execute_witness": 339240039,
+                  "2_commit_ntt_merkle": 128720651,
+                  "3_bus_constraints": 1393007179,
+                  "4_keccak_gkr": 11011492907,
+                  "5_pcs_open": 4121288105,
+                  "6_wire_encode": 9322169
+                }
+              }
+            }
+          }
+        },
+        "1400": {
+          "pair_count": 1,
+          "lean_mean_seconds": 762.182160281,
+          "rust_mean_seconds": 4.237936038,
+          "lean_peak_rss_bytes": 15776288768,
+          "lean_over_rust_time_ratio": 179.84749025157421,
+          "mean_pair_time_ratio": 179.84749025157421,
+          "pairs": {
+            "1": {
+              "rust": {
+                "passes_nanos": [
+                  4612357322,
+                  3923254731,
+                  4178196061
+                ],
+                "mean_nanos": 4237936038,
+                "peak_rss_bytes": 3970527232
+              },
+              "lean": {
+                "passes_nanos": [
+                  769358464882,
+                  779020540259,
+                  738167475702
+                ],
+                "mean_nanos": 762182160281,
+                "peak_rss_bytes": 15776288768,
+                "phase_means_nanos": {
+                  "0b_statement_hints": 137546136,
+                  "1_execute_witness": 13364616931,
+                  "2_commit_ntt_merkle": 8746194012,
+                  "3_bus_constraints": 45053497238,
+                  "4_keccak_gkr": 539734519141,
+                  "5_pcs_open": 155145786821,
+                  "6_wire_encode": 9373374
+                }
+              }
+            }
+          },
+          "target_gaps": [
+            {
+              "target_seconds": 1.0,
+              "target_gib": 4.0,
+              "time_ratio": 762.182160281,
+              "excess_seconds": 761.182160281,
+              "excess_rss_bytes": 11481321472.0
+            }
+          ]
+        }
+      }
+    },
+    "candidate7": {
+      "complete": true,
+      "paired": {
+        "4": {
+          "pair_count": 1,
+          "lean_mean_seconds": 3.627667045,
+          "rust_mean_seconds": 0.103754422,
+          "lean_peak_rss_bytes": 1397559296,
+          "lean_over_rust_time_ratio": 34.9639752703745,
+          "mean_pair_time_ratio": 34.9639752703745,
+          "pairs": {
+            "1": {
+              "rust": {
+                "passes_nanos": [
+                  94974147,
+                  108110812,
+                  108178307
+                ],
+                "mean_nanos": 103754422,
+                "peak_rss_bytes": 474857472
+              },
+              "lean": {
+                "passes_nanos": [
+                  3356164870,
+                  3392833824,
+                  4134002441
+                ],
+                "mean_nanos": 3627667045,
+                "peak_rss_bytes": 1397559296,
+                "phase_means_nanos": {
+                  "0b_statement_hints": 2069126,
+                  "1_execute_witness": 192820889,
+                  "2_commit_ntt_merkle": 72469604,
+                  "3_bus_constraints": 749192552,
+                  "4_keccak_gkr": 496146481,
+                  "5_pcs_open": 2114968391,
+                  "6_wire_encode": 7055799
+                }
+              }
+            }
+          }
+        },
+        "16": {
+          "pair_count": 1,
+          "lean_mean_seconds": 8.868967718666665,
+          "rust_mean_seconds": 0.12223808766666668,
+          "lean_peak_rss_bytes": 1543266304,
+          "lean_over_rust_time_ratio": 72.55486311968181,
+          "mean_pair_time_ratio": 72.55486311968181,
+          "pairs": {
+            "1": {
+              "rust": {
+                "passes_nanos": [
+                  150515795,
+                  110362283,
+                  105836185
+                ],
+                "mean_nanos": 122238087.66666667,
+                "peak_rss_bytes": 451403776
+              },
+              "lean": {
+                "passes_nanos": [
+                  10598784760,
+                  8117064138,
+                  7891054258
+                ],
+                "mean_nanos": 8868967718.666666,
+                "peak_rss_bytes": 1543266304,
+                "phase_means_nanos": {
+                  "0b_statement_hints": 4653308,
+                  "1_execute_witness": 348208845,
+                  "2_commit_ntt_merkle": 136620306,
+                  "3_bus_constraints": 1643341624,
+                  "4_keccak_gkr": 2156469647,
+                  "5_pcs_open": 4579673986,
+                  "6_wire_encode": 13425885
+                }
+              }
+            }
+          }
+        },
+        "1400": {
+          "pair_count": 1,
+          "lean_mean_seconds": 361.10894906933333,
+          "rust_mean_seconds": 3.459092089,
+          "lean_peak_rss_bytes": 16177577984,
+          "lean_over_rust_time_ratio": 104.39414151987133,
+          "mean_pair_time_ratio": 104.39414151987131,
+          "pairs": {
+            "1": {
+              "rust": {
+                "passes_nanos": [
+                  3470562658,
+                  3816894144,
+                  3089819465
+                ],
+                "mean_nanos": 3459092089,
+                "peak_rss_bytes": 3971158016
+              },
+              "lean": {
+                "passes_nanos": [
+                  363318915090,
+                  308975826906,
+                  411032105212
+                ],
+                "mean_nanos": 361108949069.3333,
+                "peak_rss_bytes": 16177577984,
+                "phase_means_nanos": {
+                  "0b_statement_hints": 143306900,
+                  "1_execute_witness": 17069981292,
+                  "2_commit_ntt_merkle": 10641520399,
+                  "3_bus_constraints": 46687762042,
+                  "4_keccak_gkr": 102436216653,
+                  "5_pcs_open": 184130161783,
+                  "6_wire_encode": 12028446
+                }
+              }
+            }
+          },
+          "target_gaps": [
+            {
+              "target_seconds": 1.0,
+              "target_gib": 4.0,
+              "time_ratio": 361.10894906933333,
+              "excess_seconds": 360.10894906933333,
+              "excess_rss_bytes": 11882610688.0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "phase_means_seconds": {
+    "0b_statement_hints": 0.1566379584,
+    "1_execute_witness": 19.0149816056,
+    "2_commit_ntt_merkle": 9.6279041964,
+    "3_bus_constraints": 44.5276846714,
+    "4_keccak_gkr": 97.7639192708,
+    "5_pcs_open": 172.17269027479998,
+    "6_wire_encode": 0.011433383
+  },
+  "binary_sha256": {
+    "/var/lib/orb-node/work/keccak-gkr-evidence/baseline-e2e": "3f9f92ed09bff8244f2afd209e31714a934534fde40801f80681dcfed85cc567",
+    "/var/lib/orb-node/work/keccak-gkr-evidence/candidate7-e2e": "082b2cc163e6de03f7a477599f7dc90e7e75773e296d38640eba93c76d5b74f3",
+    "/var/lib/orb-node/work/keccak-gkr-evidence/rust-native-target/release/e2e-oracle": "cabe2fd5a589197a6b704425f4c45ad6568a4f895293eef737e7e7437705ee7d"
+  },
+  "proofs": {
+    "/var/lib/orb-node/work/keccak-gkr-evidence/final/xmss4-pair1.ethproof": {
+      "bytes": 239729,
+      "sha256": "020ce58fb27df89acf46729f7fe317b66a90941eac801402c8e2e2e23a762817"
+    },
+    "/var/lib/orb-node/work/keccak-gkr-evidence/final/xmss4-pair2.ethproof": {
+      "bytes": 239729,
+      "sha256": "020ce58fb27df89acf46729f7fe317b66a90941eac801402c8e2e2e23a762817"
+    },
+    "/var/lib/orb-node/work/keccak-gkr-evidence/final/xmss4-pair3.ethproof": {
+      "bytes": 239729,
+      "sha256": "020ce58fb27df89acf46729f7fe317b66a90941eac801402c8e2e2e23a762817"
+    },
+    "/var/lib/orb-node/work/keccak-gkr-evidence/final/xmss4-pair4.ethproof": {
+      "bytes": 239729,
+      "sha256": "020ce58fb27df89acf46729f7fe317b66a90941eac801402c8e2e2e23a762817"
+    },
+    "/var/lib/orb-node/work/keccak-gkr-evidence/final/xmss4-pair5.ethproof": {
+      "bytes": 239729,
+      "sha256": "020ce58fb27df89acf46729f7fe317b66a90941eac801402c8e2e2e23a762817"
+    },
+    "/var/lib/orb-node/work/keccak-gkr-evidence/final/xmss16-pair1.ethproof": {
+      "bytes": 279209,
+      "sha256": "8224d90438cb61da55a66cdbdc31eb3dfaa6b75544a49cba7224fe245f86bd0f"
+    },
+    "/var/lib/orb-node/work/keccak-gkr-evidence/final/xmss16-pair2.ethproof": {
+      "bytes": 279209,
+      "sha256": "8224d90438cb61da55a66cdbdc31eb3dfaa6b75544a49cba7224fe245f86bd0f"
+    },
+    "/var/lib/orb-node/work/keccak-gkr-evidence/final/xmss16-pair3.ethproof": {
+      "bytes": 279209,
+      "sha256": "8224d90438cb61da55a66cdbdc31eb3dfaa6b75544a49cba7224fe245f86bd0f"
+    },
+    "/var/lib/orb-node/work/keccak-gkr-evidence/final/xmss16-pair4.ethproof": {
+      "bytes": 279209,
+      "sha256": "8224d90438cb61da55a66cdbdc31eb3dfaa6b75544a49cba7224fe245f86bd0f"
+    },
+    "/var/lib/orb-node/work/keccak-gkr-evidence/final/xmss16-pair5.ethproof": {
+      "bytes": 279209,
+      "sha256": "8224d90438cb61da55a66cdbdc31eb3dfaa6b75544a49cba7224fe245f86bd0f"
+    },
+    "/var/lib/orb-node/work/keccak-gkr-evidence/final/xmss1400-pair1.ethproof": {
+      "bytes": 359217,
+      "sha256": "9fcdb0ac8e76b81bbbb6cd42827aca27ef918c02d1f42e93865321b0b8d638a6"
+    },
+    "/var/lib/orb-node/work/keccak-gkr-evidence/final/xmss1400-pair2.ethproof": {
+      "bytes": 359217,
+      "sha256": "9fcdb0ac8e76b81bbbb6cd42827aca27ef918c02d1f42e93865321b0b8d638a6"
+    },
+    "/var/lib/orb-node/work/keccak-gkr-evidence/final/xmss1400-pair3.ethproof": {
+      "bytes": 359217,
+      "sha256": "9fcdb0ac8e76b81bbbb6cd42827aca27ef918c02d1f42e93865321b0b8d638a6"
+    },
+    "/var/lib/orb-node/work/keccak-gkr-evidence/final/xmss1400-pair4.ethproof": {
+      "bytes": 359217,
+      "sha256": "9fcdb0ac8e76b81bbbb6cd42827aca27ef918c02d1f42e93865321b0b8d638a6"
+    },
+    "/var/lib/orb-node/work/keccak-gkr-evidence/final/xmss1400-pair5.ethproof": {
+      "bytes": 359217,
+      "sha256": "9fcdb0ac8e76b81bbbb6cd42827aca27ef918c02d1f42e93865321b0b8d638a6"
+    }
+  },
+  "final_scope_memory_events": {
+    "low": 0,
+    "high": 0,
+    "max": 0,
+    "oom": 0,
+    "oom_kill": 0,
+    "oom_group_kill": 0
+  },
+  "full_profile_inner_constructors": 0,
+  "full_profile_uint64_boxes": 0,
+  "full_profile_potential_row_cow_bytes": 136734310400
+}
