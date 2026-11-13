@@ -10,7 +10,11 @@ Active durable final-campaign service: fresh baseline control full1400 running, 
 Poll: python3 /var/lib/orb-node/work/keccak-gkr-evidence/poll-campaign.py
 Bus source untouched; read-only profile campaign/keccak-gkr/bus-next-wave-profile.md. PCS/compiler owned elsewhere.
 Latest external PCS reference351.561639432s/17001930752B is separate evidence, not our matched certification.
-Anonymous fetch recovery and PCS branches succeeded; short-SHA fetch8b5def8 failed remote ref resolution, checking fetched objects next.
+Anonymous fetch recovery and PCS branches succeeded; contract8b5def891758ace73ba5e92629cfd8e80d9fddd8 fetched through public branches and authoritative gate read.
 Evidence durable ON VM at /var/lib/orb-node/work/keccak-gkr-evidence; OFF-VM harvest NOT CONFIRMED.
 Commit and export WIP at least every 30 minutes and BEFORE any VM TTL/cap/stop/destruction. No credentials on VM. Coordinator must confirm remote ref AND off-VM benchmark harvest before checkpoint is complete. No VM cleanup before harvest confirmation.
 Next checkpoint deadline 2026-11-13T16:36:50.632302+00:00
+Last commit 61bdbb09f0f69012f6b606486963a23f5fe0a1e4
+
+UPDATE 2026-11-13T16:14:59.051832+00:00
+Fresh baseline control complete, independent verify PASS:1400 total441.760339665s, GKR200.575009024s, peak15870304256B. Final five-pair campaign active. Contract8b5def891758ace73ba5e92629cfd8e80d9fddd8 read. Durable20min checkpoint service active. Off-VM harvest and remote-ref confirmation PENDING.
