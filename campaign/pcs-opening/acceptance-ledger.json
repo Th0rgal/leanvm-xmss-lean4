@@ -1,6 +1,6 @@
 {
   "status": "candidate_l0_batch_gates_pass_matched_matrix_running",
-  "updated_utc": "2026-11-13T10:59:49.361778+00:00",
+  "updated_utc": "2026-11-13T11:07:11.134155+00:00",
   "authoritative_quote": "under 1s and 4gb is the goal",
   "workload": {
     "xmss": 1400,
@@ -26,7 +26,7 @@
   },
   "blocker": null,
   "application_changes": true,
-  "fresh_proofs_generated": 7,
+  "fresh_proofs_generated": 9,
   "certification_pairs_completed": 0,
   "bootstrap": {
     "source": "https://github.com/Th0rgal/turbo-lean.git",
@@ -98,6 +98,22 @@
     "matched_benchmarks": "RUNNING",
     "certification": false,
     "runner_pid": 189281,
-    "binary_sha256": "17d726988ec3a9ccfb82de896f17dd1eb6207981cab730a917fe49505a1c2017"
+    "binary_sha256": "17d726988ec3a9ccfb82de896f17dd1eb6207981cab730a917fe49505a1c2017",
+    "small_matched_results": {
+      "xmss4": {
+        "mean_seconds": 4.4117320793333334,
+        "peak_rss_bytes": 1523699712,
+        "wire_bytes": 241473,
+        "wire_equal_parent": true,
+        "rust_verified": 3
+      },
+      "xmss16": {
+        "mean_seconds": 7.324672776666667,
+        "peak_rss_bytes": 1615552512,
+        "wire_bytes": 279625,
+        "wire_equal_parent": true,
+        "rust_verified": 3
+      }
+    }
   }
 }
