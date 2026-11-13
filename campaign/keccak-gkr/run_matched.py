@@ -20,6 +20,7 @@ p.add_argument('--sizes', default='4,16,1400')
 p.add_argument('--pairs', default=1, type=int)
 p.add_argument('--repeat', default=3, type=int)
 p.add_argument('--final', action='store_true')
+p.add_argument('--reference-proof-dir', type=Path)
 a = p.parse_args()
 if a.final and (a.pairs < 5 or a.repeat < 3):
     p.error('Final acceptance requires at least five pairs and repeat three')
@@ -57,7 +58,11 @@ for n in map(int, a.sizes.split(',')):
                              '--log-inv-rate', 1, '--phase-timings',
                              a.out / (label + '-phases.json')], True)
         run(label + '-verify', [a.rust, 'verify-eth', fixture / 'xmss-inputs.bin',
-                               proof, n, 1])
+                               proof, n, 1], True)
+        if a.reference_proof_dir:
+            reference = a.reference_proof_dir / f'xmss{n}-pair1.ethproof'
+            if proof.read_bytes() != reference.read_bytes():
+                raise SystemExit(f'Proof bytes differ: {proof} versus {reference}')
         status.setdefault('proofs', {})[str(proof)] = dict(
             bytes=proof.stat().st_size,
             sha256=hashlib.sha256(proof.read_bytes()).hexdigest())
