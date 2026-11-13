@@ -1,0 +1,15 @@
+UTC: 2026-11-13T12:35:11.628480+00:00
+Operator requirement acknowledged immediately.
+Last coordinator-confirmed pushed/harvested commit: 8dac390 (user acknowledgement).
+Latest local commit: cd794d3102707cbf554339237c8886970bb5b364; NOT confirmed remotely or harvested.
+Pending export paths:
+/var/lib/orb-node/work/pcs-opening-milestone2.bundle
+/var/lib/orb-node/work/pcs-opening-milestone2.patch
+/var/lib/orb-node/work/pcs-opening-milestone2-manifest.json
+/var/lib/orb-node/work/pcs-opening-milestone3.bundle
+/var/lib/orb-node/work/pcs-opening-milestone3.patch
+/var/lib/orb-node/work/pcs-opening-milestone3-manifest.json
+Benchmark chunk manifest: /var/lib/orb-node/work/pcs-benchmark-harvest/manifest.json
+Next checkpoint deadline: 2026-11-13T12:40:02+00:00 (earlier of 30min or VM TTL).
+Policy: commit AND push WIP at least every30min and before ANY TTL/cap/stop/destruction. No credentials on VM; export bundle+patch+SHA for coordinator authenticated push. Checkpoint is INCOMPLETE until coordinator confirms remote ref and OFF-VM artifact harvest. Stable archive chunks <=20MiB.
+Propagate to every future child. No VM cleanup, stop or destruction before confirmed harvest. Coordinator manages TTL.

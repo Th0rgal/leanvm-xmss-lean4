@@ -371,3 +371,15 @@ existing diagnostic proof, not another fresh proving/certification pass.
 No timer-overhead calibration claimed; tiny intervals include IO/closure
 allocation overhead. Diagnostic attribution remains instrumented evidence,
 not matched E2E speedup. Parent timed baseline and production code unchanged.
+
+## Operator checkpoint policy ACK — 2026-11-13T12:35 UTC
+
+Every worker must commit AND push WIP at least every30min and before ANY
+VM TTL/cap/stop/destruction. No credentials on managed VM: export bundle,
+patch and SHA for coordinator authenticated push. Checkpoint is INCOMPLETE
+until coordinator confirms remote ref AND off-VM benchmark artifact harvest.
+All benchmark proofs/timing/RSS/verification logs exported in stable chunks
+<=20MiB under /var/lib/orb-node/work/pcs-benchmark-harvest. Propagate to any
+future children. No VM cleanup before confirmed harvest. Coordinator owns TTL.
+Latest confirmed remote/harvest acknowledgement is8dac390; newer local heads
+are pending exact acknowledgement. Existing milestone exports remain frozen.
