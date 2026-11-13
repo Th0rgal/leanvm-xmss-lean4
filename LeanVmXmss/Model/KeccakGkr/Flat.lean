@@ -680,23 +680,24 @@ def pairSumsPar (cur : PlanarE) (activeRows : Nat) (claimWeights : PlanarE)
         | none => acc)
       (zero, zero)
 
-/-- Fold pairs of rows from `tape.cur` into `tape.nxt` in place, then swap buffers. -/
-@[noinline] def foldRowsFlat (tape : RoundETape) (activeRows : Nat) (challenge : E) :
-    RoundETape :=
-  let half := activeRows / 2
-  let nxt := foldRange half
-    (fun dst index =>
-      let lowBase := (2 * index) * bitCount
-      let highBase := (2 * index + 1) * bitCount
-      let dstBase := index * bitCount
-      foldRange bitCount
-        (fun inner pos =>
-          let lo := planarEGet tape.cur (lowBase + pos)
-          let hi := planarEGet tape.cur (highBase + pos)
-          planarESet inner (dstBase + pos) (eadd lo (nativeKaratsuba challenge (eadd lo hi))))
-        dst)
-    tape.nxt
-  ⟨nxt, tape.cur⟩
+/-- Fold rows with the source and destination owned separately. -/
+@[noinline] def foldRowsFlat (tape : RoundETape) (activeRows : Nat) (challenge : E) : RoundETape :=
+  match tape with
+  | ⟨cur, nxt⟩ =>
+    let half := activeRows / 2
+    let nxt := foldRange half
+      (fun dst index =>
+        let lowBase := (2 * index) * bitCount
+        let highBase := (2 * index + 1) * bitCount
+        let dstBase := index * bitCount
+        foldRange bitCount
+          (fun inner pos =>
+            let lo := planarEGet cur (lowBase + pos)
+            let hi := planarEGet cur (highBase + pos)
+            planarESet inner (dstBase + pos) (eadd lo (nativeKaratsuba challenge (eadd lo hi))))
+          dst)
+      nxt
+    ⟨nxt, cur⟩
 
 def initLocalTape (loc : LocalETape) (row0 : PlanarE) (weights : PlanarE) : LocalETape :=
   let cube := 1 <<< localBits
