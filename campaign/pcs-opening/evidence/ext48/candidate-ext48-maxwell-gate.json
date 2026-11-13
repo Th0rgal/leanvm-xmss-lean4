@@ -1,0 +1,453 @@
+{
+  "gate": "wave3_maxwell_soundness_and_purity",
+  "overall_ok": true,
+  "elapsed_seconds": 182.96,
+  "static_purity": {
+    "ok": true,
+    "scanned_lean_files": 131,
+    "non_lean_files": [],
+    "violations": []
+  },
+  "rust_reference_integrity": {
+    "ok": true,
+    "commit": "59c2984df79cc9ff1914e547c5d5d390fffc8f3e",
+    "dirty_entries": []
+  },
+  "native_binary_audit": {
+    "ok": true,
+    "binaries": [
+      {
+        "binary": "e2e-aggregate",
+        "ok": true,
+        "unexpected_undefined_symbols": [],
+        "forbidden_ffi_symbols": [],
+        "avx512_zmm_operands": 11141,
+        "vpclmulqdq_insns": 1058
+      },
+      {
+        "binary": "e2e-check",
+        "ok": true,
+        "unexpected_undefined_symbols": [],
+        "forbidden_ffi_symbols": [],
+        "avx512_zmm_operands": 11141,
+        "vpclmulqdq_insns": 1058
+      },
+      {
+        "binary": "lean-mutant-suite",
+        "ok": true,
+        "unexpected_undefined_symbols": [],
+        "forbidden_ffi_symbols": [],
+        "avx512_zmm_operands": 11141,
+        "vpclmulqdq_insns": 1058
+      }
+    ]
+  },
+  "formal_verification_audit": {
+    "ok": true,
+    "axiom_audit": {
+      "ok": true,
+      "total_declarations": 10327,
+      "rejected": 0,
+      "modules": 41,
+      "axioms_used": [
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    "strict_proofs_audit": {
+      "ok": true,
+      "checked_specs": 1102,
+      "bad_specs": 0,
+      "vacuous_specs": 0,
+      "trivial_specs": 0,
+      "warnings": 0
+    }
+  },
+  "dual_verifier_34_mutants": {
+    "ok": true,
+    "mutant_total": 34,
+    "lean_baseline_accepted": 34,
+    "lean_mutated_rejected": 34,
+    "lean_elapsed_ms": 168306,
+    "rust_baseline_accepted": 34,
+    "rust_mutated_rejected": 34,
+    "rust_elapsed_ms": 2073,
+    "disagreements": [],
+    "mutants": [
+      {
+        "id": 1,
+        "group": "public_input_statement",
+        "name": "m01_claim_message_digest_bit",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: GKR layer 18: children do not match the sumcheck"
+      },
+      {
+        "id": 2,
+        "group": "public_input_statement",
+        "name": "m02_claim_pubkey_root_bit",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: GKR layer 18: children do not match the sumcheck"
+      },
+      {
+        "id": 3,
+        "group": "public_input_statement",
+        "name": "m03_unsorted_signer_claims",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "parse: malformed signer set"
+      },
+      {
+        "id": 4,
+        "group": "public_input_statement",
+        "name": "m04_da_commitment_root_some",
+        "mutated_bytes": 241777,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: GKR layer 18: children do not match the sumcheck"
+      },
+      {
+        "id": 5,
+        "group": "public_input_statement",
+        "name": "m05_deferred_bytecode_point_coord",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: GKR layer 18: children do not match the sumcheck"
+      },
+      {
+        "id": 6,
+        "group": "transcript_pow_wire",
+        "name": "m06_fiat_shamir_scalar_swap",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: invalid grinding nonce"
+      },
+      {
+        "id": 7,
+        "group": "transcript_pow_wire",
+        "name": "m07_fiat_shamir_stream_rotate",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: announced size has a nonzero high limb"
+      },
+      {
+        "id": 8,
+        "group": "transcript_pow_wire",
+        "name": "m08_whir_pow_grinding_nonce",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: invalid grinding nonce"
+      },
+      {
+        "id": 9,
+        "group": "transcript_pow_wire",
+        "name": "m09_wire_truncated_bytes",
+        "mutated_bytes": 241728,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "parse: not a valid aggregate encoding"
+      },
+      {
+        "id": 10,
+        "group": "transcript_pow_wire",
+        "name": "m10_wire_trailing_byte_injection",
+        "mutated_bytes": 241746,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "parse: not a valid aggregate encoding"
+      },
+      {
+        "id": 11,
+        "group": "pcs_merkle_rounds",
+        "name": "m11_l0_commitment_root_bit",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: GKR layer 18: children do not match the sumcheck"
+      },
+      {
+        "id": 12,
+        "group": "pcs_merkle_rounds",
+        "name": "m12_l0_commitment_root_nonzero_c2",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: a digest half is 128-bit"
+      },
+      {
+        "id": 13,
+        "group": "pcs_merkle_rounds",
+        "name": "m13_l0_merkle_leaf_word_bit",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: Merkle root mismatch"
+      },
+      {
+        "id": 14,
+        "group": "pcs_merkle_rounds",
+        "name": "m14_l0_merkle_sibling_digest_bit",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: Merkle root mismatch"
+      },
+      {
+        "id": 15,
+        "group": "pcs_merkle_rounds",
+        "name": "m15_whir_round1_commitment_root_bit",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: invalid grinding nonce"
+      },
+      {
+        "id": 16,
+        "group": "pcs_merkle_rounds",
+        "name": "m16_whir_deeper_round_merkle_sibling_bit",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: Merkle root mismatch"
+      },
+      {
+        "id": 17,
+        "group": "bus_logup_gkr",
+        "name": "m17_bus_gkr_shared_root_claim",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: GKR layer 20: children do not match the sumcheck"
+      },
+      {
+        "id": 18,
+        "group": "bus_logup_gkr",
+        "name": "m18_bus_gkr_zero_count_root",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: GKR layer 20: children do not match the sumcheck"
+      },
+      {
+        "id": 19,
+        "group": "bus_logup_gkr",
+        "name": "m19_bus_gkr_round_poly_coeff",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: GKR layer 18: children do not match the sumcheck"
+      },
+      {
+        "id": 20,
+        "group": "bus_logup_gkr",
+        "name": "m20_bus_gkr_layer_child_eval",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: GKR layer 2: children do not match the sumcheck"
+      },
+      {
+        "id": 21,
+        "group": "bus_logup_gkr",
+        "name": "m21_bus_memory_fingerprint_eval",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: table sumcheck terminal mismatch"
+      },
+      {
+        "id": 22,
+        "group": "bus_logup_gkr",
+        "name": "m22_table_sumcheck_final_column_eval",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: table sumcheck terminal mismatch"
+      },
+      {
+        "id": 23,
+        "group": "keccak_f1600_gkr",
+        "name": "m23_keccak_committed_segment_claim",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: Keccak product polynomial does not carry the claim"
+      },
+      {
+        "id": 24,
+        "group": "keccak_f1600_gkr",
+        "name": "m24_keccak_rmfe_bit_product_poly",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: Keccak product polynomial does not carry the claim"
+      },
+      {
+        "id": 25,
+        "group": "keccak_f1600_gkr",
+        "name": "m25_keccak_instance_round_sumcheck",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: Keccak layer evaluations do not match the sumcheck"
+      },
+      {
+        "id": 26,
+        "group": "keccak_f1600_gkr",
+        "name": "m26_keccak_theta_rho_pi_chi_local_t",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: Keccak layer evaluations do not match the sumcheck"
+      },
+      {
+        "id": 27,
+        "group": "keccak_f1600_gkr",
+        "name": "m27_keccak_output_slot_opening_word",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: Keccak output opening ends on the wrong value"
+      },
+      {
+        "id": 28,
+        "group": "keccak_f1600_gkr",
+        "name": "m28_keccak_input_pack_slice_eval",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: Keccak input opening ends on the wrong value"
+      },
+      {
+        "id": 29,
+        "group": "whir_ringswitch_pcs",
+        "name": "m29_ringswitch_stacked_initial_quad",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: invalid grinding nonce"
+      },
+      {
+        "id": 30,
+        "group": "whir_ringswitch_pcs",
+        "name": "m30_whir_l0_fold_round_poly",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: invalid grinding nonce"
+      },
+      {
+        "id": 31,
+        "group": "whir_ringswitch_pcs",
+        "name": "m31_whir_ood_sample_eval",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: invalid grinding nonce"
+      },
+      {
+        "id": 32,
+        "group": "whir_ringswitch_pcs",
+        "name": "m32_whir_stir_query_intro_poly",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: invalid grinding nonce"
+      },
+      {
+        "id": 33,
+        "group": "whir_ringswitch_pcs",
+        "name": "m33_whir_tail_sumcheck_round_poly",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: WHIR terminal check failed"
+      },
+      {
+        "id": 34,
+        "group": "whir_ringswitch_pcs",
+        "name": "m34_whir_final_residual_poly_coeff",
+        "mutated_bytes": 241745,
+        "lean_baseline_accepted": true,
+        "lean_mutated_rejected": true,
+        "rust_baseline_accepted": true,
+        "rust_mutated_rejected": true,
+        "rust_rejection_reason": "verify: the snark did not verify: invalid grinding nonce"
+      }
+    ]
+  }
+}

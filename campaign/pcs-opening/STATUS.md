@@ -383,3 +383,21 @@ All benchmark proofs/timing/RSS/verification logs exported in stable chunks
 future children. No VM cleanup before confirmed harvest. Coordinator owns TTL.
 Latest confirmed remote/harvest acknowledgement is8dac390; newer local heads
 are pending exact acknowledgement. Existing milestone exports remain frozen.
+
+## Dedicated48-word extension-opening candidate: correctness PASS
+
+New Native.Kernels.KeccakExt48 uses exactly17+17+14 data words plus1,0,
+terminal high-bit padding. Existing64-word L0 kernel unchanged. Integration
+only unqueried openExtCosets subtrees width48/nVecs6,depth3..10, bounded
+384KiB packing plus existing shared512KiB zero template; other cases scalar.
+commitExtPlanar unchanged. No KeccakGkr/compiler changes.
+Native leaf/root/path differentials (all8 lanes,0/allones/highbits/random,
+offsets/default tails,depth/width fallback,duplicates/boundary/invalid queries,
+both rate1 cosets and rate2) PASS; existing L0 and kernel suites PASS.
+Fresh4 and distinct-seed5 proofs match unchanged wire bytes, Rust verifies3x.
+Exact comprehensive gate PASS:131 source files,10327 declarations/0 rejects,
+axioms only propext/Quot.sound,strict specs1102/1102; native symbol/ISA gate
+PASS; both Lean/Rust accept34 baseline/reject34 mutations.
+These are execution refinement tests, not universal Keccak refinement theorem.
+Matched fresh4/16/1400 warmup+repeat3 is launching; no speedup claim yet.
+Incorrect initial test-target invocation retained; corrected full build PASS.

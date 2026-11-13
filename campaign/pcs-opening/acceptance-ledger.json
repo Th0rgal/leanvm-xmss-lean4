@@ -1,6 +1,6 @@
 {
-  "status": "two_fastpack_pairs_complete_not_certified_no_repeatable_e2e_gain",
-  "updated_utc": "2026-11-13T12:30:26.813970+00:00",
+  "status": "ext48_gates_pass_matched_launching",
+  "updated_utc": "2026-11-13T13:01:15.625019+00:00",
   "authoritative_quote": "under 1s and 4gb is the goal",
   "workload": {
     "xmss": 1400,
@@ -137,5 +137,11 @@
     "candidate_full1400_pairs": 2,
     "two_pair_pooled_mean_seconds": 352.96032036583335,
     "additional_pair_mean_seconds": 350.03869865666667
+  },
+  "ext48": {
+    "binary_sha256": "3493787c99528a879d3db27668d33f07b98e74dbb8528ca49d3b74aec2204a4f",
+    "correctness_gates": "PASS",
+    "matched": "PENDING",
+    "certified": false
   }
 }
