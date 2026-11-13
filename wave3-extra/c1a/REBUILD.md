@@ -259,3 +259,23 @@ The coordinator's 370.6123s/15038140416B result remains a failed measurement,
 not certification of this compiler. No acceptance target was relaxed.
 Coordinator should harvest the durable archives/bundles/evidence before VM
 cleanup; TTL and release remain coordinator-owned.
+
+## PCS public bootstrap cross-check and candidate compatibility
+
+Fetched public `campaign/pcs-opening` at
+0a7aa39b4403fbb7edfe8de97039a78c5df219ce into a separate detached worktree
+`/var/lib/orb-node/work/c1a-pcs-compat`. Its published BOOTSTRAP.md confirms the
+pinned compiler/toolchain/dependency recipe. Extracted meta/compiler-fix.patch
+SHA-256 exactly matches 05d8024587ec0046b363a8821a899a5bd7c75a5eea56a68515dd558e1b8d526d.
+Applied that patch to a source-only pinned reference worktree: both LLVM.lean
+and BuildExe.lean hashes exactly match the published expected values.
+No duplicate bootstrap build or system compiler replacement was needed.
+
+Fresh PCS E2E, batch-test and campaign-audit module compilation has completed;
+the committed cache_manager.py is now regenerating native objects sequentially
+with the reconstructed task-local 48d1ee2 compiler on PATH. No PCS worker
+native objects are reused. Native batch execution, audit and real E2E linking
+are pending. Commands, source/tool hashes and receipts are preserved under
+`/var/lib/orb-node/work/c1a-evidence/pcs-compat`. This compatibility check does
+not certify the reported full1400 fixture recovery on a different worker and
+does not claim an XMSS1400 performance pass.
