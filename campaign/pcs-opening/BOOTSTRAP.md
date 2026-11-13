@@ -48,3 +48,19 @@ and bytecode value are byte-equal to committed files. Public exporters were
 rebuilt at pcs-fixture-tools with only local path relocation. Fixture roots:
 /var/lib/orb-node/work/pcs-restored-oracle/{xmss4,xmss16,xmss1400,fresh5}.
 No compiler installation or system-binary replacement was made.
+
+The unchanged full prover now links at pcs-opening-evidence/baseline-native435-e2e
+(SHA-256 581d2ac79b2e9dbd2c6d8bd0087a89886b6005e9363d59b89a7e81ad576f6863).
+It imports sequentially compiled native objects; its CLI wrapper has zero local
+LCNF kernels. nm shows unique shard_a_mul and karatsuba definitions; objdump
+shows vpclmul in the linked field multiplication. The historical ABI P0 suite
+passes, so wrapper-only success is not being counted as kernel evidence.
+
+Always set RUSTFLAGS='-C target-cpu=native' explicitly for the oracle harness:
+its external Cargo.toml does not inherit references/leanVM/.cargo/config.toml.
+The first paired attempt used generic Rust flags; it was stopped and retained
+as INVALID_BUILD_FLAGS_RESTART_REQUIRED. It is excluded from all comparisons.
+Corrected native Rust build uses separate rust-native-target, CARGO_BUILD_JOBS=1.
+
+perf task-clock access is denied (perf_event_paranoid=4); preserve that result
+and use phase diagnostics plus generated native code for cost attribution.
