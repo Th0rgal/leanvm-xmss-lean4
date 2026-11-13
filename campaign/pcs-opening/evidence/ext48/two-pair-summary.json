@@ -1,0 +1,19 @@
+{
+  "same_candidate_full1400_pairs": 2,
+  "passes_seconds": [
+    337.303694192,
+    352.895667494,
+    349.816974303,
+    348.021198769,
+    383.810447481,
+    368.526813252
+  ],
+  "pooled_mean_seconds": 356.72913258183337,
+  "max_peak_rss_bytes": 16594870272,
+  "certified": false,
+  "promoted": false,
+  "repeatable_e2e_gain_established": false,
+  "time_gate": false,
+  "memory_gate": false,
+  "note": "Second same-host Rust/Lean pair is slower. Only two pairs, fewer than five. No performance acceptance."
+}

@@ -434,3 +434,17 @@ no source changes/build overlap. Current receipt status:RUNNING.
 This is PARTIAL and does not count as completed/certified pair until final
 receipt and fresh proof verification. Checkpoint before14:05 deadline;
 cap14:40:02UTC, backupmargin14:25. No cleanup authorization.
+
+## Additional ext48 full1400 pair COMPLETE
+
+Warmup344.528185771s; passes348.021198769,383.810447481,368.526813252s;
+mean366.786153167s, wall1465.660s, peak16523329536B. Rust verify3x PASS;
+wire359217B exact unchanged parent. Memory-limit/OOM event deltas zero.
+No source edits or builds overlapped run; tiny partial snapshot exported near
+end before14:05 checkpoint deadline. Rust control mean1.951800262s.
+Two ext48 pairs pooled mean356.729132582s. Second pair
+materially slower than first346.672111996s; no repeatable E2E gain established.
+Both strict gates FAIL. Two pairs only, not required five: no certification,
+no promotion. No additional full benchmark planned before14:40:02TTL.
+Complete final evidence export required and checkpoint incomplete until
+coordinator confirms exact remote ref and OFF-VM harvest. No cleanup authorized.
