@@ -196,7 +196,7 @@ lines += ['', f'Historical total370.612s: final delta {f["lean_mean_seconds"]-37
     'policy gate remains unsupported and is not claimed passed. Available per-file spec '
     'audits and the unchanged whole/transitive purity/axiom audits passed.', '',
     '## Resources and handoff', '',
-    'Initial8.56GiB max/7.7GiB high caps were insufficient. Durable campaign scopes use '
+    'Initial observed scope max8973910016B (8.358GiB), high8076517376B (7.522GiB) were insufficient; the operator also reported prior8.56/7.7GiB caps. Durable campaign scopes use '
     '26GiB max/24GiB high. Ancestor CPU quotas showed no throttling; cgroup samples retain '
     f'memory/CPU pressure and events. Final scope memory-event maxima:{events}. '
     'Builds used jobs1/max-memory6144/LEAN_NUM_THREADS1; babylon was never built. '
