@@ -279,3 +279,17 @@ are pending. Commands, source/tool hashes and receipts are preserved under
 `/var/lib/orb-node/work/c1a-evidence/pcs-compat`. This compatibility check does
 not certify the reported full1400 fixture recovery on a different worker and
 does not claim an XMSS1400 performance pass.
+
+## PCS native compatibility and cached ABI ownership fix
+
+Compiler bd58dbedd76a49be3942f3b029d5ac85718589a6 fixes duplicate cached
+boxed ABI adapters by weakening only private copies of actually replaced
+kernels and their emitted adapters. No linker duplicate-definition bypass.
+Expanded imported-native-c P0 regression passed (2 tests,23.425s).
+PCS compatibility at public app 0a7aa39b4403fbb7edfe8de97039a78c5df219ce
+passes native batch execution, strict audit (598 declarations,0 rejections),
+and real E2E linking. Final field symbols have unique strong owners and CLMUL;
+shard_a_mul is call-free. All130 original cached object hashes are unchanged.
+Evidence: c1a-evidence/pcs-compat/receipt.json, commands.json and disassembly.
+Main/core Lean builds pass; final dynamic packaging and rerun are in progress.
+This is compatibility evidence, not a full XMSS1400 performance certificate.
