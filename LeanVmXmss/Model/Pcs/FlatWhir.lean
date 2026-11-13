@@ -1,6 +1,7 @@
 import Model.Pcs.Whir
 import Model.Merkle.Flat
 import Model.Witness.Flat
+import Model.Pcs.MerkleBatch
 
 namespace LeanVmXmss.Model.Pcs.FlatWhir
 
@@ -744,7 +745,7 @@ def openL0Cosets (bytes : @& ByteArray) (lanes logRows logInvRate : Nat)
         Model.Pcs.Ntt.encodeCosetVec8 table first nVecs logRows logInvRate curC)
       (fun encoded loc => extractL0Row encoded lanes width nVecs loc)
       (fun encoded loc => Model.Pcs.Commit.hashLeafVec8From st1 st2 st3 encoded nVecs loc)
-      (fun encoded k base => Model.Pcs.Commit.subtreeRootBuf st1 st2 st3 encoded nVecs k base)
+      (fun encoded k base => Model.Pcs.MerkleBatch.subtreeRootBuf st1 st2 st3 encoded nVecs k base)
 
 @[inline] def extFirstWord (poly : @& PlanarE) (interleaved width rowIndex col : Nat) : K :=
   if decide (col ≥ width) then 0

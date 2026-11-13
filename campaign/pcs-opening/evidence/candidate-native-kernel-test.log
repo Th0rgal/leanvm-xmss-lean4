@@ -1,0 +1,11 @@
+PASS|keccakF1600_8x
+PASS|ntt_differential_2^4_2^12_2^14
+PASS|merkle_and_pcs_commit_2^4_2^12_2^14
+PASS|whir_fold_and_sumcheck_2^4_2^12_2^14
+BENCH|ntt_encode_2^14x56_us=43307|bytes=7340032
+BENCH|merkle_leaves_8x_2^14x56_us=106455|bytes=524288
+BENCH|merkle_flat_8x_2^14_us=27366|root=cb42d481e7b6ada2dc3100cd8dc9bd184ff91b60a2a52940d835be4b028ab030
+BENCH|whir_fold_batch_2^14_4rounds_us=1940|bytes=24576
+BENCH|pcs_commit_1thread_log15_lanes51_ms=752|root=09be9237bcb43c88335e928ac9a670b890918071458e01754f7d9769471ee434
+BENCH|pcs_commit_16core_log15_lanes51_ms=134|root=09be9237bcb43c88335e928ac9a670b890918071458e01754f7d9769471ee434
+ALL_TESTS_PASSED

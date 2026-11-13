@@ -1,0 +1,19 @@
+⚠ [45/49] Replayed Native.Kernels.Ntt
+warning: Native/Kernels/Ntt.lean:350:6: Variable name `logD` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _logD
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [46/49] Replayed Native.Kernels.Keccak8x
+warning: Native/Kernels/Keccak8x.lean:770:8: Variable name `logD` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _logD
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+✔ [47/49] Built Model.Pcs.MerkleBatch (506ms)
+✔ [48/49] Built Model.Pcs.FlatWhir (2.1s)
+✔ [49/49] Built Tests.Unit.PcsOpeningBatchTest (456ms)
+Build completed successfully (49 jobs).
+[turbo-lean] BUILT & CACHED LeanVmXmss (349 artifacts, interface_hash=b72ceaea57df.., 3208 ms)

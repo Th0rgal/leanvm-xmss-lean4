@@ -1,6 +1,6 @@
 {
-  "status": "unchanged_native_matched_baseline_complete_diagnostics_started",
-  "updated_utc": "2026-11-13T10:30:56.946719+00:00",
+  "status": "candidate_l0_batch_implemented_correctness_gates_in_progress",
+  "updated_utc": "2026-11-13T10:48:15.661676+00:00",
   "authoritative_quote": "under 1s and 4gb is the goal",
   "workload": {
     "xmss": 1400,
@@ -25,7 +25,7 @@
     "matched_certification": false
   },
   "blocker": null,
-  "application_changes": false,
+  "application_changes": true,
   "fresh_proofs_generated": 3,
   "certification_pairs_completed": 0,
   "bootstrap": {
@@ -90,5 +90,12 @@
     "rss_threshold_ratio": 3.9585704803466797,
     "time_gap_seconds": 350.5616394323333,
     "rss_gap_bytes": 12706963456
+  },
+  "candidate": {
+    "optimization": "batch only unqueried L0 Merkle subtrees, 64-word padded leaves",
+    "native_differentials": "PASS",
+    "whole_gates": "IN_PROGRESS",
+    "matched_benchmarks": "PENDING",
+    "certification": false
   }
 }

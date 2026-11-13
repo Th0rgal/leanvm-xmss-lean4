@@ -1,8 +1,8 @@
 # PCS opening campaign checkpoint — 2026-11-13
 
-Status: UNCHANGED NATIVE MATCHED BASELINE COMPLETE; DIAGNOSTIC REPLAY PREPARING.
+Status: L0 BATCH CANDIDATE IMPLEMENTED; CORRECTNESS GATES IN PROGRESS; MATCHED TIMINGS PENDING.
 Compatible compiler and fixtures are restored; initial blockers below are archived.
-No application Lean source has changed. Strict <1 second / <4294967296-byte gate.
+One L0 opening callback and a new bounded helper are changed. Strict <1 second / <4294967296-byte gate.
 The unchanged full1400 warmup+repeat3 finished before any optimization edits.
 
 Starting revision: 299c689373ef3e98e0f150ff4bec21ca5e3aaea1.
@@ -229,3 +229,29 @@ extension commitments 0.540308820 s, folding 0.179988957 s, query grinding
 Full1400 diagnostic is active under durable runner PID 135560; no candidate
 selected based solely on small-case behavior. Whole-source purity scan passes:
 129 Lean files, zero forbidden tokens/non-Lean FFI files in Spec/Model/Native/Proofs.
+
+## First measured-hot-path candidate (not yet performance accepted)
+
+Full1400 isolated diagnostic completed: exact wire equality to unchanged parent,
+SHA-256 9fcdb0ac8e76b81bbbb6cd42827aca27ef918c02d1f42e93865321b0b8d638a6,
+Rust verification PASS 3x. L0 dimensions: 106954752 words, 51 lanes, stackLog27,
+logRows21, nVecs7. Unqueried L0 Merkle 44.486610989 s across 3879 calls;
+L0 NTT 8.879369480 s; initial fold 13.235770100 s; first extension commit
+25.161634555 s. Total instrumented PCS 169.954436581 s versus unchanged matched
+mean 148.685955360 s: instrumentation/host variance means these are attribution,
+not a benchmark comparison or speedup. Native profiling output is retained.
+
+Candidate adds Model/Pcs/MerkleBatch.lean and replaces only openL0Cosets'
+unqueried-subtree callback. It packs at most 1024 rows / eight Vec8s per row
+(512 KiB scratch upper bound, actual L0 448 KiB), then uses the existing native
+64-word-padded leaf kernel. Queried trees and extension hashing are unchanged.
+Explicit small-tree/width/range guards retain scalar fallback; failed root decoding
+also falls back lazily. No compiler, KeccakGkr, transcript or parameter changes.
+
+Native differential tests PASS: packed all-eight-lane order, zero default tails,
+widths0..9, depth0/1/3/4/10/11, zeros/allones/highbits/pseudorandom,
+base offsets/truncated buffers, complete opened rows and ordered siblings,
+duplicates/boundaries/invalid queries, both rate1 cosets (also rate2), lanes51
+and other padded widths. Existing native kernel suite reran PASS. These are
+execution refinement tests; a universal Keccak8x-to-scalar theorem is NOT claimed.
+Whole-repo/purity/mutation gates and matched4/16/1400 timing remain pending.

@@ -1,0 +1,288 @@
+{
+  "status": "COMPLETE_DIAGNOSTIC_NOT_CERTIFICATION",
+  "start": 1794566139.0004249,
+  "pid": 135561,
+  "exit_code": 0,
+  "wire_equal_parent": true,
+  "wire_sha256": "9fcdb0ac8e76b81bbbb6cd42827aca27ef918c02d1f42e93865321b0b8d638a6",
+  "verification_passes": 3,
+  "costs": {
+    "termsOf": {
+      "seconds": 0.012900974,
+      "calls": 1
+    },
+    "setup:termsOf": {
+      "seconds": 0.012900974,
+      "calls": 1
+    },
+    "fold": {
+      "seconds": 13.912059917,
+      "calls": 5
+    },
+    "0:fold": {
+      "seconds": 13.2357701,
+      "calls": 1
+    },
+    "commitExt": {
+      "seconds": 43.38658325,
+      "calls": 4
+    },
+    "0:commitExt": {
+      "seconds": 25.161634555,
+      "calls": 1
+    },
+    "introduceOod": {
+      "seconds": 0.147650284,
+      "calls": 4
+    },
+    "0:introduceOod": {
+      "seconds": 0.137214696,
+      "calls": 1
+    },
+    "grindWhir": {
+      "seconds": 0.601819449,
+      "calls": 5
+    },
+    "0:grindWhir": {
+      "seconds": 0.315086744,
+      "calls": 1
+    },
+    "firstCoset": {
+      "seconds": 3.337307586,
+      "calls": 2
+    },
+    "0:firstCoset": {
+      "seconds": 3.337307586,
+      "calls": 2
+    },
+    "nttL0": {
+      "seconds": 8.87936948,
+      "calls": 2
+    },
+    "0:nttL0": {
+      "seconds": 8.87936948,
+      "calls": 2
+    },
+    "unqueried_merkle": {
+      "seconds": 79.473794864,
+      "calls": 16038
+    },
+    "0:unqueried_merkle": {
+      "seconds": 44.486610989,
+      "calls": 3879
+    },
+    "queried_leaves": {
+      "seconds": 2.730338584,
+      "calls": 346
+    },
+    "0:queried_leaves": {
+      "seconds": 2.011751162,
+      "calls": 217
+    },
+    "queried_buildFlat": {
+      "seconds": 0.736363872,
+      "calls": 346
+    },
+    "0:queried_buildFlat": {
+      "seconds": 0.502414389,
+      "calls": 217
+    },
+    "top_buildFlat": {
+      "seconds": 0.036554276,
+      "calls": 5
+    },
+    "0:top_buildFlat": {
+      "seconds": 0.009141611,
+      "calls": 1
+    },
+    "inducedBasis": {
+      "seconds": 5.31417344,
+      "calls": 5
+    },
+    "0:inducedBasis": {
+      "seconds": 4.335577045,
+      "calls": 1
+    },
+    "msgPlanar": {
+      "seconds": 0.15999513,
+      "calls": 5
+    },
+    "0:msgPlanar": {
+      "seconds": 0.150801089,
+      "calls": 1
+    },
+    "1:fold": {
+      "seconds": 0.626903137,
+      "calls": 1
+    },
+    "1:commitExt": {
+      "seconds": 10.54272286,
+      "calls": 1
+    },
+    "1:introduceOod": {
+      "seconds": 0.008955044,
+      "calls": 1
+    },
+    "1:grindWhir": {
+      "seconds": 0.112953055,
+      "calls": 1
+    },
+    "nttExt": {
+      "seconds": 7.669300184,
+      "calls": 9360
+    },
+    "1:nttExt": {
+      "seconds": 6.331538595,
+      "calls": 16
+    },
+    "1:unqueried_merkle": {
+      "seconds": 18.733383107,
+      "calls": 1992
+    },
+    "1:queried_leaves": {
+      "seconds": 0.397689834,
+      "calls": 56
+    },
+    "1:queried_buildFlat": {
+      "seconds": 0.127780169,
+      "calls": 56
+    },
+    "1:top_buildFlat": {
+      "seconds": 0.004816713,
+      "calls": 1
+    },
+    "1:inducedBasis": {
+      "seconds": 0.898811792,
+      "calls": 1
+    },
+    "1:msgPlanar": {
+      "seconds": 0.008645019,
+      "calls": 1
+    },
+    "2:fold": {
+      "seconds": 0.046622436,
+      "calls": 1
+    },
+    "2:commitExt": {
+      "seconds": 5.193748683,
+      "calls": 1
+    },
+    "2:introduceOod": {
+      "seconds": 0.001082429,
+      "calls": 1
+    },
+    "2:grindWhir": {
+      "seconds": 0.021354197,
+      "calls": 1
+    },
+    "2:nttExt": {
+      "seconds": 0.925693513,
+      "calls": 128
+    },
+    "2:unqueried_merkle": {
+      "seconds": 9.260187665,
+      "calls": 992
+    },
+    "2:queried_leaves": {
+      "seconds": 0.232448982,
+      "calls": 32
+    },
+    "2:queried_buildFlat": {
+      "seconds": 0.075976854,
+      "calls": 32
+    },
+    "2:top_buildFlat": {
+      "seconds": 0.002301722,
+      "calls": 1
+    },
+    "2:inducedBasis": {
+      "seconds": 0.07643299,
+      "calls": 1
+    },
+    "2:msgPlanar": {
+      "seconds": 0.000502042,
+      "calls": 1
+    },
+    "3:fold": {
+      "seconds": 0.002517715,
+      "calls": 1
+    },
+    "3:commitExt": {
+      "seconds": 2.488477152,
+      "calls": 1
+    },
+    "3:introduceOod": {
+      "seconds": 0.000398115,
+      "calls": 1
+    },
+    "3:grindWhir": {
+      "seconds": 0.08279837,
+      "calls": 1
+    },
+    "3:nttExt": {
+      "seconds": 0.310279695,
+      "calls": 1024
+    },
+    "3:unqueried_merkle": {
+      "seconds": 4.68683727,
+      "calls": 1001
+    },
+    "3:queried_leaves": {
+      "seconds": 0.084590725,
+      "calls": 23
+    },
+    "3:queried_buildFlat": {
+      "seconds": 0.028875743,
+      "calls": 23
+    },
+    "3:top_buildFlat": {
+      "seconds": 0.002222283,
+      "calls": 1
+    },
+    "3:inducedBasis": {
+      "seconds": 0.003137272,
+      "calls": 1
+    },
+    "3:msgPlanar": {
+      "seconds": 3.7686e-05,
+      "calls": 1
+    },
+    "4:fold": {
+      "seconds": 0.000246529,
+      "calls": 1
+    },
+    "4:grindWhir": {
+      "seconds": 0.069627083,
+      "calls": 1
+    },
+    "4:nttExt": {
+      "seconds": 0.101788381,
+      "calls": 8192
+    },
+    "4:unqueried_merkle": {
+      "seconds": 2.306775833,
+      "calls": 8174
+    },
+    "4:queried_leaves": {
+      "seconds": 0.003857881,
+      "calls": 18
+    },
+    "4:queried_buildFlat": {
+      "seconds": 0.001316717,
+      "calls": 18
+    },
+    "4:top_buildFlat": {
+      "seconds": 0.018071947,
+      "calls": 1
+    },
+    "4:inducedBasis": {
+      "seconds": 0.000214341,
+      "calls": 1
+    },
+    "4:msgPlanar": {
+      "seconds": 9.294e-06,
+      "calls": 1
+    }
+  },
+  "wall_seconds": 431.9528181552887
+}

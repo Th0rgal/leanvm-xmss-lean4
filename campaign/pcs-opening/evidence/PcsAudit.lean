@@ -22,6 +22,7 @@ run_cmd do
     text.startsWith "LeanVmXmss.Model.Pcs.FlatWhir." ||
     text.startsWith "LeanVmXmss.Model.Pcs.Ntt." ||
     text.startsWith "LeanVmXmss.Model.Pcs.Commit." ||
+    text.startsWith "LeanVmXmss.Model.Pcs.MerkleBatch." ||
     text.startsWith "LeanVmXmss.Native.Kernels.Ntt." ||
     text.startsWith "LeanVmXmss.Native.Kernels.Keccak8x."
   for (name, info) in env.constants.toList do

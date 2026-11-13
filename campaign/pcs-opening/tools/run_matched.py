@@ -15,6 +15,7 @@ p.add_argument('--fixtures', required=True, type=Path)
 p.add_argument('--out', required=True, type=Path)
 p.add_argument('--counts', default='4,16,1400')
 p.add_argument('--pairs', default=1, type=int)
+p.add_argument('--reference', type=Path, help='Optional unchanged receipt directory for deterministic full-wire parity')
 a = p.parse_args()
 a.out.mkdir(parents=True, exist_ok=True)
 cg = Path('/sys/fs/cgroup' + Path('/proc/self/cgroup').read_text().split('::')[1].strip())
@@ -91,6 +92,12 @@ try:
             receipt.setdefault('proofs', []).append(dict(path=str(proof), bytes=proof.stat().st_size,
                 sha256=hashlib.sha256(proof.read_bytes()).hexdigest()))
             run(base + '-verify', [a.rust, 'verify-eth', fixture / 'xmss-inputs.bin', proof, n, 1], expect_signers=n)
+            if a.reference:
+                reference = a.reference / f'p0-xmss{n}-lean.ethproof'
+                equal = proof.read_bytes() == reference.read_bytes()
+                receipt['proofs'][-1]['wire_equal_unchanged_parent'] = equal
+                if not equal: raise RuntimeError(f'{base} deterministic full-wire mismatch')
+                save()
     receipt['status'] = 'COMPLETE'
 except BaseException as e:
     receipt['status'] = 'FAILED_OR_INCOMPLETE'
