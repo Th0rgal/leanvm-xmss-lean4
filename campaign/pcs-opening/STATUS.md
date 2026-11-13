@@ -278,3 +278,23 @@ Rust flags, independent Rust verification and byte-for-byte unchanged-parent
 wire comparison. Candidate binary SHA-256:
 17d726988ec3a9ccfb82de896f17dd1eb6207981cab730a917fe49505a1c2017.
 No speedup, peak-RSS reduction or certification is claimed before completion.
+
+## First candidate full matched result: NOT promoted
+
+Warmup360.822977912 s; measured352.065413901,354.214879587,358.678112100 s;
+mean354.986135196 s, sample stdev3.373139603 s. Wall1438.231102705 s.
+PCS mean146.389741362 s (only2.296213998 s /1.544% below baseline);
+aggregation is3.424495764 s slower. Peak16517795840 B (484134912 B below baseline).
+Both strict gates FAIL:354.986x time threshold,3.845849x RSS threshold;
+gaps353.986135196 s and12222828544 B to the boundaries.
+Wire359217 B / VM proof358656 B, exact unchanged wire identity; independent
+Rust verify3x:460,10,10 ms. All memory/CPU throttle and OOM counters zero.
+This is one matched candidate pair, not >=5-pair certification or an E2E win.
+
+Packing still uses8 runtime ByteArray.push calls per word: at3879 unqueried L0
+subtrees,1024 rows and56 words/row, this implies1779499008 byte-push calls for
+the measured full1400 query pattern. Static code confirms those runtime calls;
+the count is derived from the validated diagnostic dimensions/call count. Next
+bounded revision will copy a shared zero template and use existing proof-bounded
+USize stores, retaining the old packer as a differential oracle and fallback.
+It must rerun all gates and another full matched matrix; no improvement assumed.

@@ -78,3 +78,8 @@ for the exact strict gate. 1102/1102 tight specs, zero vacuous/trivial/warnings.
 The original installed-CLI combined failure is retained. Consolidated gate JSON
 replaces only that unsupported invocation with the exact pinned CLI result and
 records input/executable SHA-256s; all other gates retain actual executed evidence.
+
+The external Rust CLI harness generated lockfile is retained as evidence/rust-cli.Cargo.lock
+(SHA-256 a40b53ed2b85caa85b1036678d80b5f89b3f76be1269e7a026a26f303bc1cb96). Restore it to
+LeanVmXmss/Tests/Cli/Rust/Cargo.lock before rebuilding with --locked; the public
+reference checkout and its committed lockfile remain unchanged.

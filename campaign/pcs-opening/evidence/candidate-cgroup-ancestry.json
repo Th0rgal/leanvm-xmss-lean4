@@ -1,0 +1,48 @@
+{
+  "observed_utc": "2026-11-13T11:23:02.749665+00:00",
+  "ancestry": [
+    {
+      "path": "/sys/fs/cgroup/user.slice/user-996.slice/user@996.service/app.slice/sandboxed-node-efe628fca5e267a45afceab2acf4f416-job-59240c0207aa4f74b678902243608208.scope",
+      "cpu.stat": "usage_usec 16756151974\nuser_usec 16131913399\nsystem_usec 624238574\ncore_sched.force_idle_usec 0\n",
+      "memory.max": "25769803776\n",
+      "memory.high": "23622320128\n",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+    },
+    {
+      "path": "/sys/fs/cgroup/user.slice/user-996.slice/user@996.service/app.slice",
+      "cpu.max": "max 100000\n",
+      "cpu.stat": "usage_usec 17167836501\nuser_usec 16512809655\nsystem_usec 655026845\ncore_sched.force_idle_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\n",
+      "memory.max": "max\n",
+      "memory.high": "max\n",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+    },
+    {
+      "path": "/sys/fs/cgroup/user.slice/user-996.slice/user@996.service",
+      "cpu.max": "max 100000\n",
+      "cpu.stat": "usage_usec 17168796880\nuser_usec 16513418931\nsystem_usec 655377948\ncore_sched.force_idle_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\n",
+      "memory.max": "max\n",
+      "memory.high": "max\n",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+    },
+    {
+      "path": "/sys/fs/cgroup/user.slice/user-996.slice",
+      "cpu.max": "max 100000\n",
+      "cpu.stat": "usage_usec 17168807140\nuser_usec 16513425087\nsystem_usec 655382052\ncore_sched.force_idle_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\n",
+      "memory.max": "max\n",
+      "memory.high": "max\n",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+    },
+    {
+      "path": "/sys/fs/cgroup/user.slice",
+      "cpu.max": "max 100000\n",
+      "cpu.stat": "usage_usec 17239450308\nuser_usec 16540425014\nsystem_usec 699025294\ncore_sched.force_idle_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\n",
+      "memory.max": "33114030080\n",
+      "memory.high": "max\n",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+    },
+    {
+      "path": "/sys/fs/cgroup",
+      "cpu.stat": "usage_usec 17918752046\nuser_usec 16888782741\nsystem_usec 1029969304\ncore_sched.force_idle_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\n"
+    }
+  ]
+}

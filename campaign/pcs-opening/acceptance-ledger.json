@@ -1,6 +1,6 @@
 {
-  "status": "candidate_l0_batch_gates_pass_matched_matrix_running",
-  "updated_utc": "2026-11-13T11:07:11.134155+00:00",
+  "status": "first_candidate_not_promoted_packing_revision_preparing",
+  "updated_utc": "2026-11-13T11:25:58.286473+00:00",
   "authoritative_quote": "under 1s and 4gb is the goal",
   "workload": {
     "xmss": 1400,
@@ -26,7 +26,7 @@
   },
   "blocker": null,
   "application_changes": true,
-  "fresh_proofs_generated": 9,
+  "fresh_proofs_generated": 28,
   "certification_pairs_completed": 0,
   "bootstrap": {
     "source": "https://github.com/Th0rgal/turbo-lean.git",
@@ -95,7 +95,7 @@
     "optimization": "batch only unqueried L0 Merkle subtrees, 64-word padded leaves",
     "native_differentials": "PASS",
     "whole_gates": "PASS_with_exact_pinned_CLI_strict_proofs_evidence",
-    "matched_benchmarks": "RUNNING",
+    "matched_benchmarks": "COMPLETE_NO_E2E_SPEEDUP",
     "certification": false,
     "runner_pid": 189281,
     "binary_sha256": "17d726988ec3a9ccfb82de896f17dd1eb6207981cab730a917fe49505a1c2017",
@@ -114,6 +114,11 @@
         "wire_equal_parent": true,
         "rust_verified": 3
       }
-    }
-  }
+    },
+    "promoted": false,
+    "full1400_mean_seconds": 354.986135196,
+    "full1400_peak_rss_bytes": 16517795840
+  },
+  "fresh_lean_prover_invocations": 28,
+  "fresh_proof_artifacts_retained": 10
 }

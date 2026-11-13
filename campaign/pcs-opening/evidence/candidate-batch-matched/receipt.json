@@ -1,5 +1,5 @@
 {
-  "status": "RUNNING",
+  "status": "COMPLETE",
   "pid": 189281,
   "start": 1794567519.8932638,
   "records": [
@@ -325,7 +325,61 @@
         "memory.high": "23622320128\n",
         "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
       },
-      "pid": 199276
+      "pid": 199276,
+      "exit_code": 0,
+      "wall_seconds": 1438.2311027050018,
+      "cgroup_after": {
+        "memory.max": "25769803776\n",
+        "memory.high": "23622320128\n",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+      },
+      "passes_nanos": [
+        352065413901,
+        354214879587,
+        358678112100
+      ],
+      "warmup_nanos": 360822977912,
+      "peak_rss_bytes": 16517795840,
+      "mean_seconds": 354.986135196,
+      "time_gate": false,
+      "mean_time_gate": false,
+      "min_seconds": 352.065413901,
+      "max_seconds": 358.6781121,
+      "memory_gate": false,
+      "proof_size": 358656,
+      "proof_bytes": 359217
+    },
+    {
+      "label": "p0-xmss1400-verify",
+      "argv": [
+        "/var/lib/orb-node/work/pcs-opening-evidence/rust-native-target/release/e2e-oracle",
+        "verify-eth",
+        "/var/lib/orb-node/work/pcs-restored-oracle/xmss1400/xmss-inputs.bin",
+        "/var/lib/orb-node/work/pcs-opening-evidence/candidate-batch-matched/p0-xmss1400-lean.ethproof",
+        "1400",
+        "1"
+      ],
+      "start": 1794569058.4302177,
+      "cgroup_before": {
+        "memory.max": "25769803776\n",
+        "memory.high": "23622320128\n",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+      },
+      "pid": 248830,
+      "exit_code": 0,
+      "wall_seconds": 1.6864206790924072,
+      "cgroup_after": {
+        "memory.max": "25769803776\n",
+        "memory.high": "23622320128\n",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+      },
+      "passes_nanos": [],
+      "warmup_nanos": null,
+      "peak_rss_bytes": 404877312,
+      "verification_passes": 3,
+      "signers_match": true,
+      "proof_size": 358656,
+      "wire_bytes": 359217
     }
   ],
   "acceptance": {
@@ -348,6 +402,13 @@
       "bytes": 279625,
       "sha256": "bab920905b70a74d4853be3593105d6056b759c9b208005e0fbc234588338dbd",
       "wire_equal_unchanged_parent": true
+    },
+    {
+      "path": "/var/lib/orb-node/work/pcs-opening-evidence/candidate-batch-matched/p0-xmss1400-lean.ethproof",
+      "bytes": 359217,
+      "sha256": "9fcdb0ac8e76b81bbbb6cd42827aca27ef918c02d1f42e93865321b0b8d638a6",
+      "wire_equal_unchanged_parent": true
     }
-  ]
+  ],
+  "finish": 1794569060.1280782
 }
