@@ -1,0 +1,92 @@
+# PCS opening campaign checkpoint — 2026-11-13
+
+Status: BLOCKED BEFORE MATCHED BASELINE; no application optimization made.
+
+Starting revision: 299c689373ef3e98e0f150ff4bec21ca5e3aaea1.
+Anonymous HTTPS clone: /var/lib/orb-node/work/pcs-opening.
+Owned branch: campaign/pcs-opening. No credential access or snapshots.
+Evidence directory: /var/lib/orb-node/work/pcs-opening-evidence.
+
+## Feasibility
+
+Host: box-node-bdcc355beb075447 (not babylon). The actual job cgroup initially
+had memory.max=8973631488 and memory.high=8076267520 bytes, with all memory.events
+counters zero. This cannot contain the historical 15038140416-byte peak. Its
+writable controls were raised to 25769803776/23622320128 bytes (24/22 GiB), below
+the parent user.slice limit 33114030080 bytes. No benchmark was run throttled.
+
+Unchanged E2E module build passed using turbo-lean, LEAN_NUM_THREADS=1 and a
+6144 MiB build budget. However the installed lean-native v0.5.0 embeds Lean
+4.31.0 (binary strings show leanprover/lean4:v4.31.0), whereas lean-toolchain
+and the installed Lean are 4.35.0 (eb6cafb7290e8bd5f2937522d8d804f58f02bafc).
+Both compile-llvm on Tests/Hub/ShardAHw.lean and build-exe on Model/Cli/E2EMain.lean
+fail on Init.olean with "incompatible header". Thus there is no valid native
+baseline executable. lean-native-core accepts LNIR only and is not a replacement
+for the failing Lean frontend. No compiler changes or alternate proving path used.
+
+Rust reference cloned anonymously to references/leanVM and detached at
+59c2984df79cc9ff1914e547c5d5d390fffc8f3e; its working tree is unchanged.
+The committed e2e-oracle harness builds successfully in release mode (jobs=1).
+Its historical absolute include paths were satisfied by a local symlink to this
+same reference checkout; no Rust verifier source was edited. The harness CLI
+consumes positional input/proof arguments; trailing 1400/1 arguments are ignored
+by this wrapper, so parameter validation needs separate evidence on resumption.
+
+Four full1400 input/guest files are deliberately omitted from the public clone;
+expected sizes/hashes are in oracle/xmss1400/LARGE_FIXTURES_MANIFEST.json. They
+have not been regenerated or verified. No fresh proof was generated or reused.
+
+## Actual call graph and hypotheses
+
+Read committed plan.md and wave3-extra/k3-prep/k3-final-report.md. Current
+E2E uses Model.Cli.E2E.proveLeafEthereumPhasedWithBcCols (and related runners)
+-> Model.Pcs.FlatWhir.provePcsOpenFlat -> proveLevelPlanar.
+
+L0 opening: openL0Cosets -> firstCosetFromBytes -> encodeCosetVec8 ->
+streamCosetsOpen -> hashLeafVec8From/subtreeRootBuf. Extension commitments and
+openings use commitExtPlanar/openExtCosets -> encodeCosetVec8 ->
+hashLeafExtVec8/subtreeRootExtVec8. These use Model.Pcs.Ntt and Model.Pcs.Commit,
+not Native.Kernels.Ntt or Native.Kernels.Keccak8x.
+
+Inspected both native kernel files and NativePcsMerkleKernelTest. Their reported
+microbench improvements cannot be credited as an E2E gain without integrating
+and verifying the actual opening callers.
+
+Static candidates requiring measurement, not established bottleneck attribution:
+- encodeCosetVec8 holds boxed Array Vec8 values; vecPairLoop reads two values,
+  clears two slots, builds butterfly results, then writes two slots. Allocation,
+  reference counting, and scalar arithmetic should be separated in profiles.
+- firstCosetFromBytes is inside the L0 encode-coset closure; each coset rebuilds
+  the packed Vec8 input. Hoisting may trade repeated packing for sharing/COW;
+  it must be measured rather than assumed beneficial.
+- foldPlanar/msgPlanar use byte-backed limbs but materialize E values and tuple
+  accumulators. Generated code is needed to determine actual boxing elimination.
+- streamCosetsOpen reconstructs codewords and hashes subtree leaves. Any native
+  replacement must preserve leading-zero padding, row extraction, query ordering,
+  sibling order, roots, transcript and wire bytes, not merely match a root.
+
+No KeccakGkr or compiler edits. No extern/unsafe/sorry or crypto FFI introduced;
+no allow-multiple-definition. Protocol/security/log_inv_rate=1 unchanged.
+
+## Evidence limits and restart contract
+
+No matched baseline, candidate, E2E XMSS4/16/1400 warmup+repeat3, proof-size/RSS
+comparison, independent fresh-proof verification, or alternating Rust/Lean pairs
+has completed. Historical 370.612 s / warmup 374.455 s / wall 751.54 s /
+15038140416 B / wire 359217 B and ~154.93 s PCS opening are supplied historical
+observations, not measurements from this host.
+
+All target sets remain unresolved: <1.15 s/<8.633 GiB, <3 s/4 GiB, and
+<920 ms/5.5 GiB. No target is relaxed and no performance improvement is claimed.
+
+Coordinator prerequisite: provision a credential-free compatible Lean 4.35
+lean-native frontend/compiler/runtime with the campaign's pinned P0 fixes and
+recorded hashes. Then regenerate omitted fixtures and match every committed
+hash, establish unchanged full baseline first, profile, and only then implement
+and gate a candidate. Final certification still requires >=5 same-host alternating
+fresh Rust/Lean pairs with warmup+repeat3 and independent Rust verification.
+
+No TTL/lease or coordinator messaging API is exposed here. Checkpoint is durable;
+no VM deletion has been requested. No credential-free push capability was
+provisioned (origin is public HTTPS). Export bundle/patch/hashes for coordinator
+harvest, then request destruction after harvest acknowledgement.
