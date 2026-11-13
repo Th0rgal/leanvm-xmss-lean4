@@ -1,5 +1,19 @@
 # C1a reconstruction checkpoint
 
+**Current placement correction:** this session runs on fresh Boat xlarge
+`managed-859023b6-1b58-4d60-aa6d-c0a47c637108`. Local builds here are explicitly
+authorized; the Babylon restriction applies to the coordinator. Coordinator
+owns TTL/extensions. Earlier missing-worker statements below are historical
+and no longer block builds. No snapshots or secrets are used.
+
+Priority: bootstrap the frozen public compiler against Lean 4.35 first,
+because the preinstalled executable embeds Lean 4.31 and cannot import this
+package's Init.olean. Clean frozen worktree `/var/lib/orb-node/work/c1a-bootstrap`
+is building through turbo-lean (one job/thread, max-memory 6144 MiB).
+The reproducible bootstrap script is committed in compiler `f74efc3`;
+receipts are under `/var/lib/orb-node/work/c1a-evidence/bootstrap`.
+No compatible executable or native test PASS has been claimed yet.
+
 Application base: `299c689373ef3e98e0f150ff4bec21ca5e3aaea1`.
 Compiler source: public `https://github.com/Th0rgal/turbo-lean.git`, frozen
 revision `29d85f7da2d963750f77d76d5323408a73386f14` from
