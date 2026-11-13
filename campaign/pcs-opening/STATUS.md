@@ -1,6 +1,6 @@
 # PCS opening campaign checkpoint — 2026-11-13
 
-Status: NATIVE 4.35 BOOTSTRAP IN PROGRESS; no application optimization made.
+Status: NATIVE 4.35 BOOTSTRAP PASS; UNCHANGED PROVER BUILD IN PROGRESS.
 
 Starting revision: 299c689373ef3e98e0f150ff4bec21ca5e3aaea1.
 Anonymous HTTPS clone: /var/lib/orb-node/work/pcs-opening.
@@ -156,3 +156,7 @@ hashes must match before their use as the unchanged baseline.
 The cgroup reset to its original cap at the new turn; controls were re-raised
 via Python /proc/self/cgroup to 24/22 GiB for feasibility only. No memory-gate
 success is claimed. Coordinator can harvest the updated checkpoint immediately.
+
+Bootstrap and P0 canary now pass; the former 4.31/4.35 blocker is resolved.
+All omitted full1400 fixtures match their committed SHA-256s and sizes.
+Unchanged app native-object build is running with task-local rebuilt compiler.

@@ -1,0 +1,2 @@
+{"cycles":1146537,"memory_cells_used":8668972,"memory_keccak256":"5b771e0e421e7c539b8b419188320dbeffe7a0c465bdf84731036efafa341530","rows":[262098, 237184, 169439, 159273, 57477, 261066],"unconstrained_reads":[]}
+{"records":1400,"padded_instructions":524288,"code_instructions":488806,"bytecode_keccak256":"f1535eceea9e551e99046f576b5885ee8e72155a3115c02881c3ad163b2abdfa","hints_keccak256":"0038d98ce4f3337fc02da9c4ac0c8c9393e12ab8eda96094a41e636ebfcd08d4","statement_digest":"ded8679e548f3d7c810a3c50e1c69b4fed50773b35189e3a67d7728accafe423","signature_mutant_rejected":true}

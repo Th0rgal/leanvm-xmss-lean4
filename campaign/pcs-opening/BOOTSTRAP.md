@@ -32,3 +32,19 @@ compiler; preserve generated output manifests and executable hashes.
 This worker has no exposed cross-mission messaging tool. This committed file
 and exported bundle are the reproducible-needs handoff; coordinator owns TTL.
 No credentials, snapshots, new VM provisioning or VM deletion are requested.
+
+## Bootstrap completed
+
+The 352-target build passed in 351.508 s. Executable SHA-256 exactly matches
+the historical report: 79b805002e329a6eee167403265daa91b50467a4169c8e735d0e843eca3cc6ba.
+Canary passed after adding the lean-sys dependency directory to LEAN_PATH:
+/var/lib/orb-node/work/pcs-turbo-lean/lean/.lake/packages/lean-sys/.lake/build/lib/lean.
+262 K and 131 E vectors, UInt64 bit63/all-ones, native CLMUL, ABI boxing,
+standalone/unique symbols, unsupported exports and tool-failure regressions pass.
+See bootstrap-p0.log and bootstrap-p0/result.json.
+
+All four omitted full1400 files match committed SHA-256/size; seed, statement
+and bytecode value are byte-equal to committed files. Public exporters were
+rebuilt at pcs-fixture-tools with only local path relocation. Fixture roots:
+/var/lib/orb-node/work/pcs-restored-oracle/{xmss4,xmss16,xmss1400,fresh5}.
+No compiler installation or system-binary replacement was made.
