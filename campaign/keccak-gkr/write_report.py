@@ -32,6 +32,11 @@ def gkr(row):
 final = summary('final')
 control = summary('baseline-final-control')
 original = summary('baseline')
+attempts = {}
+for i in range(1, int(winner.removeprefix('candidate')) + 1):
+    name = f'candidate{i}'
+    attempts[name] = (json.loads((e / 'candidate4-accepted-summary.json').read_text())
+                      if i == 4 else summary(name))
 fs = json.loads((e / 'final/status.json').read_text())
 assert all(x['exit_code'] == 0 for x in fs['commands'])
 for n in ['4', '16', '1400']:
@@ -88,6 +93,7 @@ manifest = dict(base='299c689373ef3e98e0f150ff4bec21ca5e3aaea1', winner=winner,
     implementation_commit=subprocess.check_output(['git', 'log', '-1', '--format=%H',
         '--', 'LeanVmXmss/Model/KeccakGkr/Flat.lean'], cwd=repo, text=True).strip(),
     final=final, baseline_final_control=control, original_baseline=original,
+    candidate_matched_attempts=attempts,
     phase_means_seconds=phases, binary_sha256=state['binary_sha256'], proofs=fs['proofs'],
     final_scope_memory_events=events, full_profile_inner_constructors=inner,
     full_profile_uint64_boxes=boxes, full_profile_potential_row_cow_bytes=cow)
@@ -120,10 +126,19 @@ for label, row in [('Original pre-edit baseline', o), ('Fresh saved-baseline con
                    ('Final five-pair selected binary', f)]:
     lines.append(f'| {label} | {row["lean_mean_seconds"]:.6f} | {gkr(row):.6f} | '
                  f'{row["rust_mean_seconds"]:.6f} | {row["lean_peak_rss_bytes"]} |')
+lines += ['', '| Candidate XMSS1400 matched gate | Lean total s | GKR s | Rust s | Peak B |',
+          '|---|---:|---:|---:|---:|']
+for name, attempt in attempts.items():
+    row = attempt['paired']['1400']
+    lines.append(f'| {name} | {row["lean_mean_seconds"]:.6f} | {gkr(row):.6f} | '
+                 f'{row["rust_mean_seconds"]:.6f} | {row["lean_peak_rss_bytes"]} |')
 lines += ['', 'Host/phase drift is substantial; raw differences between candidates are not '
     'causal speedup estimates. The fresh baseline control and final per-pair raw samples '
     'are retained in `final-results.json`. Confidence intervals in the summary assume '
     'independent pair means and do not establish host stability.', '',
+    f'Final observed non-GKR phase subtotal:{sum(v for k, v in phases.items() if k != "4_keccak_gkr"):.6f}s. '
+    'This is a measured phase budget, not a mathematical lower bound after arbitrary '
+    'pipeline changes; further E2E work requires the other owners.', '',
     '## Literal targets and historical gaps', '',
     '| Target time / RSS | Time ratio | Excess seconds | Excess RSS B |',
     '|---|---:|---:|---:|']
