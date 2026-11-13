@@ -1,0 +1,16 @@
+UTC 2026-11-13T16:11:50.632302+00:00
+Branch campaign/keccak-gkr; selected implementation 200b18acaebd31571aa4c9b07838ae079f451a2a.
+Authoritative gate STRICT <1s XMSS1400 aggregation AND peak RSS <4294967296B. NOT MET.
+Candidate7 matched full1400 mean total361.108949069s; GKR102.436216653s; peak16177577984B. Host drift prevents causal total speedup claim.
+Actual hot path Model.Cli.E2E.proveKeccakGkrOnlyWq -> Model.KeccakGkr.Flat.proveReductionFlat. Standalone Native kernels absent from E2E import/call path.
+Optimized product accumulator reuse, round tape ownership, packed word reads. Removed measured 29569843200 inner-loop constructors; external instrumented diagnostic, not acceptance timing.
+Compatible compiler /var/lib/orb-node/work/turbo-lean-bootstrap/lean/.lake/build/bin/lean-native SHA256 79b805002e329a6eee167403265daa91b50467a4169c8e735d0e843eca3cc6ba.
+Candidate7 correctness/purity/refinement/native parity/dual34 mutants/independent verification completed; wire359217 byte-identical. Installed audit-spec named strict-proofs policy unsupported; NOT claimed passed. Available transitive axiom audits passed.
+Active durable final-campaign service: fresh baseline control full1400 running, then final >=5 alternating pairs each size4/16/1400 warmup+repeat3. No builds or diagnostics during timing.
+Poll: python3 /var/lib/orb-node/work/keccak-gkr-evidence/poll-campaign.py
+Bus source untouched; read-only profile campaign/keccak-gkr/bus-next-wave-profile.md. PCS/compiler owned elsewhere.
+Latest external PCS reference351.561639432s/17001930752B is separate evidence, not our matched certification.
+Anonymous fetch recovery and PCS branches succeeded; short-SHA fetch8b5def8 failed remote ref resolution, checking fetched objects next.
+Evidence durable ON VM at /var/lib/orb-node/work/keccak-gkr-evidence; OFF-VM harvest NOT CONFIRMED.
+Commit and export WIP at least every 30 minutes and BEFORE any VM TTL/cap/stop/destruction. No credentials on VM. Coordinator must confirm remote ref AND off-VM benchmark harvest before checkpoint is complete. No VM cleanup before harvest confirmation.
+Next checkpoint deadline 2026-11-13T16:36:50.632302+00:00

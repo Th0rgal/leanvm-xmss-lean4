@@ -112,7 +112,7 @@ lines = ['# Keccak GKR campaign final report', '',
     f'peak RSS **{f["lean_peak_rss_bytes"]}B** ({f["lean_peak_rss_bytes"]/2**30:.6f}GiB). '
     f'Frozen Rust mean {f["rust_mean_seconds"]:.6f}s, peak {rust_peak}B; '
     f'Lean/Rust mean-time ratio {f["lean_over_rust_time_ratio"]:.3f}. '
-    'All requested absolute time/RSS target pairs remain unmet.', '',
+    'The authoritative strict <1 second / <4 GiB (4294967296 bytes) gate remains unmet. All earlier targets are superseded.', '',
     '## Matched final measurements', '',
     'Every pair uses sequential Rust then Lean on this host, each a fresh process with one '
     'warmup and three timed full recomputations. `/usr/bin/time -v` measures fresh-process '
@@ -145,7 +145,7 @@ lines += ['', 'Host/phase drift is substantial; raw differences between candidat
     f'Final observed non-GKR phase subtotal:{sum(v for k, v in phases.items() if k != "4_keccak_gkr"):.6f}s. '
     'This is a measured phase budget, not a mathematical lower bound after arbitrary '
     'pipeline changes; further E2E work requires the other owners.', '',
-    '## Literal targets and historical gaps', '',
+    '## Authoritative gate and historical gaps', '',
     '| Target time / RSS | Time ratio | Excess seconds | Excess RSS B |',
     '|---|---:|---:|---:|']
 for gap in f['target_gaps']:

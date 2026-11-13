@@ -48,6 +48,6 @@ for n, pairs in groups.items():
                                     time_ratio=lean/t,
                                     excess_seconds=lean-t,
                                     excess_rss_bytes=rss-g*2**30)
-                              for t, g in [(1.15, 8.633), (3.0, 4.0), (0.920, 5.5)]]
+                              for t, g in [(1.0, 4.0)]]
     result['paired'][n] = item
 print(json.dumps(result, indent=2))
