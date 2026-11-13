@@ -1,0 +1,31 @@
+{
+  "status": "blocked_before_matched_baseline",
+  "updated_utc": "2026-11-13T09:48:52.792189+00:00",
+  "authoritative_quote": "under 1s and 4gb is the goal",
+  "workload": {
+    "xmss": 1400,
+    "log_inv_rate": 1
+  },
+  "acceptance": {
+    "aggregation_seconds_strict_lt": 1,
+    "peak_rss_bytes_strict_lt": 4294967296,
+    "matched_measured_passes_required": true,
+    "alternating_same_host_pairs_min": 5,
+    "warmup": 1,
+    "repeat": 3
+  },
+  "supersedes_all_prior_targets": true,
+  "historical_only": {
+    "aggregation_seconds": 370.6123,
+    "peak_rss_bytes": 15038140416,
+    "time_threshold_ratio": 370.6123,
+    "rss_threshold_ratio": 3.501339912414551,
+    "time_gap_to_boundary_seconds": 369.6123,
+    "rss_gap_to_boundary_bytes": 10743173120,
+    "matched_certification": false
+  },
+  "blocker": "lean-native embeds Lean 4.31 while repository and Init.olean use 4.35",
+  "application_changes": false,
+  "fresh_proofs_generated": 0,
+  "certification_pairs_completed": 0
+}

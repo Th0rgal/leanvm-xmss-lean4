@@ -76,8 +76,17 @@ has completed. Historical 370.612 s / warmup 374.455 s / wall 751.54 s /
 15038140416 B / wire 359217 B and ~154.93 s PCS opening are supplied historical
 observations, not measurements from this host.
 
-All target sets remain unresolved: <1.15 s/<8.633 GiB, <3 s/4 GiB, and
-<920 ms/5.5 GiB. No target is relaxed and no performance improvement is claimed.
+Authoritative contract (Thomas, relayed verbatim): "under 1s and 4gb is the goal".
+Acceptance is strictly XMSS1400 aggregation <1 second and peak RSS
+<4294967296 bytes (4 GiB), in matched measured passes. This supersedes ALL
+previous targets, including <920 ms/5.5 GiB, <3 s/4 GiB and <1.15 s/8.633 GiB.
+There are no remaining alternative performance gates and no relaxation.
+
+The supplied historical current1400 370.6123 s / 15038140416 B is 370.6123x
+the time threshold and approximately 3.50134x the memory threshold. Absolute
+gaps are 369.6123 s and 10743173120 B to the threshold boundaries; strict
+acceptance requires going below both. This is historical gap arithmetic, not
+matched certification. No performance improvement is claimed.
 
 Coordinator prerequisite: provision a credential-free compatible Lean 4.35
 lean-native frontend/compiler/runtime with the campaign's pinned P0 fixes and
@@ -107,3 +116,24 @@ The broader WHIR/RingSwitch/StackOpen/Wire strict audit also passes: 1072
 declarations, zero rejections. The 66-target gate build completed in 208.711 s;
 this is build time, not prover time. Final cgroup high/max/OOM event counts
 remain zero.
+
+
+## Authoritative gate update and feasibility recheck
+
+Rechecked native E2E build after the gate update: the same incompatible
+Init.olean header prevents baseline generation. No compatible replacement
+lean-native binary was found in the exposed workspace or /opt. The shared
+compiler was not changed. native-recheck.log preserves the failure.
+
+Further call-graph review: the reported PCS phase also includes decodePhases,
+signer-set checks and statement construction after provePcsOpenFlat. The phased
+total currently ends at t5, with wire serialization reported separately through
+t6. On resumption, document this timing boundary against Rust aggregation;
+do not mistake a PCS kernel timer for the complete aggregation gate.
+
+Even removing the entire historical ~154.93 s PCS phase would leave about
+215.6823 s from a 370.6123 s run. This arithmetic is not a measured speedup:
+PCS ownership alone cannot certify the overall <1 s gate. Other phase owners
+must resolve the remainder, while this branch still needs a matched baseline
+before any PCS candidate edit. Peak RSS must be measured across the full process,
+not inferred from PCS-end resident memory.
