@@ -26,3 +26,7 @@ final/status.json False xmss4-pair3-lean 23 running
 finalize-status.json False complete final campaign  running
 
 Next deadline 2026-11-13T16:40:45.749739+00:00
+
+UTC 2026-11-13T16:16:22.826062+00:00
+EXPLICIT ACK: Thomas requires every worker INCLUDING ME AND ALL FUTURE CHILDREN to commit AND push WIP at least every 30 minutes and BEFORE ANY VM TTL/cap/stop/destruction. No credentials on managed VM: export bundle+patch+SHA to coordinator for authenticated push. Checkpoint NOT complete until coordinator confirms remote ref AND OFF-VM benchmark artifact harvest. NO VM cleanup before confirmed harvest. Benchmark archive transport chunks MUST be <=10MiB. Authoritative gate is STRICT <1 second XMSS1400 aggregation AND peak RSS <4294967296 bytes; unmet; older targets superseded.
+Next checkpoint deadline 2026-11-13T16:41:22.826062+00:00
