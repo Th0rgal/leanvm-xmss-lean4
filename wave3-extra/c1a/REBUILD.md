@@ -166,3 +166,21 @@ Reconstructed dynamic compiler packaging is underway, separate from the clean
 bootstrap archive. Neither compiler correctness checks nor application tests
 constitute matched XMSS1400 performance acceptance. Strict goal remains
 wall time <1 second and peak RSS <4294967296 bytes; no passing measurement.
+
+## Purity and axiom audit results
+
+Existing Field AxiomAudit passed: 626 declarations, 420 theorems. Existing
+StructuralAudit passed (61 declarations). Keccak AxiomDetails compiled; listed
+Keccak/transcript proof dependencies are subsets of `{propext, Quot.sound}`.
+Combined turbo audit build completed 38 jobs in 181.875 seconds.
+
+A separate module-origin audit of production Field/Bus/Keccak/Transcript and
+all their application dependencies passed: 2961 declarations, 754 theorems,
+33 modules; zero unsafe/external declarations and only allowed transitive
+axioms. Audit source and output are preserved outside the application tree.
+
+The stricter fixture-inclusive audit failed on pre-existing generated
+`clmul64.go._unsafe_rec` from `Tests.Field.Intrinsic` (a total well-founded
+recursive fixture). Therefore no claim of zero unsafe auxiliaries across all
+Tests is made. The original fixture and application remain untouched. Static
+purity and production-module audit passes must not conceal this scope gap.
