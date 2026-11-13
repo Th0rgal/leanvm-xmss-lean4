@@ -29,6 +29,7 @@ for module, site_file in [('gkr', name + '-profile-gkr.sites.json'),
             row[1] += int(value)
     report = dict(diagnostic_only=True, size=a.size, module=module,
         caveats=['Timers are nested aggregate thread CPU, not wall time.',
+                 'Each timer excludes CPU spent by spawned child threads.',
                  'Constructor bytes include headers, exclude allocator rounding.',
                  'ByteArray bytes are potential shared-input COW payload.',
                  'Generated-C instrumentation may change native inlining.',

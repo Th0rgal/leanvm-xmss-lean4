@@ -6,6 +6,8 @@ One full proving recomputation in an external generated-C diagnostic copy comple
 
 Timers below are nested aggregate thread CPU, selectively instrumented, and are not wall time, percentages, an acceptance benchmark, or evidence of speedup. The diagnostic C object may have different inlining from the ordinary native object; Lean mutant correctness checks overlapped part of diagnostics. Constructor counts include requested object storage/header, exclude allocator rounding, and do not count every runtime allocation.
 
+Each timer measures its executing thread; a parent timer excludes CPU used by spawned child threads. Aggregation sums calls to the instrumented function across threads. Do not treat a parent row as inclusive CPU for all of its parallel work or infer balance/constraints wall-time shares from this table.
+
 | Function | Calls | Diagnostic thread CPU s |
 |---|---:|---:|
 | proveBalanceFlat | 1 | 11.235240 |

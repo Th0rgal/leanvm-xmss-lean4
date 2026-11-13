@@ -181,6 +181,7 @@ lines += ['', f'Historical total370.612s: final delta {f["lean_mean_seconds"]-37
     f'row-fold loop objects:{row_objects}.', '',
     'These are selective generated-C counters, not total runtime allocations, peak RSS or '
     'DRAM traffic. Timers are nested aggregate thread CPU, not native wall time. '
+    'Parent timers exclude CPU used by spawned child threads. '
     'Instrumentation may change inlining. The full diagnostic proof is byte-identical '
     'and independently verified; diagnostic executables are excluded from acceptance.', '',
     '## Correctness, purity and scope', '',
