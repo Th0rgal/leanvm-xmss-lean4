@@ -11,7 +11,7 @@ open Spec.KeccakGkr (packBits packSize embedBits productBits bitCount localBits 
   segments segLog stepsLog packVars slotBits layerRound)
 open Model.Field (eadd nativeKaratsuba nativeEinv)
 open Model.Bus (ProverState addScalar addScalars sampleChallenge sampleVec nativeMulBase)
-open Model.Pcs.Ntt (foldRange)
+open Model.Pcs.Ntt (foldRange foldRangeLoop)
 
 @[inline] def pushWordLE (bytes : ByteArray) (w : UInt64) : ByteArray :=
   bytes.push w.toUInt8
@@ -91,6 +91,16 @@ def decodePlanarE (p : PlanarE) : Array E :=
 @[inline] def maskedAddE (acc w : E) (poly : UInt64) (bit : UInt64) : E :=
   let mask := 0 - ((poly >>> bit) &&& 1)
   ⟨acc.c0 ^^^ (w.c0 &&& mask), acc.c1 ^^^ (w.c1 &&& mask), acc.c2 ^^^ (w.c2 &&& mask)⟩
+
+/-- Scalar limb folds for one product coefficient. Each fold carries a UInt64
+rather than constructing a field element for every planar weight read. -/
+@[noinline] def productBucketLoop (weights : PlanarE) (polys : ByteArray) (bit : UInt64)
+    (remaining idx : Nat) (a0 a1 a2 : UInt64) : E :=
+  let limb := fun words acc => foldRangeLoop
+    (fun cur pos =>
+      let mask := 0 - ((readWordLE polys pos >>> bit) &&& 1)
+      cur ^^^ (readWordLE words pos &&& mask)) remaining idx acc
+  ⟨limb weights.c0 a0, limb weights.c1 a1, limb weights.c2 a2⟩
 
 /-- Pure total carryless product (low 64 bits) via structural `Fin.foldl` (no `BEq UInt64`). -/
 def clmul64 (a b : UInt64) : UInt64 :=
@@ -422,10 +432,7 @@ def decodeMaskTape (masks : MaskTape) : Array (Array (Array UInt64)) :=
             let nextCoeffs := foldRange productBits
               (fun cf c =>
                 let bit := UInt64.ofNat c
-                let bucket := foldRange bitCount
-                  (fun acc pos =>
-                    maskedAddE acc (planarEGet weights pos) (readWordLE polys pos) bit)
-                  zero
+                let bucket := productBucketLoop weights polys bit bitCount 0 0 0 0
                 let prev := planarEGet cf c
                 planarESet cf c (eadd prev (nativeKaratsuba scale bucket)))
               inner.1

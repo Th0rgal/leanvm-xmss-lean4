@@ -44,3 +44,9 @@ First pair (not final >=5-pair certification):
 | 1400 | pending | pending | 3.484690861 | pending |
 
 Small Lean proofs independently verified. XMSS1400 running. Resource samples in baseline-resource-samples.jsonl so far show no memory-high/max/OOM events or memory pressure after scope repair. perf_event_paranoid=4 blocks perf counters. Candidate first edit: explicit structural scalar-UInt64 bucket recursion in existing product-bit loop, proved equal to current foldRange maskedAddE. NOT YET EDITED: waiting for full matched baseline before implementation changes.
+
+## Complete pre-edit baseline and candidate 1
+
+Full baseline completed: all 4/16/1400 proofs independently Rust verified. XMSS1400 timed recomputations 442.641455299, 481.114033886, 562.143011421 seconds; mean 495.299500202 seconds, GKR mean 213.445628139 seconds, bus 51.329203183 seconds, PCS 203.279574811 seconds. Peak RSS 15,736,782,848 bytes; wire 359217 bytes. Native Rust mean 3.4846908617 seconds. Strong pass-to-pass drift requires final alternating pairs; historical 370.612 seconds is not reproduced. All target gaps are retained in baseline-summary.json.
+
+Candidate 1 replaces per-position E accumulation with three scalar UInt64 Fin.foldl loops. An initially proposed explicit recursive loop was rejected by unchanged whole-repo audit for generated ._unsafe_rec; that representation was discarded before native benchmarking. Revised implementation has an all-buffer/all-length/all-offset/all-shift refinement proof checked by Lean. Whole-repo audit zero rejections, candidate strict audit passes; static purity 130 files zero violations; frozen protocol hashes unchanged. Native build and 972-case differential suite pending, as are matched timing/34-mutant/final-pair gates. Generated C scalar worker has UInt64 accumulator and no constructor/UInt64 boxing calls in its loop. This is code-generation evidence, not an E2E performance result.
