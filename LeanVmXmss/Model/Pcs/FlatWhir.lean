@@ -1,3 +1,4 @@
+import Native.Kernels.KeccakExt48
 import Model.Pcs.Whir
 import Model.Merkle.Flat
 import Model.Witness.Flat
@@ -838,6 +839,18 @@ def subtreeRootExtVec8 (encoded : Array Vec8) (width nVecs k : Nat) : Nat → Di
       Digest32.hashPairFlat (rec base) (rec (base + (1 <<< d))))
     k
 
+/-- Batch only bounded unqueried 48-word extension subtrees; all other formats
+retain the scalar oracle. No 64-word leaf kernel is used for extension leaves. -/
+def subtreeRootExtVec8Batch (encoded : @& Array Vec8) (width nVecs k base : Nat) : Digest32 :=
+  if decide (width = 48 ∧ nVecs = 6 ∧ 3 ≤ k ∧ k ≤ 10) then
+    let packed := Model.Pcs.MerkleBatch.packVec8Rows encoded 6 base (1 <<< k)
+    match Digest32.fromBytesFast
+        (Native.Kernels.KeccakExt48.subtreeRoot packed 0 (1 <<< k)) with
+    | some root => root
+    | none => subtreeRootExtVec8 encoded width nVecs k base
+  else
+    subtreeRootExtVec8 encoded width nVecs k base
+
 structure ExtPrepared where
   first : Array Vec8
   logRows : Nat
@@ -893,7 +906,7 @@ def openExtCosets (prep : @& ExtPrepared) (queries : @& Array Nat) :
         Model.Pcs.Ntt.encodeCosetVec8 table prep.first nVecs logRows logInvRate curC)
       (fun encoded loc => extractExtRow encoded width nVecs loc)
       (fun encoded loc => hashLeafExtVec8 encoded width nVecs loc)
-      (fun encoded k base => subtreeRootExtVec8 encoded width nVecs k base)
+      (fun encoded k base => subtreeRootExtVec8Batch encoded width nVecs k base)
 
 def openQueriesFlat (rowsAt : Nat → Array K) (nRows : Nat) (queries : Array Nat)
     (depth leafWords : Nat) : Option Spec.Merkle.PrunedMerklePaths := do
