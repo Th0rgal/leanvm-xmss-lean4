@@ -91,3 +91,25 @@ checks pass; the Lean fixture and native cases remain uncompiled/unrun.
 Boat tool discovery still returns no callable managed-compute tool. The newly
 available managed-compute/lean-builds skills were read; their referenced REST
 fallback resource is absent from this session. No provider keys were sought.
+
+## Verified Lean 4.35 bootstrap delivery
+
+Clean pinned compiler `29d85f7da2d963750f77d76d5323408a73386f14` and dependency
+`077775ba387f1eeb2976cb8763b4633b8d5ce313` built successfully via turbo-lean
+(352 jobs, one thread/job, max-memory 6144). The installed turbo-lean delegates
+this executable target to Lake; its process environment was recorded.
+Both the static original and smaller shared-runtime relink imported Lean 4.35
+Init.olean, ingested an exported UInt64 addition source, and evaluated 7+5=12.
+The packaged launcher independently repeated ingestion/evaluation successfully.
+
+Harvest `/var/lib/orb-node/work/c1a-bootstrap-lean435.tar.gz` (7.1 MiB), SHA-256
+`88bd563d4e1e11cfb6080842c3fc7d720bd44731a5d6e80ed68b9e7266dc7c1e`.
+It includes executable, matching-runtime launcher, reproducible bootstrap script,
+source patch, README, manifest, and command/build receipts. Requires an installed
+Lean 4.35 runtime. Source bootstrap script is compiler commit `3e3b2dc`.
+The original 248 MiB static executable is separately preserved at
+`/var/lib/orb-node/work/c1a-lean-native-435-static`.
+
+This establishes compiler/toolchain compatibility only, not C1a correctness or
+XMSS1400 acceptance. Bootstrap worktree is now detached at `3e3b2dc` and rebuilding
+lean-native + lean-native-core incrementally for reconstruction validation.
