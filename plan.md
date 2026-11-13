@@ -281,11 +281,33 @@ Le vérifieur Python doit être employé sur un corpus interopérable avec l’e
 
 Le contrôleur (`builtin/smart`) agit en **Orchestrateur pur** : zéro compilation ni preuve lourde sur le nœud coordinateur, maintien d’un *open-file ownership ledger* strict dans `campaign-state.json`, gel de `Spec/` avant chaque vague parallèle, et intégration séquentielle uniquement d’archives vérifiées (`exit 0`). Consulter systématiquement `list_managed_machines` / `get_budget` (`spent_today_usd`, `committed_usd`, `daily_cap_usd`) avant chaque vague et détruire immédiatement (`destroy_managed_machine`) toute VM terminée ou perdante dès récolte de son archive.
 
+### Incident C1a : cause de perte et préservation obligatoire (Thomas, 2026-11-13)
+
+**Cause établie : destruction de la VM portant un état compilateur non publié, sans récolte complète hors VM.** Ce n’est pas une expiration TTL démontrée ni un workspace wipe démontré. La cause initiale du classement du contrôleur en échec reste inconnue ; ne pas confondre le motif de nettoyage `owner_failed` avec un échec des tests du worker.
+
+Chronologie UTC des reçus de cycle de vie et des événements conservés :
+
+- Le C1a initial (`22e978a4-5bbd-4301-8798-1e6ab1271377`) utilisait `mm3dagt4ua`. Son état a été transféré par fork vers `mm5xvnw6ha` le 2026-11-10 à 21:00:47 ; la VM initiale a ensuite été détruite à 21:03:33 avec `destroy_reason=requested`. Cette destruction initiale n’est donc pas, à elle seule, la perte du C1a final.
+- Le C1a-r3 (`48ed01c2-772c-4195-84a1-0ac1873bec0f`) travaillait sur le fork. À 00:35:59 le 2026-11-11, Git indiquait `HEAD detached at 29d85f7` et des modifications non committées. À 00:36:16, le worker a généré par `git diff` le patch final `compiler-fix-w3-c1a.patch`, 249 433 octets, SHA-256 `c3b93b720d76d5468375f4d30247488382fec23e84983b570aa0002c81417277`. La génération de patch n’est pas un commit ni un push.
+- Le fork `mm5xvnw6ha` a été détruit à 00:44:03 avec `destroy_reason=owner_failed`, avant son expiration enregistrée à 01:00:47. Les rapports et 26 opérations partielles ont survécu hors VM, mais pas le patch complet identifié. Aucun reçu retrouvé ne démontre un commit/push ultérieur de cette implémentation ni sa récolte complète avant destruction.
+- La VM C1c distincte `mmp2t4xd94` a également été détruite avec `owner_failed` à 01:46:05, avant son expiration à 02:03:04 ; ne pas la présenter comme le fork C1a.
+- Le rapport d’intégration ultérieur confirme un patch de seulement 17 070 octets, identique à l’ancienne baseline, et une réconciliation encore à appliquer : ce patch n’est pas le C1a final perdu. Voir `wave3-extra/c1a/c1a-r3-final-report.md` et `wave3-extra/c1-avx512/final_report.md`.
+
+Sources d’enquête locales conservées sur le coordinateur : reçu de machines `.local/share/opencode/tool-output/tool_1c8bf3ab3001NSFa7htKouvDcJ`, événements C1a `.local/share/opencode/tool-output/tool_1c8c026e7001Cd91tfoJoYcmP1` (seq 2113) et `tool_1c8c24c94001kVoUvp82gllshl` (seq 2120–2132), sous la racine de mission `23bad383-5b27-4b83-9a84-d86d34223509`. Ces chemins documentent la provenance, pas des dépendances de build. Le défaut de processus est l’absence de checkpoint Git publié et d’archive complète vérifiée hors VM ; un fork, un rapport de succès ou un hash seul ne constitue pas une sauvegarde.
+
+**Instruction opérateur obligatoire, remplaçant toute restriction antérieure incompatible sur les commits/push WIP :**
+
+1. Tous les workers présents (`7fde635c-db54-4329-b9a1-c1c92cac2728`, `1e86621c-11cc-45b2-8e0b-64d81080ba66`, `e8a50818-a3ec-456b-bbb2-2f5a5e2ed12c`) et futurs doivent committer et pousser leur branche WIP au moins toutes les 30 minutes, ainsi qu’avant tout cap/TTL, arrêt, recyclage ou destruction de VM. Le contrôleur inscrit cette exigence dans chaque nouveau dispatch et exige un accusé explicite ; un reçu de message en file n’est pas un accusé du worker.
+2. Aucun secret ni credential sur une VM managée : le worker committe localement, exporte bundle Git + patch + manifeste SHA-256 sous le workspace durable et les transmet immédiatement au coordinateur, qui les récolte, vérifie et pousse avec son identité provisionnée. Le checkpoint n’est terminé qu’après confirmation du SHA sur la branche distante ; l’impossibilité de push direct n’autorise pas à sauter cette échéance.
+3. Récolter hors VM les artefacts de chaque benchmark terminé : preuves, stdout/stderr, échantillons bruts, temps/RSS/phases, vérifications, environnement et manifestes. Utiliser des archives stables de taille compatible avec le transport (au plus 20 MiB par fichier pour `harvest_managed_file`), vérifier les hashes à destination et conserver les chemins de livraison. Ne pas attendre la fin de la vague ni une performance gagnante.
+4. Le registre du contrôleur suit par worker : dernier commit/push confirmé UTC et SHA distant, prochain checkpoint au plus 30 minutes plus tard, cap VM, export/manifestes, récolte vérifiée et accusé explicite de politique. Déclencher la préparation à 20 minutes ; réserver au moins 15 minutes avant le cap pour terminer push et récolte. Si l’échéance est menacée, interrompre les nouveaux travaux et préserver le WIP avant de poursuivre.
+5. Aucune suppression/wipe volontaire avant confirmation de push et récolte. Les nettoyages automatiques peuvent néanmoins survenir avant le TTL : prolonger un bail ou forker ne remplace jamais la sauvegarde hors VM. Un test incomplet se committe comme WIP avec son statut honnête ; publier ne signifie ni intégrer ni certifier. Aucune autorisation de merge/PR n’est impliquée.
+
 ### Golden Snapshot Boat obligatoire par vague
 
 1. Assembler et préchauffer sur une VM `boat:xlarge` le cône complet sous `/var/lib/orb-node/work/caches/<wave-sha>/` (jamais `/tmp` ni `~/.cache`, que les snapshots Boat ne conservent pas) : `xmss-hub-unified`, `leanVM@59c2984` compilé avec exporteurs différentiels, `turbo-lean@29d85f7` patché P0 (`lean-native` 4.35, ABI `UInt64` 64 bits, ordre de link LLVM), fixtures et cache `.olean` + `.c.o.export` chaud.
 2. Vérifier l’absence totale de secrets, exécuter `sync`, appeler `snapshot_managed_machine(name="xmss-hub-v3-<sha>")` et attendre `status == "ready"` avant d’éventrer la vague parallèle.
-3. Récolter systématiquement les bundles `.tar.gz` + manifestes SHA-256 **avant** expiration du bail VM ou appel à `destroy_managed_machine`. Sans autorisation explicite, ne faire ni commit, ni push, ni PR/merge.
+3. Récolter systématiquement les bundles `.tar.gz` + manifestes SHA-256 **avant** expiration du bail VM ou appel à `destroy_managed_machine`, et après chaque benchmark terminé. Thomas autorise et exige les commits/push WIP toutes les 30 minutes selon la règle d’incident ci-dessus ; aucune autorisation de PR/merge n’est implicite.
 
 ### Répartition des modèles (`backend="opencode"`) et parallélisme par vagues (6 à 10 VMs Boat simultanées)
 
