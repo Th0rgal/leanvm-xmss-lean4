@@ -1,0 +1,35 @@
+{
+  "utc": "2026-11-13T12:05:10.022548+00:00",
+  "compiler_sha256": "79b805002e329a6eee167403265daa91b50467a4169c8e735d0e843eca3cc6ba",
+  "fixtures": [
+    {
+      "path": "/var/lib/orb-node/work/pcs-restored-oracle/xmss1400/bytecode.bin",
+      "size_bytes": 20041312,
+      "sha256": "929753489573a779f6d2396deb39d35f313b0d6c05aad68562e487d4bfe33216",
+      "matches_committed_manifest": true
+    },
+    {
+      "path": "/var/lib/orb-node/work/pcs-restored-oracle/xmss1400/hints.bin",
+      "size_bytes": 10594241,
+      "sha256": "c5f04bfbe4e7ba54e2a8fc794534dfb6a72d99a1b5197788351943d403714183",
+      "matches_committed_manifest": true
+    },
+    {
+      "path": "/var/lib/orb-node/work/pcs-restored-oracle/xmss1400/schedule.bin",
+      "size_bytes": 2924748,
+      "sha256": "049ab4a52c6c4bbeb219af5d48bfb7a8a579d4004b62f38927cc5d0b969cc35e",
+      "matches_committed_manifest": true
+    },
+    {
+      "path": "/var/lib/orb-node/work/pcs-restored-oracle/xmss1400/xmss-inputs.bin",
+      "size_bytes": 3455200,
+      "sha256": "6d3f0dabe5b62679a63decb43ce52ac2074005f5e109df0da7dff9a63c78abe3",
+      "matches_committed_manifest": true
+    }
+  ],
+  "baseline_status": "COMPLETE_BEFORE_PRODUCTION_EDITS",
+  "latest_candidate_status": "COMPLETE_NOT_PROMOTED_NO_E2E_GAIN",
+  "coordinator_ttl_epoch": 1794573602,
+  "previous_harvest_checkpoint": "10146f1459767db147fc35e4d8da2a7465d803b1",
+  "latest_result_checkpoint": "cbc240b96032ab7743d19270cf09b4287e50c3ae"
+}
