@@ -27,9 +27,9 @@ Le travail est une réimplémentation du prouveur, pas un appel à son implémen
 
 Les parts d’instructions sont XOR 26.7 %, SET 18.9 %, MUL 18.3 %, KECCAK 16.6 %, DEREF 12.3 %, JUMP 7.2 %. Ce ne sont PAS des parts de temps hôte : ne pas en déduire un budget Amdahl sans profilage.
 
-**Contrat principal :** prouveur Lean complet accepté par le vérifieur Rust de référence non modifié ; temps moyen et RSS strictement inférieurs à 1.15 s et 8.633 GiB, et supériorité reproductible face au Rust relancé sur la même machine. Taille de preuve et temps de vérification sont des garde-fous sans régression significative, pas des gains à fabriquer en modifiant le protocole. Avec format et paramètres fixes, une taille identique est normale ; accélérer le prouveur n’accélère pas automatiquement un vérifieur inchangé. Rapporter séparément toute demande de domination stricte des quatre mesures : elle n’est ni présumée possible ni implicitement satisfaite.
+**Contrat principal :** prouveur Lean complet accepté par le vérifieur Rust de référence non modifié ; temps moyen d’agrégation XMSS1400 strictement inférieur à 1 s et pic RSS strictement inférieur à 4 GiB (4 294 967 296 octets), sur passes mesurées appariées, et supériorité reproductible face au Rust relancé sur la même machine. Taille de preuve et temps de vérification sont des garde-fous sans régression significative, pas des gains à fabriquer en modifiant le protocole. Avec format et paramètres fixes, une taille identique est normale ; accélérer le prouveur n’accélère pas automatiquement un vérifieur inchangé. Rapporter séparément toute demande de domination stricte des quatre mesures : elle n’est ni présumée possible ni implicitement satisfaite.
 
-Objectifs de marge, non promesses : <= 1.0 s et <= 8.0 GiB, puis poursuite sur le front de Pareto. Ne jamais annoncer ces objectifs comme atteints sans artefacts et mesures.
+Autorité Thomas, 2026-11-13, verbatim : "under 1s and 4gb is the goal". Le gate contraignant est strictement < 1 s et < 4 GiB, avec warmup exclu, hints/exécution/witness recalculés dans chaque appel mesuré et passes Rust/Lean appariées sur la même machine isolée. Il remplace les variantes < 3 s / 4 GiB, < 920 ms / 5.5 GiB et l’ancien seuil < 1.15 s / 8.633 GiB ; les références historiques ci-dessus ne sont pas des critères d’acceptation. Aucun assouplissement implicite. Dernière mesure XMSS1400 : 370.612324613 s, 15 038 140 416 octets RSS, soit 370.6123× le seuil temps et 3.50134× le seuil mémoire ; ce run à une seule passe ne constitue pas une certification appariée. Gate ouvert.
 
 ## 2. Périmètre exact et invariants
 
@@ -341,7 +341,7 @@ Chaque tâche reçoit entrées, sorties, fichiers exclusivement possédés, thé
 - Tableaux `UInt64` planaires SoA (`Flat/`), slices/arènes/bitplanes sans boxage par élément chaud, remplissage direct de `w.q`, gestion du padding, états `E` tardifs, codewords reconstruits (`Keep::BeforeDeep`).
 - Preuves S3 -> S2 et gates natifs différentiels ; bilan des allocations et du RSS par phase avant/après sur `boat:xlarge`.
 
-**Sortie :** pipeline Lean natif complet `verify() == OK` sur `--xmss 1400 --log-inv-rate 1`, sans OOM, RSS borné (< 8.633 GiB) et profil de temps natif par phase mesuré.
+**Sortie :** pipeline Lean natif complet `verify() == OK` sur `--xmss 1400 --log-inv-rate 1`, sans OOM, RSS borné (< 4 GiB) et profil de temps natif par phase mesuré.
 
 ### P4 — SIMD et compilation guidée par le corpus
 
@@ -388,7 +388,7 @@ Les journaux/artefacts futurs sont à créer au besoin dans l’espace durable d
 ## 14. Instruction `/goal` alignée au contrôleur
 
 ```text
-/goal Agis en Orchestrateur Maxwell/Hindsight pur (`builtin/smart`) pour livrer le prouveur Lean 4 natif complet XMSS 1400 (`leanVM@59c2984`, `turbo-lean@29d85f7`, zéro FFI crypto Rust/C), accepté par le vérifieur Rust inchangé et reproductiblement plus rapide avec moins de RSS que `1.15 s` / `8.633 GiB` ET que Rust relancé en passes alternées sur la même VM `boat:xlarge`.
+/goal Agis en Orchestrateur Maxwell/Hindsight pur (`builtin/smart`) pour livrer le prouveur Lean 4 natif complet XMSS 1400 (`leanVM@59c2984`, `turbo-lean@29d85f7`, zéro FFI crypto Rust/C), accepté par le vérifieur Rust inchangé et reproductiblement sous `1 s` / `4 GiB` sur passes mesurées appariées, plus rapide et moins gourmand en RSS que Rust relancé en passes alternées sur la même VM `boat:xlarge`.
 
 Principes Hindsight obligatoires :
 1. Zéro compilation lourde sur le coordinateur et interdiction d’exécuter `Model/` (tableaux `E` boxés) sur `xmss1400`. Repars de `xmss-hub-unified` (`Field`, `Transcript`, `Merkle`, `Vm`, `Xmss`, `Layout`, `Pcs/{Ntt,Commit}`, `Witness`, `Bus+Constraints` acquis).

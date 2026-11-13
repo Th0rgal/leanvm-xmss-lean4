@@ -10,7 +10,7 @@ Reimplement in pure/native-compiled Lean 4 (zero cryptographic Rust/C FFI) the f
 cargo leanvm aggregate --xmss 1400 --log-inv-rate 1 --repeat 3
 ```
 
-with formal `Spec` / `Model` refinement proofs (`0 sorryAx`, `0 Classical.choice` in strict kernel gates, `turbo-lean audit-spec` tight specs), acceptance of emitted `EthereumProof` wire bytes by the **unmodified Rust reference verifier**, and target Tier B performance `< 1.15 s` mean proving time and `< 8.633 GiB` peak RSS (plus beating same-host Rust in `>= 5` alternating passes on isolated `boat:xlarge`).
+with formal `Spec` / `Model` refinement proofs (`0 sorryAx`, `0 Classical.choice` in strict kernel gates, `turbo-lean audit-spec` tight specs), acceptance of emitted `EthereumProof` wire bytes by the **unmodified Rust reference verifier**, and authoritative Tier B gate (Thomas, 2026-11-13: "under 1s and 4gb is the goal") of `< 1 s` mean XMSS1400 aggregation time and `< 4 GiB` peak RSS on matched measured passes, excluding warmup (plus beating same-host Rust in `>= 5` alternating passes on isolated `boat:xlarge`).
 
 ## Repository Layout
 

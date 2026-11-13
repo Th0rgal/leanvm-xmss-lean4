@@ -1,5 +1,24 @@
 {
-  "commits_made": false,
+  "authoritative_performance_gate": {
+    "authority": "Thomas via operator, 2026-11-13",
+    "verbatim": "under 1s and 4gb is the goal",
+    "workload": "XMSS1400 aggregation, log_inv_rate=1, unchanged protocol and Rust verifier",
+    "mean_aggregation_seconds_strictly_less_than": 1,
+    "peak_rss_bytes_strictly_less_than": 4294967296,
+    "measurement": "Matched measured passes on the same isolated host; discard warmup; recompute hints, execution and witness in each timed call; at least five alternating Rust/Lean pairs",
+    "supersedes": ["<3 s / 4 GiB", "<920 ms / 5.5 GiB", "<1.15 s / 8.633 GiB"],
+    "status": "open_not_met",
+    "latest_observation": {
+      "aggregation_seconds": 370.612324613,
+      "peak_rss_bytes": 15038140416,
+      "measured_passes": 1,
+      "paired_certification": false,
+      "time_threshold_ratio": 370.612324613,
+      "rss_excess_bytes": 10743173120,
+      "rust_verify_eth": "PASS for 1400 signers; not performance certification"
+    }
+  },
+  "commits_made": true,
   "compiler_p0_blockers": [
     "Preinstalled lean-native built for Lean 4.31 vs image Lean 4.35; must rebuild from frozen turbo-lean@29d85f7",
     "BuildExe runtime archive path hardcoded to stale machine path",
@@ -43,7 +62,7 @@
     "source_mission_id": "36345237-85cd-4d69-9bfc-77d601c8fc31",
     "status": "ready"
   },
-  "integration_policy": "No commits, pushes, PRs or merges authorized. Store durable artifacts exclusively under /var/lib/orb-node/work/caches/... and verify ready snapshots before destroying VMs.",
+  "integration_policy": "Thomas/operator authorized resumed campaign commits and early/often pushes, including this contract update. Push from trusted provisioned identity only; no credentials on managed VMs. Preserve refs and verified evidence before VM destruction. No snapshots without explicit authorization.",
   "last_updated": "2026-11-10T02:45:00Z",
   "lifecycle_reconciliation": {
     "baseline_recovery_vm_mmcdd8gqsp": "destroyed confirmed2026-11-06T07:47:52Z; ledger closed0.04862USD; ready snapshot95at preserves outputs",
