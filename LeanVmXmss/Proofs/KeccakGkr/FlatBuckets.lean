@@ -15,12 +15,8 @@ theorem productBucketLoop_refines_fold (weights : PlanarE) (polys : ByteArray)
       foldRangeLoop
         (fun a pos => maskedAddE a (planarEGet weights pos) (readWordLE polys pos) bit)
         remaining idx acc := by
-  induction remaining generalizing idx acc with
-  | zero => cases acc; rfl
-  | succ rem ih =>
-    simp only [productBucketLoop, Proofs.Pcs.foldRangeLoop_succ] at *
-    exact ih (idx + 1)
-      (maskedAddE acc (planarEGet weights idx) (readWordLE polys idx) bit)
+  cases acc
+  rfl
 
 /-- Exact replacement of the pre-optimization inner product-bit loop. -/
 theorem productBucket_refines (weights : PlanarE) (polys : ByteArray) (bit : UInt64) :
