@@ -1,0 +1,72 @@
+{
+  "status": "RUNNING_NOT_CERTIFIED",
+  "updated_utc": "2026-11-13T10:10:09.680995+00:00",
+  "completed_benchmarks": [
+    {
+      "label": "p0-xmss4-rust-bench",
+      "mean_seconds": 0.11071572933333333,
+      "peak_rss_bytes": 472412160,
+      "passes_nanos": [
+        130053820,
+        99851310,
+        102242058
+      ],
+      "warmup_nanos": 89962584,
+      "proof_size": 270120,
+      "proof_bytes": 270681
+    },
+    {
+      "label": "p0-xmss4-lean-bench",
+      "mean_seconds": 4.878195301,
+      "peak_rss_bytes": 1516535808,
+      "passes_nanos": [
+        4596694365,
+        4816400271,
+        5221491267
+      ],
+      "warmup_nanos": 4580117968,
+      "proof_size": 240912,
+      "proof_bytes": 241473
+    },
+    {
+      "label": "p0-xmss16-rust-bench",
+      "mean_seconds": 0.11292168233333333,
+      "peak_rss_bytes": 453124096,
+      "passes_nanos": [
+        127869648,
+        106222628,
+        104672771
+      ],
+      "warmup_nanos": 96663610,
+      "proof_size": 255544,
+      "proof_bytes": 256105
+    },
+    {
+      "label": "p0-xmss16-lean-bench",
+      "mean_seconds": 7.620480492,
+      "peak_rss_bytes": 1680027648,
+      "passes_nanos": [
+        7172253923,
+        7194364614,
+        8494822939
+      ],
+      "warmup_nanos": 7064794702,
+      "proof_size": 279064,
+      "proof_bytes": 279625
+    },
+    {
+      "label": "p0-xmss1400-rust-bench",
+      "mean_seconds": 2.3668005103333334,
+      "peak_rss_bytes": 3953496064,
+      "passes_nanos": [
+        2848247992,
+        2118680141,
+        2133473398
+      ],
+      "warmup_nanos": 3920773236,
+      "proof_size": 358656,
+      "proof_bytes": 359217
+    }
+  ],
+  "active": "p0-xmss1400-lean-bench"
+}

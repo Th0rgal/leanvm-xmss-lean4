@@ -1,6 +1,6 @@
 # PCS opening campaign checkpoint — 2026-11-13
 
-Status: NATIVE 4.35 BOOTSTRAP PASS; UNCHANGED PROVER BUILD IN PROGRESS.
+Status: UNCHANGED NATIVE MATCHED BASELINE RUNNING (durable PID 68935).
 
 Starting revision: 299c689373ef3e98e0f150ff4bec21ca5e3aaea1.
 Anonymous HTTPS clone: /var/lib/orb-node/work/pcs-opening.
@@ -160,3 +160,12 @@ success is claimed. Coordinator can harvest the updated checkpoint immediately.
 Bootstrap and P0 canary now pass; the former 4.31/4.35 blocker is resolved.
 All omitted full1400 fixtures match their committed SHA-256s and sizes.
 Unchanged app native-object build is running with task-local rebuilt compiler.
+
+Unchanged prover linkage and native CLMUL inspection passed. Corrected paired
+baseline uses explicit Rust target-cpu=native (generic-Rust attempt excluded).
+XMSS4: Lean mean 4.878195301 s, peak RSS 1516535808 B, wire 241473 B;
+Rust mean 0.11071572933333333 s. XMSS16: Lean mean 7.620480492 s, peak RSS
+1680027648 B, wire 279625 B; Rust mean 0.11292168233333333 s. Both fresh Lean
+proofs independently verify 3x with unchanged Rust and expected signer counts.
+XMSS1400 Rust mean 2.3668005103333334 s, peak RSS 3953496064 B; full Lean
+warmup+repeat3 is active. No candidate or certification claim.

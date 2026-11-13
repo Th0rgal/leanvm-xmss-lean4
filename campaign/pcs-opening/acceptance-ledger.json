@@ -1,6 +1,6 @@
 {
-  "status": "bootstrap_pass_unchanged_prover_build_in_progress",
-  "updated_utc": "2026-11-13T10:00:10.912414+00:00",
+  "status": "unchanged_native_matched_baseline_running",
+  "updated_utc": "2026-11-13T10:10:09.681673+00:00",
   "authoritative_quote": "under 1s and 4gb is the goal",
   "workload": {
     "xmss": 1400,
@@ -38,5 +38,6 @@
     "binary_sha256": "79b805002e329a6eee167403265daa91b50467a4169c8e735d0e843eca3cc6ba",
     "p0_canary": "PASS"
   },
-  "fixtures_sha256": "all_committed_full1400_omitted_files_match"
+  "fixtures_sha256": "all_committed_full1400_omitted_files_match",
+  "baseline_pid": 68935
 }
