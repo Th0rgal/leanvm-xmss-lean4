@@ -223,3 +223,13 @@ P0 regression now calls the actual [inline] masked canonical helper family:
 262 additional arithmetic pairs and final call-free VPCLMULQDQ checks pass.
 Expanded P0 suite PASS (2 tests,20.102s). Trust suite and all real executables
 are being revalidated before an updated delivery archive is certified.
+
+Post-fix validation completed: trust boundary PASS (20 tests,36.357s), plus
+12 embedded runner tests PASS. All five refreshed real application executables
+(Field NativeMulProbe/Native, Keccak ImportedRunner/LaneRunner, ShardAHw external
+harness) built successfully with the corrected compiler. Field and imported
+multiply oracle cases passed; both Keccak runner outputs match earlier verified
+outputs; 48 production Bus/Field and 48 refreshed ShardAHw oracle cases passed.
+P0 final masked caller and extension kernels are call-free VPCLMULQDQ; its
+slice kernel retains all four required ZMM instruction families. Updated dynamic
+compiler delivery is being linked; old archive still identifies ba5b99b only.
