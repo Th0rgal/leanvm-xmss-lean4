@@ -1,0 +1,47 @@
+{
+  "utc": "2026-11-13T13:38:23.471371+00:00",
+  "coordinator_confirmed_remote_and_offvm_head": "cfa3f73822ba0203a1edd6cbb8ca271e08b243ca",
+  "coordinator_confirmed_archive_sha256": "b27cfd5d951b56c4a87e4a7b0f3fbdd9e5c52d1be04fdd2f0ba0de59e4645a1b",
+  "coordinator_confirmed_archive_bytes": 55446029,
+  "checkpoint_1308_missed": true,
+  "next_push_deadline_utc": "2026-11-13T14:05:00Z",
+  "vm_cap_utc": "2026-11-13T14:40:02Z",
+  "backup_margin_utc": "2026-11-13T14:25:00Z",
+  "acceptance": false,
+  "promoted": false,
+  "cleanup_authorized": false,
+  "review": "Read-only consistency checks; no new proof generation or certification pair",
+  "checks": [
+    {
+      "xmss": 4,
+      "wire_bytes": 241473,
+      "wire_sha256": "ca0e390d5fc7364b42ecdd40e433d4b6ae3fb3f80648ab1abc779d4a94320815",
+      "peak_rss_bytes": 1484107776,
+      "fresh_warmup_repeat3": true,
+      "rust_verify_passes": 3,
+      "parent_wire_equal": true,
+      "memory_events_unchanged": true
+    },
+    {
+      "xmss": 16,
+      "wire_bytes": 279625,
+      "wire_sha256": "bab920905b70a74d4853be3593105d6056b759c9b208005e0fbc234588338dbd",
+      "peak_rss_bytes": 1584660480,
+      "fresh_warmup_repeat3": true,
+      "rust_verify_passes": 3,
+      "parent_wire_equal": true,
+      "memory_events_unchanged": true
+    },
+    {
+      "xmss": 1400,
+      "wire_bytes": 359217,
+      "wire_sha256": "9fcdb0ac8e76b81bbbb6cd42827aca27ef918c02d1f42e93865321b0b8d638a6",
+      "peak_rss_bytes": 16594870272,
+      "fresh_warmup_repeat3": true,
+      "rust_verify_passes": 3,
+      "parent_wire_equal": true,
+      "memory_events_unchanged": true
+    }
+  ],
+  "retained_proof_count": 25
+}

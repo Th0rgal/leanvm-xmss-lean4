@@ -1,0 +1,87 @@
+{
+  "status": "RUNNING",
+  "pid": 833361,
+  "start": 1794577126.1194859,
+  "records": [
+    {
+      "label": "p0-xmss1400-rust-bench",
+      "argv": [
+        "/var/lib/orb-node/work/pcs-opening-evidence/rust-native-target/release/e2e-oracle",
+        "benchmark",
+        "/var/lib/orb-node/work/pcs-restored-oracle/xmss1400",
+        "--repeat",
+        "3",
+        "--cooldown-ms",
+        "2000",
+        "--log-inv-rate",
+        "1"
+      ],
+      "start": 1794577126.2498758,
+      "cgroup_before": {
+        "memory.max": "25769803776\n",
+        "memory.high": "23622320128\n",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+      },
+      "pid": 833363,
+      "exit_code": 0,
+      "wall_seconds": 22.13590168952942,
+      "cgroup_after": {
+        "memory.max": "25769803776\n",
+        "memory.high": "23622320128\n",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+      },
+      "passes_nanos": [
+        2004262296,
+        1977605956,
+        1873532533
+      ],
+      "warmup_nanos": 6384506141,
+      "peak_rss_bytes": 3957022720,
+      "mean_seconds": 1.9518002616666668,
+      "time_gate": false,
+      "mean_time_gate": false,
+      "min_seconds": 1.873532533,
+      "max_seconds": 2.004262296,
+      "memory_gate": true,
+      "proof_size": 358656,
+      "proof_bytes": 359217
+    },
+    {
+      "label": "p0-xmss1400-lean-bench",
+      "argv": [
+        "/var/lib/orb-node/work/pcs-opening-evidence/candidate-ext48-e2e",
+        "--xmss",
+        "1400",
+        "--inputs",
+        "/var/lib/orb-node/work/pcs-restored-oracle/xmss1400",
+        "--prover",
+        "e2e",
+        "--repeat",
+        "3",
+        "--cooldown-ms",
+        "2000",
+        "--log-inv-rate",
+        "1",
+        "--phase-timings",
+        "/var/lib/orb-node/work/pcs-opening-evidence/candidate-ext48-additional-pair/p0-xmss1400-phases.json",
+        "--out-proof",
+        "/var/lib/orb-node/work/pcs-opening-evidence/candidate-ext48-additional-pair/p0-xmss1400-lean.ethproof"
+      ],
+      "start": 1794577148.3870733,
+      "cgroup_before": {
+        "memory.max": "25769803776\n",
+        "memory.high": "23622320128\n",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+      },
+      "pid": 833722
+    }
+  ],
+  "acceptance": {
+    "seconds_strict_lt": 1,
+    "rss_bytes_strict_lt": 4294967296
+  },
+  "binaries": {
+    "/var/lib/orb-node/work/pcs-opening-evidence/candidate-ext48-e2e": "3493787c99528a879d3db27668d33f07b98e74dbb8528ca49d3b74aec2204a4f",
+    "/var/lib/orb-node/work/pcs-opening-evidence/rust-native-target/release/e2e-oracle": "a026e789520f1fcbee7214f43e7e315d582b5d5ad82c2de58b6b1ba62bdc47f1"
+  }
+}

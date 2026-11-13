@@ -425,3 +425,12 @@ commitment batching is unimplemented and requires its own gates and matrix.
 No time remains for another full candidate before coordinator-owned13:40TTL.
 Stable all-artifact chunk export and latest source bundle must be harvested
 and pushed with exact remote-ref confirmation before checkpoint is complete.
+
+## Additional ext48 pair checkpoint 2026-11-13T14:03:25.659093+00:00
+
+Exact remote+offVM preservation confirmed throughcfa3f738. Additional fresh
+full1400 Rust/Lean pair running durable PID833361, same preserved binaries,
+no source changes/build overlap. Current receipt status:RUNNING.
+This is PARTIAL and does not count as completed/certified pair until final
+receipt and fresh proof verification. Checkpoint before14:05 deadline;
+cap14:40:02UTC, backupmargin14:25. No cleanup authorization.
