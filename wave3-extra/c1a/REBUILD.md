@@ -66,3 +66,14 @@ harvest files under `/var/lib/orb-node/work`:
 No Boat provisioning, SSH, or TTL tools/connection are exposed. A new worker
 and TTL-management route remain required; no worker exists here to extend
 or clean up. The promised Worker A archive has not been delivered.
+
+## Follow-up checkpoint
+
+Compiler commit `68df8e2`
+adds prepared P0 coverage for borrowed ByteArray reads, owned writes with a
+retained original, unaligned/short/out-of-range/max offsets, and slice kernels
+whose destination aliases a retained source. Python syntax and whitespace
+checks pass; the Lean fixture and native cases remain uncompiled/unrun.
+Boat tool discovery still returns no callable managed-compute tool. The newly
+available managed-compute/lean-builds skills were read; their referenced REST
+fallback resource is absent from this session. No provider keys were sought.
