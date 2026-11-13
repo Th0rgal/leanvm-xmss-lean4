@@ -1,0 +1,4 @@
+VERIFY_ETH|inputs=/var/lib/orb-node/work/pcs-restored-oracle/xmss1400/xmss-inputs.bin|path=/var/lib/orb-node/work/pcs-opening-evidence/diag1400/proof.ethproof|wire_bytes=359217|proof_size=358656|signers=1400
+VERIFY_ETH|PASS|pass=1|ms=1331
+VERIFY_ETH|PASS|pass=2|ms=13
+VERIFY_ETH|PASS|pass=3|ms=13

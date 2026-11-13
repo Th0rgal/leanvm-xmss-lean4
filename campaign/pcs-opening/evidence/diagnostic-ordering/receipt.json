@@ -1,0 +1,28 @@
+{
+  "utc": "2026-11-13T12:33:37.798903+00:00",
+  "diagnostic_binary_sha256": "da0f677c70a00fbe1ecf851a07a7587586c3e4a33c29d6d17934b01f3a34f026",
+  "generated_c_sha256": "e1147d4c27b39b2e9449c35c2f99a1f71a95848378a78cd5fbb6251f98868d75",
+  "native_clock_addresses": [
+    "0x8b71",
+    "0x8bc0"
+  ],
+  "native_closure_evaluation_address": "0x8b81",
+  "closure_body_calls": [
+    "Commit.subtreeRootBuf",
+    "Ntt.encodeCosetVec8",
+    "FlatWhir.commitExtPlanar"
+  ],
+  "ordering_observed": true,
+  "proof_byte_equal_unchanged": true,
+  "wire_sha256": "9fcdb0ac8e76b81bbbb6cd42827aca27ef918c02d1f42e93865321b0b8d638a6",
+  "fresh_rust_verification_passes": 3,
+  "verify_argv": [
+    "/var/lib/orb-node/work/pcs-opening-evidence/rust-native-target/release/e2e-oracle",
+    "verify-eth",
+    "/var/lib/orb-node/work/pcs-restored-oracle/xmss1400/xmss-inputs.bin",
+    "/var/lib/orb-node/work/pcs-opening-evidence/diag1400/proof.ethproof",
+    "1400",
+    "1"
+  ],
+  "limits": "Machine code inspection validates inspected wrapper/closure ordering, not timer-overhead calibration or causal speedup. Tiny timings include closure/IO allocation overhead; instrumented full replay is not matched certification. Rust wrapper ignores trailing count/rate, independently checked by runner."
+}

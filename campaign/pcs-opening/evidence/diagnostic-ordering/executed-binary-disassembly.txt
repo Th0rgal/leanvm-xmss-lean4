@@ -1,0 +1,331 @@
+
+/var/lib/orb-node/work/pcs-opening-evidence/pcs-diagnostic:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+Disassembly of section .plt:
+
+Disassembly of section .plt.got:
+
+Disassembly of section .text:
+
+0000000000008b60 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg>:
+    8b60:	41 57                	push   %r15
+    8b62:	41 56                	push   %r14
+    8b64:	41 55                	push   %r13
+    8b66:	41 54                	push   %r12
+    8b68:	53                   	push   %rbx
+    8b69:	48 89 f3             	mov    %rsi,%rbx
+    8b6c:	49 89 ff             	mov    %rdi,%r15
+    8b6f:	31 c0                	xor    %eax,%eax
+    8b71:	e8 ba fa ff ff       	call   8630 <lean_io_mono_nanos_now@plt>
+    8b76:	49 89 c6             	mov    %rax,%r14
+    8b79:	be 01 00 00 00       	mov    $0x1,%esi
+    8b7e:	48 89 df             	mov    %rbx,%rdi
+    8b81:	e8 fa fb ff ff       	call   8780 <lean_apply_1@plt>
+    8b86:	48 89 c3             	mov    %rax,%rbx
+    8b89:	bf 10 00 00 00       	mov    $0x10,%edi
+    8b8e:	e8 6d fb ff ff       	call   8700 <lean_alloc_small_object_core@plt>
+    8b93:	c7 00 01 00 00 00    	movl   $0x1,(%rax)
+    8b99:	66 c7 40 06 01 00    	movw   $0x1,0x6(%rax)
+    8b9f:	48 89 58 08          	mov    %rbx,0x8(%rax)
+    8ba3:	f6 c3 01             	test   $0x1,%bl
+    8ba6:	75 0e                	jne    8bb6 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x56>
+    8ba8:	8b 0b                	mov    (%rbx),%ecx
+    8baa:	85 c9                	test   %ecx,%ecx
+    8bac:	0f 8e 39 02 00 00    	jle    8deb <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x28b>
+    8bb2:	ff c1                	inc    %ecx
+    8bb4:	89 0b                	mov    %ecx,(%rbx)
+    8bb6:	48 89 c7             	mov    %rax,%rdi
+    8bb9:	e8 c2 f4 ff ff       	call   8080 <lean_dec_ref_cold@plt>
+    8bbe:	31 c0                	xor    %eax,%eax
+    8bc0:	e8 6b fa ff ff       	call   8630 <lean_io_mono_nanos_now@plt>
+    8bc5:	49 89 c4             	mov    %rax,%r12
+    8bc8:	48 8d 3d b9 87 3c 00 	lea    0x3c87b9(%rip),%rdi        # 3d1388 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg___closed__0_value>
+    8bcf:	4c 89 fe             	mov    %r15,%rsi
+    8bd2:	e8 c9 f4 ff ff       	call   80a0 <lean_string_append@plt>
+    8bd7:	48 8d 35 da 87 3c 00 	lea    0x3c87da(%rip),%rsi        # 3d13b8 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg___closed__1_value>
+    8bde:	48 89 c7             	mov    %rax,%rdi
+    8be1:	e8 ba f4 ff ff       	call   80a0 <lean_string_append@plt>
+    8be6:	49 89 c7             	mov    %rax,%r15
+    8be9:	41 f6 c4 01          	test   $0x1,%r12b
+    8bed:	0f 84 57 01 00 00    	je     8d4a <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x1ea>
+    8bf3:	41 f6 c6 01          	test   $0x1,%r14b
+    8bf7:	0f 84 ad 01 00 00    	je     8daa <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x24a>
+    8bfd:	49 d1 ec             	shr    $1,%r12
+    8c00:	49 d1 ee             	shr    $1,%r14
+    8c03:	bf 01 00 00 00       	mov    $0x1,%edi
+    8c08:	4d 29 f4             	sub    %r14,%r12
+    8c0b:	72 08                	jb     8c15 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0xb5>
+    8c0d:	4a 8d 3c 65 01 00 00 	lea    0x1(,%r12,2),%rdi
+    8c14:	00 
+    8c15:	e8 46 fb ff ff       	call   8760 <l_Nat_reprFast@plt>
+    8c1a:	49 89 c6             	mov    %rax,%r14
+    8c1d:	4c 89 ff             	mov    %r15,%rdi
+    8c20:	48 89 c6             	mov    %rax,%rsi
+    8c23:	e8 78 f4 ff ff       	call   80a0 <lean_string_append@plt>
+    8c28:	41 8b 0e             	mov    (%r14),%ecx
+    8c2b:	83 f9 02             	cmp    $0x2,%ecx
+    8c2e:	0f 8c 2c 01 00 00    	jl     8d60 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x200>
+    8c34:	ff c9                	dec    %ecx
+    8c36:	41 89 0e             	mov    %ecx,(%r14)
+    8c39:	48 89 c7             	mov    %rax,%rdi
+    8c3c:	be 0a 00 00 00       	mov    $0xa,%esi
+    8c41:	e8 8a f9 ff ff       	call   85d0 <lean_string_push@plt>
+    8c46:	49 89 c6             	mov    %rax,%r14
+    8c49:	31 c0                	xor    %eax,%eax
+    8c4b:	e8 70 f6 ff ff       	call   82c0 <lean_get_stdout@plt>
+    8c50:	48 8b 78 28          	mov    0x28(%rax),%rdi
+    8c54:	8b 0f                	mov    (%rdi),%ecx
+    8c56:	85 c9                	test   %ecx,%ecx
+    8c58:	0f 8e 1d 01 00 00    	jle    8d7b <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x21b>
+    8c5e:	ff c1                	inc    %ecx
+    8c60:	89 0f                	mov    %ecx,(%rdi)
+    8c62:	8b 08                	mov    (%rax),%ecx
+    8c64:	83 f9 02             	cmp    $0x2,%ecx
+    8c67:	0f 8c 22 01 00 00    	jl     8d8f <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x22f>
+    8c6d:	ff c9                	dec    %ecx
+    8c6f:	89 08                	mov    %ecx,(%rax)
+    8c71:	ba 01 00 00 00       	mov    $0x1,%edx
+    8c76:	4c 89 f6             	mov    %r14,%rsi
+    8c79:	e8 02 f9 ff ff       	call   8580 <lean_apply_2@plt>
+    8c7e:	a8 01                	test   $0x1,%al
+    8c80:	75 67                	jne    8ce9 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x189>
+    8c82:	0f b6 48 07          	movzbl 0x7(%rax),%ecx
+    8c86:	85 c9                	test   %ecx,%ecx
+    8c88:	74 69                	je     8cf3 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x193>
+    8c8a:	f6 c3 01             	test   $0x1,%bl
+    8c8d:	75 0f                	jne    8c9e <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x13e>
+    8c8f:	8b 0b                	mov    (%rbx),%ecx
+    8c91:	83 f9 02             	cmp    $0x2,%ecx
+    8c94:	0f 8c 65 01 00 00    	jl     8dff <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x29f>
+    8c9a:	ff c9                	dec    %ecx
+    8c9c:	89 0b                	mov    %ecx,(%rbx)
+    8c9e:	83 38 01             	cmpl   $0x1,(%rax)
+    8ca1:	0f 84 99 00 00 00    	je     8d40 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x1e0>
+    8ca7:	48 8b 58 08          	mov    0x8(%rax),%rbx
+    8cab:	f6 c3 01             	test   $0x1,%bl
+    8cae:	75 0e                	jne    8cbe <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x15e>
+    8cb0:	8b 0b                	mov    (%rbx),%ecx
+    8cb2:	85 c9                	test   %ecx,%ecx
+    8cb4:	0f 8e 60 01 00 00    	jle    8e1a <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x2ba>
+    8cba:	ff c1                	inc    %ecx
+    8cbc:	89 0b                	mov    %ecx,(%rbx)
+    8cbe:	a8 01                	test   $0x1,%al
+    8cc0:	75 0f                	jne    8cd1 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x171>
+    8cc2:	8b 08                	mov    (%rax),%ecx
+    8cc4:	83 f9 02             	cmp    $0x2,%ecx
+    8cc7:	0f 8c 61 01 00 00    	jl     8e2e <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x2ce>
+    8ccd:	ff c9                	dec    %ecx
+    8ccf:	89 08                	mov    %ecx,(%rax)
+    8cd1:	bf 10 00 00 00       	mov    $0x10,%edi
+    8cd6:	e8 25 fa ff ff       	call   8700 <lean_alloc_small_object_core@plt>
+    8cdb:	c7 00 01 00 00 00    	movl   $0x1,(%rax)
+    8ce1:	66 c7 40 06 01 01    	movw   $0x101,0x6(%rax)
+    8ce7:	eb 53                	jmp    8d3c <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x1dc>
+    8ce9:	48 89 c1             	mov    %rax,%rcx
+    8cec:	48 d1 e9             	shr    $1,%rcx
+    8cef:	85 c9                	test   %ecx,%ecx
+    8cf1:	75 97                	jne    8c8a <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x12a>
+    8cf3:	8b 08                	mov    (%rax),%ecx
+    8cf5:	83 f9 01             	cmp    $0x1,%ecx
+    8cf8:	75 1b                	jne    8d15 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x1b5>
+    8cfa:	48 8b 78 08          	mov    0x8(%rax),%rdi
+    8cfe:	40 f6 c7 01          	test   $0x1,%dil
+    8d02:	75 38                	jne    8d3c <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x1dc>
+    8d04:	8b 0f                	mov    (%rdi),%ecx
+    8d06:	83 f9 02             	cmp    $0x2,%ecx
+    8d09:	0f 8c 34 01 00 00    	jl     8e43 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x2e3>
+    8d0f:	ff c9                	dec    %ecx
+    8d11:	89 0f                	mov    %ecx,(%rdi)
+    8d13:	eb 27                	jmp    8d3c <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x1dc>
+    8d15:	a8 01                	test   $0x1,%al
+    8d17:	75 0d                	jne    8d26 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x1c6>
+    8d19:	83 f9 02             	cmp    $0x2,%ecx
+    8d1c:	0f 8c 39 01 00 00    	jl     8e5b <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x2fb>
+    8d22:	ff c9                	dec    %ecx
+    8d24:	89 08                	mov    %ecx,(%rax)
+    8d26:	bf 10 00 00 00       	mov    $0x10,%edi
+    8d2b:	e8 d0 f9 ff ff       	call   8700 <lean_alloc_small_object_core@plt>
+    8d30:	c7 00 01 00 00 00    	movl   $0x1,(%rax)
+    8d36:	66 c7 40 06 01 00    	movw   $0x1,0x6(%rax)
+    8d3c:	48 89 58 08          	mov    %rbx,0x8(%rax)
+    8d40:	5b                   	pop    %rbx
+    8d41:	41 5c                	pop    %r12
+    8d43:	41 5d                	pop    %r13
+    8d45:	41 5e                	pop    %r14
+    8d47:	41 5f                	pop    %r15
+    8d49:	c3                   	ret
+    8d4a:	4c 89 e7             	mov    %r12,%rdi
+    8d4d:	4c 89 f6             	mov    %r14,%rsi
+    8d50:	e8 9b f8 ff ff       	call   85f0 <lean_nat_big_sub@plt>
+    8d55:	48 89 c7             	mov    %rax,%rdi
+    8d58:	41 f6 c6 01          	test   $0x1,%r14b
+    8d5c:	74 5a                	je     8db8 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x258>
+    8d5e:	eb 73                	jmp    8dd3 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x273>
+    8d60:	85 c9                	test   %ecx,%ecx
+    8d62:	0f 84 d1 fe ff ff    	je     8c39 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0xd9>
+    8d68:	4c 89 f7             	mov    %r14,%rdi
+    8d6b:	49 89 c6             	mov    %rax,%r14
+    8d6e:	e8 0d f3 ff ff       	call   8080 <lean_dec_ref_cold@plt>
+    8d73:	4c 89 f0             	mov    %r14,%rax
+    8d76:	e9 be fe ff ff       	jmp    8c39 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0xd9>
+    8d7b:	81 f9 01 00 00 90    	cmp    $0x90000001,%ecx
+    8d81:	0f 82 db fe ff ff    	jb     8c62 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x102>
+    8d87:	f0 ff 0f             	lock decl (%rdi)
+    8d8a:	e9 d3 fe ff ff       	jmp    8c62 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x102>
+    8d8f:	85 c9                	test   %ecx,%ecx
+    8d91:	0f 84 da fe ff ff    	je     8c71 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x111>
+    8d97:	49 89 ff             	mov    %rdi,%r15
+    8d9a:	48 89 c7             	mov    %rax,%rdi
+    8d9d:	e8 de f2 ff ff       	call   8080 <lean_dec_ref_cold@plt>
+    8da2:	4c 89 ff             	mov    %r15,%rdi
+    8da5:	e9 c7 fe ff ff       	jmp    8c71 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x111>
+    8daa:	4c 89 e7             	mov    %r12,%rdi
+    8dad:	4c 89 f6             	mov    %r14,%rsi
+    8db0:	e8 3b f8 ff ff       	call   85f0 <lean_nat_big_sub@plt>
+    8db5:	48 89 c7             	mov    %rax,%rdi
+    8db8:	41 8b 06             	mov    (%r14),%eax
+    8dbb:	83 f8 02             	cmp    $0x2,%eax
+    8dbe:	0f 8c ac 00 00 00    	jl     8e70 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x310>
+    8dc4:	ff c8                	dec    %eax
+    8dc6:	41 89 06             	mov    %eax,(%r14)
+    8dc9:	41 f6 c4 01          	test   $0x1,%r12b
+    8dcd:	0f 85 42 fe ff ff    	jne    8c15 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0xb5>
+    8dd3:	41 8b 04 24          	mov    (%r12),%eax
+    8dd7:	83 f8 02             	cmp    $0x2,%eax
+    8dda:	0f 8c ab 00 00 00    	jl     8e8b <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x32b>
+    8de0:	ff c8                	dec    %eax
+    8de2:	41 89 04 24          	mov    %eax,(%r12)
+    8de6:	e9 2a fe ff ff       	jmp    8c15 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0xb5>
+    8deb:	81 f9 01 00 00 90    	cmp    $0x90000001,%ecx
+    8df1:	0f 82 bf fd ff ff    	jb     8bb6 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x56>
+    8df7:	f0 ff 0b             	lock decl (%rbx)
+    8dfa:	e9 b7 fd ff ff       	jmp    8bb6 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x56>
+    8dff:	85 c9                	test   %ecx,%ecx
+    8e01:	0f 84 97 fe ff ff    	je     8c9e <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x13e>
+    8e07:	48 89 df             	mov    %rbx,%rdi
+    8e0a:	48 89 c3             	mov    %rax,%rbx
+    8e0d:	e8 6e f2 ff ff       	call   8080 <lean_dec_ref_cold@plt>
+    8e12:	48 89 d8             	mov    %rbx,%rax
+    8e15:	e9 84 fe ff ff       	jmp    8c9e <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x13e>
+    8e1a:	81 f9 01 00 00 90    	cmp    $0x90000001,%ecx
+    8e20:	0f 82 98 fe ff ff    	jb     8cbe <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x15e>
+    8e26:	f0 ff 0b             	lock decl (%rbx)
+    8e29:	e9 90 fe ff ff       	jmp    8cbe <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x15e>
+    8e2e:	85 c9                	test   %ecx,%ecx
+    8e30:	0f 84 9b fe ff ff    	je     8cd1 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x171>
+    8e36:	48 89 c7             	mov    %rax,%rdi
+    8e39:	e8 42 f2 ff ff       	call   8080 <lean_dec_ref_cold@plt>
+    8e3e:	e9 8e fe ff ff       	jmp    8cd1 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x171>
+    8e43:	85 c9                	test   %ecx,%ecx
+    8e45:	0f 84 f1 fe ff ff    	je     8d3c <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x1dc>
+    8e4b:	49 89 c6             	mov    %rax,%r14
+    8e4e:	e8 2d f2 ff ff       	call   8080 <lean_dec_ref_cold@plt>
+    8e53:	4c 89 f0             	mov    %r14,%rax
+    8e56:	e9 e1 fe ff ff       	jmp    8d3c <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x1dc>
+    8e5b:	85 c9                	test   %ecx,%ecx
+    8e5d:	0f 84 c3 fe ff ff    	je     8d26 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x1c6>
+    8e63:	48 89 c7             	mov    %rax,%rdi
+    8e66:	e8 15 f2 ff ff       	call   8080 <lean_dec_ref_cold@plt>
+    8e6b:	e9 b6 fe ff ff       	jmp    8d26 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x1c6>
+    8e70:	85 c0                	test   %eax,%eax
+    8e72:	0f 84 51 ff ff ff    	je     8dc9 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x269>
+    8e78:	49 89 fd             	mov    %rdi,%r13
+    8e7b:	4c 89 f7             	mov    %r14,%rdi
+    8e7e:	e8 fd f1 ff ff       	call   8080 <lean_dec_ref_cold@plt>
+    8e83:	4c 89 ef             	mov    %r13,%rdi
+    8e86:	e9 3e ff ff ff       	jmp    8dc9 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x269>
+    8e8b:	49 89 fe             	mov    %rdi,%r14
+    8e8e:	85 c0                	test   %eax,%eax
+    8e90:	74 08                	je     8e9a <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0x33a>
+    8e92:	4c 89 e7             	mov    %r12,%rdi
+    8e95:	e8 e6 f1 ff ff       	call   8080 <lean_dec_ref_cold@plt>
+    8e9a:	4c 89 f7             	mov    %r14,%rdi
+    8e9d:	e9 73 fd ff ff       	jmp    8c15 <l_LeanVmXmss_PcsOpeningDiagnostics_measuredIO___redArg+0xb5>
+
+Disassembly of section .fini:
+
+/var/lib/orb-node/work/pcs-opening-evidence/pcs-diagnostic:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+Disassembly of section .plt:
+
+Disassembly of section .plt.got:
+
+Disassembly of section .text:
+
+0000000000012300 <l_LeanVmXmss_PcsOpeningDiagnostics_openL0Cosets___lam__0>:
+   12300:	e9 9b 46 36 00       	jmp    3769a0 <lp_LeanVmXmss_LeanVmXmss_Model_Pcs_FlatWhir_firstCosetFromBytes>
+
+Disassembly of section .fini:
+
+/var/lib/orb-node/work/pcs-opening-evidence/pcs-diagnostic:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+Disassembly of section .plt:
+
+Disassembly of section .plt.got:
+
+Disassembly of section .text:
+
+00000000000124f0 <l_LeanVmXmss_PcsOpeningDiagnostics_openL0Cosets___lam__2>:
+   124f0:	e9 7b e4 0c 00       	jmp    e0970 <lp_LeanVmXmss_LeanVmXmss_Model_Pcs_Ntt_encodeCosetVec8>
+
+Disassembly of section .fini:
+
+/var/lib/orb-node/work/pcs-opening-evidence/pcs-diagnostic:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+Disassembly of section .plt:
+
+Disassembly of section .plt.got:
+
+Disassembly of section .text:
+
+00000000000175f0 <l_LeanVmXmss_PcsOpeningDiagnostics_openL0Cosets___lam__5>:
+   175f0:	48 89 c8             	mov    %rcx,%rax
+   175f3:	4c 89 c1             	mov    %r8,%rcx
+   175f6:	49 89 c0             	mov    %rax,%r8
+   175f9:	e9 a2 17 13 00       	jmp    148da0 <lp_LeanVmXmss_LeanVmXmss_Model_Pcs_Commit_subtreeRootBuf>
+
+Disassembly of section .fini:
+
+/var/lib/orb-node/work/pcs-opening-evidence/pcs-diagnostic:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+Disassembly of section .plt:
+
+Disassembly of section .plt.got:
+
+Disassembly of section .text:
+
+0000000000017ff0 <l_LeanVmXmss_PcsOpeningDiagnostics_openExtCosets___lam__3>:
+   17ff0:	e9 7b 89 0c 00       	jmp    e0970 <lp_LeanVmXmss_LeanVmXmss_Model_Pcs_Ntt_encodeCosetVec8>
+
+Disassembly of section .fini:
+
+/var/lib/orb-node/work/pcs-opening-evidence/pcs-diagnostic:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+Disassembly of section .plt:
+
+Disassembly of section .plt.got:
+
+Disassembly of section .text:
+
+0000000000018cc0 <l_LeanVmXmss_PcsOpeningDiagnostics_proveLevelPlanar___lam__4>:
+   18cc0:	e9 7b b2 37 00       	jmp    393f40 <lp_LeanVmXmss_LeanVmXmss_Model_Pcs_FlatWhir_commitExtPlanar>
+
+Disassembly of section .fini:

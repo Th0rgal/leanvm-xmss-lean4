@@ -350,3 +350,24 @@ passes, fewer than required five pairs: no certification. Pair means straddle
 baseline; no repeatable E2E win established, both strict gates fail.
 Previous export filenames remain frozen. New immutable milestone exports
 use pcs-opening-milestone2-* names for harvest before coordinator-owned TTL.
+
+## Diagnostic timing-boundary inspection
+
+Inspected actual executed pcs-diagnostic binary SHA256
+da0f677c70a00fbe1ecf851a07a7587586c3e4a33c29d6d17934b01f3a34f026.
+measuredIO redArg calls first clock at0x8b71, lean_apply_1 at0x8b81,
+second clock at0x8bc0. No reliance on noinline: forceResult's IO allocation
+is visible inline in native code. Generated C shows the thunk captures inputs,
+then executes fastSubRoot via lean_apply_3 when called. Native L0 Merkle lambda
+tail-jumps Commit.subtreeRootBuf; L0/extension NTT lambdas tail-jump
+Ntt.encodeCosetVec8; extension commitment lambda calls commitExtPlanar.
+Work is inside the inspected clock boundaries, not precomputed in these closures.
+Saved generated-C excerpts and actual executable disassembly with binary hashes.
+
+Existing full1400 diagnostic proof rechecked byte-equal to immutable parent,
+SHA2569fcdb0ac8e76b81bbbb6cd42827aca27ef918c02d1f42e93865321b0b8d638a6;
+unchanged native Rust reverified3x PASS. This is another verification of the
+existing diagnostic proof, not another fresh proving/certification pass.
+No timer-overhead calibration claimed; tiny intervals include IO/closure
+allocation overhead. Diagnostic attribution remains instrumented evidence,
+not matched E2E speedup. Parent timed baseline and production code unchanged.
