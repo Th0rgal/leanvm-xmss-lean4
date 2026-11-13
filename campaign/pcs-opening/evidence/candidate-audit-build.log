@@ -1,0 +1,1084 @@
+⚠ [46/51] Replayed Native.Kernels.Ntt
+warning: Native/Kernels/Ntt.lean:350:6: Variable name `logD` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _logD
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [47/51] Replayed Native.Kernels.Keccak8x
+warning: Native/Kernels/Keccak8x.lean:770:8: Variable name `logD` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _logD
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+ℹ [50/93] Built Tests.Hub.PcsCampaignAudit (6.7s)
+info: Tests/Hub/PcsCampaignAudit.lean:17:0: WHIR_STRICT_AUDIT_COUNT 598
+info: Tests/Hub/PcsCampaignAudit.lean:17:0: WHIR_STRICT_AUDIT_REJECTIONS 0
+⚠ [51/93] Replayed Proofs.Field.Basic
+warning: Proofs/Field/Basic.lean:63:10: This simp argument is unused:
+  Bool.xor_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Bool.xor_left_comm, Bool.xor_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [53/93] Replayed Proofs.Field.Reduction
+warning: Proofs/Field/Reduction.lean:14:49: This simp argument is unused:
+  Bool.xor_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Nat.testBit_xor, Bool.xor_comm, Bool.xor_left_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/Reduction.lean:37:29: This simp argument is unused:
+  hb
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [BitVec.getLsbD_of_ge, Nat.testBit_two_pow]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/Reduction.lean:37:55: This simp argument is unused:
+  Nat.testBit_two_pow
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [hb, BitVec.getLsbD_of_ge]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/Reduction.lean:38:32: This simp argument is unused:
+  hb
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [h, Nat.testBit_two_pow, Ne.symm h]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/Reduction.lean:38:36: This simp argument is unused:
+  Nat.testBit_two_pow
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [h, hb, Ne.symm h]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [54/93] Replayed Proofs.Field.Squares
+warning: Proofs/Field/Squares.lean:71:8: This simp argument is unused:
+  Bool.xor_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Bool.xor_comm, Bool.xor_left_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/Squares.lean:71:24: This simp argument is unused:
+  Bool.xor_comm
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Bool.xor_assoc, Bool.xor_left_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [56/93] Replayed Proofs.Field.Quotient
+warning: Proofs/Field/Quotient.lean:31:25: This simp argument is unused:
+  Bool.xor_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Nat.testBit_xor, Bool.xor_comm, Bool.xor_left_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/Quotient.lean:31:41: This simp argument is unused:
+  Bool.xor_comm
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Nat.testBit_xor, Bool.xor_assoc, Bool.xor_left_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/Quotient.lean:45:45: This simp argument is unused:
+  Bool.xor_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [polynomialMultiple, Nat.testBit_xor, Bool.xor_comm, Bool.xor_left_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/Quotient.lean:96:10: This simp argument is unused:
+  Bool.xor_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Bool.xor_comm, Bool.xor_left_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/Quotient.lean:96:26: This simp argument is unused:
+  Bool.xor_comm
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Bool.xor_assoc, Bool.xor_left_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/Quotient.lean:96:41: This simp argument is unused:
+  Bool.xor_left_comm
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Bool.xor_assoc, Bool.xor_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [57/93] Replayed Proofs.Field.Extension
+warning: Proofs/Field/Extension.lean:34:25: This simp argument is unused:
+  Bool.xor_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Bool.xor_comm, Bool.xor_left_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/Extension.lean:34:56: This simp argument is unused:
+  Bool.xor_left_comm
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Bool.xor_assoc, Bool.xor_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [58/93] Replayed Proofs.Field.Operations
+warning: Proofs/Field/Operations.lean:63:35: This simp argument is unused:
+  Spec.Field.decodeBytesK?
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Model.Field.decodeBytesK?, h]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/Operations.lean:67:35: This simp argument is unused:
+  Spec.Field.decodeBytesE?
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Model.Field.decodeBytesE?, h]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/Operations.lean:113:10: This simp argument is unused:
+  Bool.xor_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Bool.xor_comm, Bool.xor_left_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/Operations.lean:113:41: This simp argument is unused:
+  Bool.xor_left_comm
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Bool.xor_assoc, Bool.xor_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/Operations.lean:122:10: This simp argument is unused:
+  Bool.xor_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Bool.xor_comm, Bool.xor_left_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/Operations.lean:122:26: This simp argument is unused:
+  Bool.xor_comm
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Bool.xor_assoc, Bool.xor_left_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/Operations.lean:150:4: This simp argument is unused:
+  ByteArray.append
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Spec.Field.readLimb, Spec.Field.encodeBytesE, Spec.Field.encodeBytesK, List.range_succ,
+    Nat.shiftRight_eq_div_pow, Nat.shiftLeft_eq, byte_reconstruct, UInt64.toNat_lt_size]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [61/93] Replayed Proofs.Field.Frobenius
+warning: Proofs/Field/Frobenius.lean:13:37: This simp argument is unused:
+  kxor_comm
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [kxor_assoc, kxor_left_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/Frobenius.lean:58:25: This simp argument is unused:
+  kxor_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [kxor_comm, kxor_left_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [62/93] Replayed Proofs.Field.Inverse
+warning: Proofs/Field/Inverse.lean:56:27: This simp argument is unused:
+  recoverSteps_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [square_zero]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [66/93] Replayed Proofs.Field.NativeHighShift
+warning: Proofs/Field/NativeHighShift.lean:30:26: This simp argument is unused:
+  hd
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [hle, h128, decide_true, decide_false, Bool.not_false, Bool.true_and, heq,
+    BitVec.getLsbD_ushiftRight]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [67/93] Replayed Proofs.Field.NativeKernel
+warning: Proofs/Field/NativeKernel.lean:48:4: This simp argument is unused:
+  BitVec.toNat_ofNat
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [nativeClmulLo, nativeClmulByte, clmul, clmulSteps.succ, clmulSteps.zero, UInt64.toBitVec_xor,
+    nativeSelect_toBitVec, UInt64.toBitVec_shiftLeft, UInt64.toBitVec_shiftRight, UInt64.toBitVec_ofNat,
+    UInt64.toNat_ofNat, BitVec.getLsbD_ushiftRight, BitVec.setWidth_xor, BitVec.shiftLeft_xor_distrib,
+    BitVec.setWidth_shiftLeft_of_le (by decide : 64 ≤ 128),
+    BitVec.setWidth_setWidth_of_le a.toBitVec (by decide : 64 ≤ 128), resize, shift, ← BitVec.shiftLeft_add]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:48:24: This simp argument is unused:
+  BitVec.getLsbD_ushiftRight
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [nativeClmulLo, nativeClmulByte, clmul, clmulSteps.succ, clmulSteps.zero, UInt64.toBitVec_xor,
+    nativeSelect_toBitVec, UInt64.toBitVec_shiftLeft, UInt64.toBitVec_shiftRight, UInt64.toBitVec_ofNat,
+    UInt64.toNat_ofNat, BitVec.toNat_ofNat, BitVec.setWidth_xor, BitVec.shiftLeft_xor_distrib,
+    BitVec.setWidth_shiftLeft_of_le (by decide : 64 ≤ 128),
+    BitVec.setWidth_setWidth_of_le a.toBitVec (by decide : 64 ≤ 128), resize, shift, ← BitVec.shiftLeft_add]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:49:25: This simp argument is unused:
+  BitVec.shiftLeft_xor_distrib
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [nativeClmulLo, nativeClmulByte, clmul, clmulSteps.succ, clmulSteps.zero, UInt64.toBitVec_xor,
+    nativeSelect_toBitVec, UInt64.toBitVec_shiftLeft, UInt64.toBitVec_shiftRight, UInt64.toBitVec_ofNat,
+    UInt64.toNat_ofNat, BitVec.toNat_ofNat, BitVec.getLsbD_ushiftRight, BitVec.setWidth_xor,
+    BitVec.setWidth_shiftLeft_of_le (by decide : 64 ≤ 128),
+    BitVec.setWidth_setWidth_of_le a.toBitVec (by decide : 64 ≤ 128), resize, shift, ← BitVec.shiftLeft_add]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:52:13: This simp argument is unused:
+  shift
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [nativeClmulLo, nativeClmulByte, clmul, clmulSteps.succ, clmulSteps.zero, UInt64.toBitVec_xor,
+    nativeSelect_toBitVec, UInt64.toBitVec_shiftLeft, UInt64.toBitVec_shiftRight, UInt64.toBitVec_ofNat,
+    UInt64.toNat_ofNat, BitVec.toNat_ofNat, BitVec.getLsbD_ushiftRight, BitVec.setWidth_xor,
+    BitVec.shiftLeft_xor_distrib, BitVec.setWidth_shiftLeft_of_le (by decide : 64 ≤ 128),
+    BitVec.setWidth_setWidth_of_le a.toBitVec (by decide : 64 ≤ 128), resize, ← BitVec.shiftLeft_add]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:52:20: This simp argument is unused:
+  ← BitVec.shiftLeft_add
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [nativeClmulLo, nativeClmulByte, clmul, clmulSteps.succ, clmulSteps.zero, UInt64.toBitVec_xor,
+    nativeSelect_toBitVec, UInt64.toBitVec_shiftLeft, UInt64.toBitVec_shiftRight, UInt64.toBitVec_ofNat,
+    UInt64.toNat_ofNat, BitVec.toNat_ofNat, BitVec.getLsbD_ushiftRight, BitVec.setWidth_xor,
+    BitVec.shiftLeft_xor_distrib, BitVec.setWidth_shiftLeft_of_le (by decide : 64 ≤ 128),
+    BitVec.setWidth_setWidth_of_le a.toBitVec (by decide : 64 ≤ 128), resize, shift]
+
+Note: Simp arguments with `←` have the additional effect of removing the other direction from the simp set, even if the simp argument itself is unused. If the hint above does not work, try replacing `←` with `-` to only get that effect and silence this warning.
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:53:13: This simp argument is unused:
+  Nat.reduceMod
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Nat.reduceAdd, BitVec.reduceUMod, BitVec.toNat_ofNat, UInt64.reduceToNat, Nat.zero_add,
+    Nat.add_zero, BitVec.shiftLeft_zero, BitVec.zero_xor, BitVec.setWidth_zero, BitVec.setWidth_eq]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:53:28: This simp argument is unused:
+  Nat.reduceAdd
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Nat.reduceMod, BitVec.reduceUMod, BitVec.toNat_ofNat, UInt64.reduceToNat, Nat.zero_add,
+    Nat.add_zero, BitVec.shiftLeft_zero, BitVec.zero_xor, BitVec.setWidth_zero, BitVec.setWidth_eq]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:53:43: This simp argument is unused:
+  BitVec.reduceUMod
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Nat.reduceMod, Nat.reduceAdd, BitVec.toNat_ofNat, UInt64.reduceToNat, Nat.zero_add, Nat.add_zero,
+    BitVec.shiftLeft_zero, BitVec.zero_xor, BitVec.setWidth_zero, BitVec.setWidth_eq]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:53:62: This simp argument is unused:
+  BitVec.toNat_ofNat
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Nat.reduceMod, Nat.reduceAdd, BitVec.reduceUMod, UInt64.reduceToNat, Nat.zero_add, Nat.add_zero,
+    BitVec.shiftLeft_zero, BitVec.zero_xor, BitVec.setWidth_zero, BitVec.setWidth_eq]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:54:4: This simp argument is unused:
+  UInt64.reduceToNat
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Nat.reduceMod, Nat.reduceAdd, BitVec.reduceUMod, BitVec.toNat_ofNat, Nat.zero_add, Nat.add_zero,
+    BitVec.shiftLeft_zero, BitVec.zero_xor, BitVec.setWidth_zero, BitVec.setWidth_eq]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:54:24: This simp argument is unused:
+  Nat.zero_add
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Nat.reduceMod, Nat.reduceAdd, BitVec.reduceUMod, BitVec.toNat_ofNat, UInt64.reduceToNat,
+    Nat.add_zero, BitVec.shiftLeft_zero, BitVec.zero_xor, BitVec.setWidth_zero, BitVec.setWidth_eq]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:54:38: This simp argument is unused:
+  Nat.add_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Nat.reduceMod, Nat.reduceAdd, BitVec.reduceUMod, BitVec.toNat_ofNat, UInt64.reduceToNat,
+    Nat.zero_add, BitVec.shiftLeft_zero, BitVec.zero_xor, BitVec.setWidth_zero, BitVec.setWidth_eq]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:55:4: This simp argument is unused:
+  BitVec.zero_xor
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Nat.reduceMod, Nat.reduceAdd, BitVec.reduceUMod, BitVec.toNat_ofNat, UInt64.reduceToNat,
+    Nat.zero_add, Nat.add_zero, BitVec.shiftLeft_zero, BitVec.setWidth_zero, BitVec.setWidth_eq]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:55:21: This simp argument is unused:
+  BitVec.setWidth_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Nat.reduceMod, Nat.reduceAdd, BitVec.reduceUMod, BitVec.toNat_ofNat, UInt64.reduceToNat,
+    Nat.zero_add, Nat.add_zero, BitVec.shiftLeft_zero, BitVec.zero_xor, BitVec.setWidth_eq]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:56:43: This simp argument is unused:
+  BitVec.reduceUMod
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Nat.reducePow, Nat.reduceMod, BitVec.toNat_ofNat]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:56:62: This simp argument is unused:
+  BitVec.toNat_ofNat
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Nat.reducePow, Nat.reduceMod, BitVec.reduceUMod]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:57:13: This simp argument is unused:
+  BitVec.getLsbD_ushiftRight
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [BitVec.shiftLeft_xor_distrib, shift, shiftCond, BitVec.shiftLeft_eq', ← BitVec.shiftLeft_add,
+    BitVec.zero_xor, BitVec.shiftLeft_zero, Nat.reducePow, Nat.reduceMod, Nat.reduceAdd, BitVec.toNat_ofNat,
+    BitVec.xor_assoc]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:58:11: This simp argument is unused:
+  shiftCond
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [BitVec.getLsbD_ushiftRight, BitVec.shiftLeft_xor_distrib, shift, BitVec.shiftLeft_eq',
+    ← BitVec.shiftLeft_add, BitVec.zero_xor, BitVec.shiftLeft_zero, Nat.reducePow, Nat.reduceMod, Nat.reduceAdd,
+    BitVec.toNat_ofNat, BitVec.xor_assoc]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:59:28: This simp argument is unused:
+  BitVec.zero_xor
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [BitVec.getLsbD_ushiftRight, BitVec.shiftLeft_xor_distrib, shift, shiftCond, BitVec.shiftLeft_eq',
+    ← BitVec.shiftLeft_add, BitVec.shiftLeft_zero, Nat.reducePow, Nat.reduceMod, Nat.reduceAdd, BitVec.toNat_ofNat,
+    BitVec.xor_assoc]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:59:45: This simp argument is unused:
+  BitVec.shiftLeft_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [BitVec.getLsbD_ushiftRight, BitVec.shiftLeft_xor_distrib, shift, shiftCond, BitVec.shiftLeft_eq',
+    ← BitVec.shiftLeft_add, BitVec.zero_xor, Nat.reducePow, Nat.reduceMod, Nat.reduceAdd, BitVec.toNat_ofNat,
+    BitVec.xor_assoc]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:60:4: This simp argument is unused:
+  Nat.reducePow
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [BitVec.getLsbD_ushiftRight, BitVec.shiftLeft_xor_distrib, shift, shiftCond, BitVec.shiftLeft_eq',
+    ← BitVec.shiftLeft_add, BitVec.zero_xor, BitVec.shiftLeft_zero, Nat.reduceMod, Nat.reduceAdd, BitVec.toNat_ofNat,
+    BitVec.xor_assoc]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:60:19: This simp argument is unused:
+  Nat.reduceMod
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [BitVec.getLsbD_ushiftRight, BitVec.shiftLeft_xor_distrib, shift, shiftCond, BitVec.shiftLeft_eq',
+    ← BitVec.shiftLeft_add, BitVec.zero_xor, BitVec.shiftLeft_zero, Nat.reducePow, Nat.reduceAdd, BitVec.toNat_ofNat,
+    BitVec.xor_assoc]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:60:34: This simp argument is unused:
+  Nat.reduceAdd
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [BitVec.getLsbD_ushiftRight, BitVec.shiftLeft_xor_distrib, shift, shiftCond, BitVec.shiftLeft_eq',
+    ← BitVec.shiftLeft_add, BitVec.zero_xor, BitVec.shiftLeft_zero, Nat.reducePow, Nat.reduceMod, BitVec.toNat_ofNat,
+    BitVec.xor_assoc]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:60:49: This simp argument is unused:
+  BitVec.toNat_ofNat
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [BitVec.getLsbD_ushiftRight, BitVec.shiftLeft_xor_distrib, shift, shiftCond, BitVec.shiftLeft_eq',
+    ← BitVec.shiftLeft_add, BitVec.zero_xor, BitVec.shiftLeft_zero, Nat.reducePow, Nat.reduceMod, Nat.reduceAdd,
+    BitVec.xor_assoc]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:63:41: This simp argument is unused:
+  BitVec.shiftLeft_xor_distrib
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [BitVec.getLsbD_ushiftRight, shift, ← BitVec.shiftLeft_add, BitVec.xor_assoc, BitVec.zero_xor]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:64:4: This simp argument is unused:
+  shift
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [BitVec.getLsbD_ushiftRight, BitVec.shiftLeft_xor_distrib, ← BitVec.shiftLeft_add, BitVec.xor_assoc,
+    BitVec.zero_xor]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:64:11: This simp argument is unused:
+  ← BitVec.shiftLeft_add
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [BitVec.getLsbD_ushiftRight, BitVec.shiftLeft_xor_distrib, shift, BitVec.xor_assoc, BitVec.zero_xor]
+
+Note: Simp arguments with `←` have the additional effect of removing the other direction from the simp set, even if the simp argument itself is unused. If the hint above does not work, try replacing `←` with `-` to only get that effect and silence this warning.
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:64:35: This simp argument is unused:
+  BitVec.xor_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [BitVec.getLsbD_ushiftRight, BitVec.shiftLeft_xor_distrib, shift, ← BitVec.shiftLeft_add,
+    BitVec.zero_xor]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:83:27: This simp argument is unused:
+  UInt64.toBitVec_shiftLeft
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [nativeClmulHi, clmul, clmulSteps.succ, clmulSteps.zero, UInt64.toBitVec_xor, nativeSelect_toBitVec,
+    UInt64.toBitVec_shiftRight, UInt64.toBitVec_ofNat, UInt64.toNat_ofNat, BitVec.ushiftRight_xor_distrib,
+    BitVec.setWidth_xor, right]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:87:43: This simp argument is unused:
+  BitVec.reduceUMod
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Nat.reducePow, Nat.reduceMod, BitVec.toNat_ofNat, UInt64.reduceToNat, BitVec.shiftLeft_eq',
+    BitVec.ushiftRight_eq']
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:87:62: This simp argument is unused:
+  BitVec.toNat_ofNat
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Nat.reducePow, Nat.reduceMod, BitVec.reduceUMod, UInt64.reduceToNat, BitVec.shiftLeft_eq',
+    BitVec.ushiftRight_eq']
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:88:4: This simp argument is unused:
+  UInt64.reduceToNat
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Nat.reducePow, Nat.reduceMod, BitVec.reduceUMod, BitVec.toNat_ofNat, BitVec.shiftLeft_eq',
+    BitVec.ushiftRight_eq']
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:88:24: This simp argument is unused:
+  BitVec.shiftLeft_eq'
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Nat.reducePow, Nat.reduceMod, BitVec.reduceUMod, BitVec.toNat_ofNat, UInt64.reduceToNat,
+    BitVec.ushiftRight_eq']
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:91:13: This simp argument is unused:
+  z
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [BitVec.zero_xor, BitVec.ushiftRight_eq']
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Field/NativeKernel.lean:91:33: This simp argument is unused:
+  BitVec.ushiftRight_eq'
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [z, BitVec.zero_xor]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [71/93] Replayed Proofs.Vm.Kernel
+warning: Proofs/Vm/Kernel.lean:52:8: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Proofs/Vm/Kernel.lean:52:35: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Proofs/Vm/Kernel.lean:54:8: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Proofs/Vm/Kernel.lean:54:20: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+⚠ [72/93] Replayed Proofs.Vm.GPow
+warning: Proofs/Vm/GPow.lean:85:4: `simp` already closes the goal
+
+Hint: Use `simp` instead of `simpa`:
+  [apply] simp [BitVec.xor_assoc]
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: Proofs/Vm/GPow.lean:56:10: This simp argument is unused:
+  BitVec.toNat_setWidth
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [BitVec.toNat_shiftLeft, Nat.shiftLeft_eq, Nat.mod_eq_of_lt hx]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/GPow.lean:56:75: This simp argument is unused:
+  Nat.mod_eq_of_lt hx
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [BitVec.toNat_setWidth, BitVec.toNat_shiftLeft, Nat.shiftLeft_eq]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+ℹ [79/93] Replayed Tests.Pcs.WhirAxiomAudit
+info: Tests/Pcs/WhirAxiomAudit.lean:17:0: WHIR_STRICT_AUDIT_COUNT 1072
+info: Tests/Pcs/WhirAxiomAudit.lean:17:0: WHIR_STRICT_AUDIT_REJECTIONS 0
+✔ [89/94] Built Model.Keccak.Scalar (266ms)
+✔ [91/96] Built Model.Merkle.Scalar (284ms)
+✔ [93/96] Built Model.Transcript.Scalar (296ms)
+✔ [94/97] Built Model.Vm.KeccakInternal (259ms)
+✔ [95/98] Built Model.Vm.PowerTable (269ms)
+✔ [96/99] Built Proofs.Bus.Refinement (11s)
+✔ [97/100] Built Proofs.Keccak.Refinement (297ms)
+✔ [98/101] Built Proofs.KeccakGkr.Refinement (2.0s)
+✔ [99/102] Built Proofs.Merkle.Contracts (1.0s)
+✔ [100/103] Built Proofs.Merkle.Refinement (248ms)
+⚠ [101/104] Built Proofs.Pcs.CommitMerkle (2.1s)
+warning: Proofs/Pcs/CommitMerkle.lean:494:68: This simp argument is unused:
+  ByteArray.size
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [ByteArray.extract, ByteArray.copySlice, hemp, Array.extract_empty, Array.empty_append,
+    Array.append_empty, array_extract_toList]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Pcs/CommitMerkle.lean:659:31: This simp argument is unused:
+  Nat.add_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Nat.mul_zero] at hw0
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Pcs/CommitMerkle.lean:712:28: This simp argument is unused:
+  Nat.mul_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [subtreeRoot_zero, Nat.add_zero]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Pcs/CommitMerkle.lean:813:39: This simp argument is unused:
+  ↓reduceDIte
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [hlt_parent, ↓reduceIte, Option.map_some, Option.getD_some]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Pcs/CommitMerkle.lean:989:15: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:989:43: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:990:6: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:994:15: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:994:43: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:995:6: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:999:15: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:999:43: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:1000:6: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:1004:15: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:1004:43: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:1005:6: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:1009:15: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:1009:43: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:1010:6: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:1014:15: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:1014:43: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:1015:6: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:1019:15: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:1019:45: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:1020:6: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:1023:15: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:1023:45: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:1024:6: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:1027:15: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:1027:48: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:1028:6: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:1063:27: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Proofs/Pcs/CommitMerkle.lean:1065:8: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+⚠ [102/105] Built Proofs.Pcs.CosetNtt (2.5s)
+warning: Proofs/Pcs/CosetNtt.lean:23:22: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Proofs/Pcs/CosetNtt.lean:47:37: This simp argument is unused:
+  Array.getElem?_setIfInBounds
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Array.getD_eq_getD_getElem?, hi]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Pcs/CosetNtt.lean:51:37: This simp argument is unused:
+  Array.getElem?_setIfInBounds
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Array.getD_eq_getD_getElem?, hne]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Pcs/CosetNtt.lean:251:31: This simp argument is unused:
+  Array.toList_push
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Array.toList_append, List.append_assoc]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Pcs/CosetNtt.lean:251:50: This simp argument is unused:
+  List.append_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Array.toList_append, Array.toList_push]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Pcs/CosetNtt.lean:395:41: This simp argument is unused:
+  Array.getElem?_append
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Array.getD_eq_getD_getElem?, hoff]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Pcs/CosetNtt.lean:705:10: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Proofs/Pcs/CosetNtt.lean:716:10: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Proofs/Pcs/CosetNtt.lean:1080:10: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+warning: Proofs/Pcs/CosetNtt.lean:1091:10: `if_neg` has been deprecated: Use `ite_eq_right` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵n̵e̵g̵i̲t̲e̲_̲e̲q̲_̲r̲i̲g̲h̲t̲
+warning: Proofs/Pcs/CosetNtt.lean:1355:31: This simp argument is unused:
+  Array.toList_push
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Array.toList_append, List.append_assoc]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Pcs/CosetNtt.lean:1355:50: This simp argument is unused:
+  List.append_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Array.toList_append, Array.toList_push]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+✔ [103/106] Built Proofs.Transcript.Refinement (297ms)
+⚠ [104/106] Built Proofs.Transcript.Replay (1.3s)
+warning: Proofs/Transcript/Replay.lean:832:14: Variable name `p5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _p5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [105/109] Built Proofs.Vm.Basic (535ms)
+warning: Proofs/Vm/Basic.lean:17:103: This simp argument is unused:
+  opcode
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Model.Vm.step, Model.Vm.setStep, Spec.Vm.step, Spec.Vm.stepWithPowers, Spec.Vm.stepBody, hp, bind,
+    Except.bind, pure, Except.pure]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:18:33: This simp argument is unused:
+  pure
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Model.Vm.step, Model.Vm.setStep, Spec.Vm.step, Spec.Vm.stepWithPowers, Spec.Vm.stepBody, opcode, hp,
+    bind, Except.bind, Except.pure]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:18:39: This simp argument is unused:
+  Except.pure
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Model.Vm.step, Model.Vm.setStep, Spec.Vm.step, Spec.Vm.stepWithPowers, Spec.Vm.stepBody, opcode, hp,
+    bind, Except.bind, pure]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:67:27: This simp argument is unused:
+  bind
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Memory.store, Except.bind] at success
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:67:33: This simp argument is unused:
+  Except.bind
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Memory.store, bind] at success
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:72:19: This simp argument is unused:
+  pure
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [hm, Except.pure] at success
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:72:25: This simp argument is unused:
+  Except.pure
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [hm, pure] at success
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:185:10: `dite_cond_eq_true` has been deprecated: Use `dite_eq_left_of_eq_true` instead
+
+Hint: Replace the deprecated name:
+  d̵i̵t̵e̵_̵c̵o̵n̵d̵_̵e̵q̵_̵t̵r̵u̵e̵d̲i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲_̲o̲f̲_̲e̲q̲_̲t̲r̲u̲e̲
+warning: Proofs/Vm/Basic.lean:238:27: This simp argument is unused:
+  pure
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Except.pure] at h
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:238:33: This simp argument is unused:
+  Except.pure
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [pure] at h
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:240:23: This simp argument is unused:
+  pure
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Except.pure, Except.ok.injEq, ForInStep.done.injEq] at h
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:240:29: This simp argument is unused:
+  Except.pure
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [pure, Except.ok.injEq, ForInStep.done.injEq] at h
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:283:23: This simp argument is unused:
+  bind
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Except.bind, pure, Except.pure] at hd
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:283:29: This simp argument is unused:
+  Except.bind
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [bind, pure, Except.pure] at hd
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:283:42: This simp argument is unused:
+  pure
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [bind, Except.bind, Except.pure] at hd
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:283:48: This simp argument is unused:
+  Except.pure
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [bind, Except.bind, pure] at hd
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:288:23: This simp argument is unused:
+  bind
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Except.bind, pure, Except.pure] at hy
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:288:29: This simp argument is unused:
+  Except.bind
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [bind, pure, Except.pure] at hy
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:288:42: This simp argument is unused:
+  pure
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [bind, Except.bind, Except.pure] at hy
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:288:48: This simp argument is unused:
+  Except.pure
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [bind, Except.bind, pure] at hy
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:329:19: This simp argument is unused:
+  pure
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [hm, Except.pure] at success
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:329:25: This simp argument is unused:
+  Except.pure
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [hm, pure] at success
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:383:33: This simp argument is unused:
+  bind
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [hp, Except.bind] at hd
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:383:39: This simp argument is unused:
+  Except.bind
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [hp, bind] at hd
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:384:31: This simp argument is unused:
+  bind
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [hp, Except.bind, pure, Except.pure] at hd
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:384:37: This simp argument is unused:
+  Except.bind
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [hp, bind, pure, Except.pure] at hd
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:384:50: This simp argument is unused:
+  pure
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [hp, bind, Except.bind, Except.pure] at hd
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:384:56: This simp argument is unused:
+  Except.pure
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [hp, bind, Except.bind, pure] at hd
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:387:33: This simp argument is unused:
+  bind
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [hp, Except.bind] at hy
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:387:39: This simp argument is unused:
+  Except.bind
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [hp, bind] at hy
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:390:27: This simp argument is unused:
+  bind
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [hp, Except.bind, pure, Except.pure, Except.ok.injEq, ForInStep.yield.injEq] at hy
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:390:33: This simp argument is unused:
+  Except.bind
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [hp, bind, pure, Except.pure, Except.ok.injEq, ForInStep.yield.injEq] at hy
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:390:46: This simp argument is unused:
+  pure
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [hp, bind, Except.bind, Except.pure, Except.ok.injEq, ForInStep.yield.injEq] at hy
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Proofs/Vm/Basic.lean:390:52: This simp argument is unused:
+  Except.pure
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [hp, bind, Except.bind, pure, Except.ok.injEq, ForInStep.yield.injEq] at hy
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+✔ [106/110] Built Proofs.Vm.RuntimePowers (1000ms)
+✔ [107/110] Built Proofs.Witness.Refinement (245ms)
+⚠ [108/111] Built Proofs.Vm.Linear (738ms)
+warning: Proofs/Vm/Linear.lean:121:10: `if_pos` has been deprecated: Use `ite_eq_left` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵p̵o̵s̵i̲t̲e̲_̲e̲q̲_̲l̲e̲f̲t̲
+✔ [109/111] Built Proofs.Xmss.Basic (298ms)
+⚠ [110/117] Built Proofs.Xmss.Encoding (19s)
+warning: Proofs/Xmss/Encoding.lean:96:57: This simp argument is unused:
+  length
+
+Hint: Omit it from the simp argument list.
+  [apply] simp (disch := omega) [nat_byte_bit, nat_word_bit, Nat.testBit_or, Nat.testBit_shiftRight,
+    Nat.testBit_shiftLeft, byte_high_bit, getElem!_pos, ByteArray.getElem_eq_getElem_data]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+ℹ [114/118] Replayed Tests.Audit.Mutants
+info: Tests/Audit/Mutants.lean:363:0: W5_LEAN_MUTANTS_DONE path=/var/lib/orb-node/work/pcs-opening/tmp/mutants-lean.json
+✔ [115/118] Built Proofs.Aggregate.Verify (12s)
+✔ [116/119] Built Model.Keccak.Fast (1.5s)
+✔ [117/120] Built Model.Keccak.Simd8 (6.9s)
+✔ [118/120] Built Model.Pcs.CommitSlab (974ms)
+⚠ [119/123] Built Model.Witness.VmWitnessPar (28s)
+warning: Model/Witness/VmWitnessPar.lean:2436:23: Variable name `zeroMidArr` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _zeroMidArr
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+✔ [120/123] Built Model.Prim.Slice64 (866ms)
+✔ [121/124] Built Native.Kernels.Bus (946ms)
+✔ [122/125] Built Native.Kernels.BusPar (457ms)
+✔ [123/126] Built Native.Kernels.KeccakGkr.Support (343ms)
+✔ [124/127] Built Native.Kernels.KeccakGkr.Transpose (296ms)
+✔ [125/128] Built Native.Kernels.KeccakGkr.Chi (190ms)
+✔ [126/130] Built Native.Kernels.KeccakGkr.Planes (291ms)
+✔ [127/131] Built Native.Kernels.KeccakGkr.Rmfe (347ms)
+✔ [128/132] Built Native.Kernels.KeccakGkr.Fold (199ms)
+✔ [129/132] Built Native.Kernels (261ms)
+✔ [130/133] Built Native.Kernels.KeccakGkr (156ms)
+✔ [132/135] Built Proofs.Bus.FlatRefinement (1.8s)
+✔ [133/135] Built Proofs.Prim.Slice64Refinement (867ms)
+✔ [134/135] Built Proofs.Witness.FlatRefinement (264ms)
+ℹ [135/135] Built Tests.Audit.WholeRepoAxiomAudit (1.3s)
+info: Tests/Audit/WholeRepoAxiomAudit.lean:146:0: W5_REPO_AUDIT_COUNT 10319
+info: Tests/Audit/WholeRepoAxiomAudit.lean:146:0: W5_REPO_AUDIT_REJECTIONS 0
+info: Tests/Audit/WholeRepoAxiomAudit.lean:146:0: W5_REPO_AUDIT_MODULES 41
+Build completed successfully (135 jobs).
+[turbo-lean] BUILT & CACHED LeanVmXmss (494 artifacts, interface_hash=7ad647b6b3c6.., 111423 ms)

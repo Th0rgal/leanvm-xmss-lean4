@@ -1,0 +1,19 @@
+{
+  "purpose": "unmatched correctness-only distinct-seed fixture, not performance evidence",
+  "runs": [
+    {
+      "label": "unchanged",
+      "sha256": "e0a6cfe84e28e7c05af14d64dcc235cf05c691198fdefbdfb3166f16ea68a48f",
+      "wire_bytes": 242345,
+      "verification_passes": 3
+    },
+    {
+      "label": "candidate",
+      "sha256": "e0a6cfe84e28e7c05af14d64dcc235cf05c691198fdefbdfb3166f16ea68a48f",
+      "wire_bytes": 242345,
+      "verification_passes": 3
+    }
+  ],
+  "wire_equal": true,
+  "status": "PASS"
+}

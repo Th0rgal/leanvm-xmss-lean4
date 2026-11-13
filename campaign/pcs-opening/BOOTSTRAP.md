@@ -64,3 +64,17 @@ Corrected native Rust build uses separate rust-native-target, CARGO_BUILD_JOBS=1
 
 perf task-clock access is denied (perf_event_paranoid=4); preserve that result
 and use phase diagnostics plus generated native code for cost attribution.
+
+## Exact strict-proofs CLI restored locally
+
+The installed audit-spec only accepts one file and rejects --policy. The public
+pinned source contains the required strict-proofs/multi-directory API. Built its
+unchanged Rust turbo-lean CLI with cargo build --release --locked -p turbo-lean,
+CARGO_BUILD_JOBS=1, CARGO_TARGET_DIR=/var/lib/orb-node/work/pcs-cli-target,
+LEAN_NUM_THREADS=1 and TURBO_LEAN_MAX_MEMORY_MB=6144 (3m43s).
+No shared binary was overwritten; existing compiler P0 patches are the only
+source diff in the public tool checkout. Use pcs-cli-target/release/turbo-lean
+for the exact strict gate. 1102/1102 tight specs, zero vacuous/trivial/warnings.
+The original installed-CLI combined failure is retained. Consolidated gate JSON
+replaces only that unsupported invocation with the exact pinned CLI result and
+records input/executable SHA-256s; all other gates retain actual executed evidence.

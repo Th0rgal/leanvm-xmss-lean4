@@ -1,6 +1,6 @@
 # PCS opening campaign checkpoint — 2026-11-13
 
-Status: L0 BATCH CANDIDATE IMPLEMENTED; CORRECTNESS GATES IN PROGRESS; MATCHED TIMINGS PENDING.
+Status: L0 BATCH CORRECTNESS GATES PASS; MATCHED MATRIX RUNNING (durable PID 189281).
 Compatible compiler and fixtures are restored; initial blockers below are archived.
 One L0 opening callback and a new bounded helper are changed. Strict <1 second / <4294967296-byte gate.
 The unchanged full1400 warmup+repeat3 finished before any optimization edits.
@@ -255,3 +255,26 @@ duplicates/boundaries/invalid queries, both rate1 cosets (also rate2), lanes51
 and other padded widths. Existing native kernel suite reran PASS. These are
 execution refinement tests; a universal Keccak8x-to-scalar theorem is NOT claimed.
 Whole-repo/purity/mutation gates and matched4/16/1400 timing remain pending.
+
+## Candidate correctness gates complete; matched matrix active
+
+Whole-source purity: 130 files, zero violations. Targeted PCS/native audit:
+598 declarations / zero rejections. WHIR audit: 1072 / zero. Whole-repo audit:
+10319 / zero, axioms only propext/Quot.sound (existing documented broken-test
+import exclusions remain). Native-symbol/ISA audit: no unexpected undefined
+or crypto FFI symbols; vector and CLMUL instructions present. These static ISA
+counts do not alone establish dynamic hot-path attribution. Generated FlatWhir C
+explicitly calls MerkleBatch.subtreeRootBuf from the L0 callback.
+
+Dual mutation harness: Lean and unchanged Rust each accept34/34 baseline wires
+and reject34/34 mutations, zero disagreements. Distinct seed/fresh5 parent and
+candidate proofs are byte-identical (242345 B), each Rust verified3x. Exact
+strict-proofs gate now passes1102/1102 with the locally rebuilt pinned CLI;
+installed CLI's unsupported flag failure is preserved, not silently waived.
+See candidate-gates-consolidated.json for exact result provenance.
+
+Matched4/16/1400 matrix is active, fresh warmup+repeat3, same compiler/native
+Rust flags, independent Rust verification and byte-for-byte unchanged-parent
+wire comparison. Candidate binary SHA-256:
+17d726988ec3a9ccfb82de896f17dd1eb6207981cab730a917fe49505a1c2017.
+No speedup, peak-RSS reduction or certification is claimed before completion.
