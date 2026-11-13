@@ -70,16 +70,21 @@ def roots : IO Unit := do
   IO.println "PASS|subtree_roots_widths_padding_highbits_defaults_fallbacks"
 
 def packing : IO Unit := do
-  for nVecs in [1,7,8] do
-    let encoded := vectors 3 (5*nVecs-1)
-    let packed := Model.Pcs.MerkleBatch.packVec8Rows encoded nVecs 2 4
-    assertOk "packed byte count" (packed.size == 4*nVecs*64)
-    for i in [:4*nVecs] do
-      let v := encoded.getD (2*nVecs+i) default
-      for lane in [:8] do
-        let w := Native.Kernels.Ntt.loadU64 packed (USize.ofNat (i*64+lane*8))
-        assertOk "packed lane order / zero tail" (w == v.lane lane)
-  IO.println "PASS|packed_all_lanes_and_zero_tail"
+  for nVecs in [0,1,7,8,9] do
+    for rows in [0,4,1025] do
+      for pattern in [0,1,2,3] do
+        let encoded := vectors pattern (5*nVecs-1)
+        let packed := Model.Pcs.MerkleBatch.packVec8Rows encoded nVecs 2 rows
+        let reference := Model.Pcs.MerkleBatch.packVec8RowsPush encoded nVecs 2 rows
+        assertOk "complete bytes vs original push packer, including large fallback"
+          (packed == reference)
+        assertOk "packed byte count" (packed.size == rows*nVecs*64)
+        for i in [:rows*nVecs] do
+          let v := encoded.getD (2*nVecs+i) default
+          for lane in [:8] do
+            let w := Native.Kernels.Ntt.loadU64 packed (USize.ofNat (i*64+lane*8))
+            assertOk "packed lane order / zero tail / template isolation" (w == v.lane lane)
+  IO.println "PASS|packed_all_lanes_zero_tail_template_isolation_and_large_fallback"
 
 def paths : IO Unit := do
   for lanes in [1,7,8,9,16,37,51,56,64,65] do

@@ -1,6 +1,6 @@
 {
-  "status": "first_candidate_not_promoted_packing_revision_preparing",
-  "updated_utc": "2026-11-13T11:25:58.286473+00:00",
+  "status": "fastpack_gates_pass_matched_launching",
+  "updated_utc": "2026-11-13T11:36:31.123679+00:00",
   "authoritative_quote": "under 1s and 4gb is the goal",
   "workload": {
     "xmss": 1400,
@@ -120,5 +120,13 @@
     "full1400_peak_rss_bytes": 16517795840
   },
   "fresh_lean_prover_invocations": 28,
-  "fresh_proof_artifacts_retained": 10
+  "fresh_proof_artifacts_retained": 10,
+  "fastpack": {
+    "binary_sha256": "fe2d2054d38f089ce75efab0a1a4850860ecd177b401578e239abae74024248d",
+    "native_differentials": "PASS",
+    "fresh_wire_controls": "PASS_XMSS4_fresh5_Rust3x",
+    "matched_benchmarks": "PENDING",
+    "certification": false,
+    "whole_gates": "PASS_exact_comprehensive_gate"
+  }
 }

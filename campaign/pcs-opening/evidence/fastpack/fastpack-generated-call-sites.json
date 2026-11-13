@@ -1,0 +1,10 @@
+{
+  "lp_LeanVmXmss_Fin_foldl_loop___at___00LeanVmXmss_Model_Pcs_MerkleBatch_packVec8RowsPush_spec__0": {
+    "runtime_byte_push_call_sites": 64,
+    "inline_byte_store_sites": 0
+  },
+  "lp_LeanVmXmss_Fin_foldl_loop___at___00LeanVmXmss_Model_Pcs_MerkleBatch_packVec8Rows_spec__0": {
+    "runtime_byte_push_call_sites": 0,
+    "inline_byte_store_sites": 64
+  }
+}

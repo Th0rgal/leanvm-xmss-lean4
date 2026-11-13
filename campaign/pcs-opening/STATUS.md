@@ -1,6 +1,7 @@
 # PCS opening campaign checkpoint — 2026-11-13
 
-Status: L0 BATCH CORRECTNESS GATES PASS; MATCHED MATRIX RUNNING (durable PID 189281).
+Status: first candidate completed without E2E gain; bounded fast-packing revision undergoing full gates.
+See latest dated checkpoint below; earlier sections are chronological evidence.
 Compatible compiler and fixtures are restored; initial blockers below are archived.
 One L0 opening callback and a new bounded helper are changed. Strict <1 second / <4294967296-byte gate.
 The unchanged full1400 warmup+repeat3 finished before any optimization edits.
@@ -298,3 +299,18 @@ the count is derived from the validated diagnostic dimensions/call count. Next
 bounded revision will copy a shared zero template and use existing proof-bounded
 USize stores, retaining the old packer as a differential oracle and fallback.
 It must rerun all gates and another full matched matrix; no improvement assumed.
+
+## Bounded fast-packing revision — correctness checkpoint
+
+Retained push packer as oracle/fallback; bounded path uses existing safe USize
+stores into an extracted immutable 512KiB zero template. No compiler/kernel,
+protocol or extension-leaf changes. Native differential tests and existing kernel
+suite pass. Whole-repo audit:10321 declarations,0 rejects. Fresh XMSS4 and
+distinct-seed fresh5 wire bytes exactly match unchanged; Rust verifies each3x.
+Generated fast-loop C has zero byte-push calls versus64 static sites in old loop.
+This is mechanism evidence, not a measured performance claim. Comprehensive
+mutation/strict-proof gate is active; fresh matched4/16/1400 follows.
+
+Exact comprehensive gate PASS: purity130 files, clean Rust reference,
+10321 declarations / allowed axioms only, strict specs1102/1102,
+Lean and Rust each34 baseline accepts and34 mutation rejects.
