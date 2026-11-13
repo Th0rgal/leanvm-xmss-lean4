@@ -1,6 +1,6 @@
 {
   "status": "unchanged_native_matched_baseline_running",
-  "updated_utc": "2026-11-13T10:10:09.681673+00:00",
+  "updated_utc": "2026-11-13T10:20:47.209186+00:00",
   "authoritative_quote": "under 1s and 4gb is the goal",
   "workload": {
     "xmss": 1400,
@@ -26,7 +26,7 @@
   },
   "blocker": null,
   "application_changes": false,
-  "fresh_proofs_generated": 0,
+  "fresh_proofs_generated": 2,
   "certification_pairs_completed": 0,
   "bootstrap": {
     "source": "https://github.com/Th0rgal/turbo-lean.git",

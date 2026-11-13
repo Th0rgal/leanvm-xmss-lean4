@@ -1,13 +1,16 @@
 # PCS opening campaign checkpoint — 2026-11-13
 
 Status: UNCHANGED NATIVE MATCHED BASELINE RUNNING (durable PID 68935).
+Compatible compiler and fixtures are restored; initial blockers below are archived.
+No application Lean source has changed. Strict <1 second / <4294967296-byte gate.
+The active full1400 warmup+repeat3 must finish before optimization edits.
 
 Starting revision: 299c689373ef3e98e0f150ff4bec21ca5e3aaea1.
 Anonymous HTTPS clone: /var/lib/orb-node/work/pcs-opening.
 Owned branch: campaign/pcs-opening. No credential access or snapshots.
 Evidence directory: /var/lib/orb-node/work/pcs-opening-evidence.
 
-## Feasibility
+## Archived initial feasibility (resolved below)
 
 Host: box-node-bdcc355beb075447 (not babylon). The actual job cgroup initially
 had memory.max=8973631488 and memory.high=8076267520 bytes, with all memory.events
@@ -169,3 +172,24 @@ Rust mean 0.11071572933333333 s. XMSS16: Lean mean 7.620480492 s, peak RSS
 proofs independently verify 3x with unchanged Rust and expected signer counts.
 XMSS1400 Rust mean 2.3668005103333334 s, peak RSS 3953496064 B; full Lean
 warmup+repeat3 is active. No candidate or certification claim.
+
+## Diagnostic preparation while unchanged full1400 runs
+
+Prepared tools/make_diagnostics.py (not executed against app sources yet). It
+will generate a separate IO replay driver around the actual E2E PCS calls,
+with noinline forcing before stop-clock reads. Its results are diagnostics only,
+never matched certification. It separates L0 packing/NTT, extension NTT,
+queried/unqueried Merkle work, folding, extension commitment and query basis.
+Comparing the replay proof byte-for-byte with the unchanged parent and independent
+Rust verification is mandatory before trusting its attribution. perf remains denied.
+
+Critical integration correction: Keccak8x hash8LeavesAt/hash1LeafAt always
+absorb a 64-word leaf. leafWords only determines leading padZeros; it is NOT a
+generic leaf-length parameter. Therefore passing width=48, leafWords=48 would
+not refine FlatWhir's extension hash, which absorbs exactly 48 words. Any bounded
+existing-kernel integration must stay L0 (64-word padded) unless separate extension
+support is implemented and validated. Existing unit tests cover leafWords=64 only.
+
+Full1400 process HWM so far 15899238400 B; not a final measurement. cgroup
+24/22 GiB controls remain in effect, all throttle/max/OOM events zero. Two fresh
+small Lean proofs have independently verified; no full1400 Lean proof yet.
